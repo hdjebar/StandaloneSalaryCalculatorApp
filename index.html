@@ -58,7 +58,10 @@
       --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.2);
       --info-color: #3b82f6;
       --success-color: #10b981;
-      --warning-color: #f59e0b;
+      --warning-color: #f59e0b; /* Standard warning color */
+      --warning-bg-light: #fffbeb; /* Light yellow for warning background */
+      --warning-border-light: #fef3c7; /* Lighter yellow for warning border */
+      --warning-text-dark: #713f12; /* Darker yellow/brown for warning text */
       --danger-color: #ef4444;
       --text-muted: #6c757d;
       --dark-bg: #333;
@@ -356,6 +359,22 @@
       opacity: 1;
     }
 
+    /* Tax Class Warning Style */
+    .tax-class-warning {
+        background-color: var(--warning-bg-light);
+        border: 1px solid var(--warning-border-light);
+        color: var(--warning-text-dark);
+        padding: var(--spacing-sm) var(--spacing-md);
+        margin-top: var(--spacing-sm);
+        border-radius: var(--border-radius);
+        font-size: var(--font-size-sm);
+    }
+    .tax-class-warning .fas {
+        margin-right: var(--spacing-xs);
+        color: var(--warning-color);
+    }
+
+
     /* Loading Overlay */
     .loading-overlay {
       position: fixed;
@@ -506,11 +525,11 @@
     }
     /* CIM Note Style */
     .cim-note {
-        background-color: #fefce8; /* Light yellow */
-        border: 1px solid #fde047; /* Yellow border */
-        color: #713f12; /* Dark yellow/brown text */
+        background-color: var(--warning-bg-light); 
+        border: 1px solid var(--warning-border-light); 
+        color: var(--warning-text-dark); 
         padding: var(--spacing-md);
-        margin-top: var(--spacing-sm); /* Add some space if ceiling note is also present */
+        margin-top: var(--spacing-sm); 
         border-radius: var(--border-radius);
         font-size: var(--font-size-sm);
     }
@@ -792,6 +811,7 @@
               <option value="2">Class 2 - Married/Civil Partnership</option>
             </select>
             <div id="taxClassFeedback" class="invalid-feedback">Please select a tax class.</div>
+            <div id="taxClassWarning" class="tax-class-warning d-none mt-2"></div> <!-- New warning div -->
           </div>
 
           <!-- Mutuality Class -->
@@ -1323,7 +1343,7 @@
       </p>
       <p>
         <i class="fas fa-heart text-danger"></i>
-        Made for Luxembourg's workforce | Version 3.3.3 (Tax Credits Added)
+        Made for Luxembourg's workforce | Version 3.3.4 (Tax Class Validation)
       </p>
     </footer>
   </div>
@@ -1343,7 +1363,7 @@
   <script>
     /**
      * Luxembourg Payroll Calculator 2025 - Full 2025 Updates
-     * Version: 3.3.3 (Tax Credits Added)
+     * Version: 3.3.4 (Tax Class Validation)
      * Includes:
      * - Updated 2025 Tax Brackets
      * - Updated Social Security Rates (Accident, Mutuality)
@@ -1353,6 +1373,7 @@
      * - Added note for ceiling calculations
      * - Enhanced Annual Summary & new Monthly Deductions/Benefits card
      * - Added CIS, CI-CO2, CISSM tax credits
+     * - Added Tax Class 1 / Children cross-validation warning
      */
     'use strict';
 
@@ -1402,32 +1423,19 @@
         { limit: 54090, rate: 0.38 }, { limit: 117450, rate: 0.39 }, { limit: 176160, rate: 0.40 },
         { limit: 234870, rate: 0.41 }, { limit: Infinity, rate: 0.42 }
       ],
-      // Tax Credits Parameters for 2025
       TAX_CREDITS: {
-        CIS: { // Employee Tax Credit
-          minAnnualGross: 936,
-          maxAnnualGross: 79999.99, // No credit at 80,000
-          threshold1: 11265,
-          threshold2: 40000,
-          amountTier1: 300, // Base amount for lowest incomes
-          amountTier2: 600, // Max amount
-          rate1: 0.029, // (Gross - 936) * 0.029
-          rate2: 0.015  // (Gross - 40000) * 0.015 (reduction)
+        CIS: { 
+          minAnnualGross: 936, maxAnnualGross: 79999.99, threshold1: 11265,
+          threshold2: 40000, amountTier1: 300, amountTier2: 600,
+          rate1: 0.029, rate2: 0.015
         },
-        CICO2: { // CO2 Tax Credit
-          minAnnualGross: 936,
-          maxAnnualGross: 79999.99,
-          threshold: 40000,
-          amountFull: 192,
-          reductionRate: 0.0048 // (Gross - 40000) * 0.0048
+        CICO2: { 
+          minAnnualGross: 936, maxAnnualGross: 79999.99, threshold: 40000,
+          amountFull: 192, reductionRate: 0.0048
         },
-        CISSM: { // Min. Social Wage Tax Credit
-            minMonthlyGross: 1800,
-            threshold1Monthly: 3000,
-            threshold2Monthly: 3600,
+        CISSM: { 
+            minMonthlyGross: 1800, threshold1Monthly: 3000, threshold2Monthly: 3600,
             amountFullMonthly: 81,
-            // Formula for degressive part: amountFull * (1 - (GrossMonthly - threshold1) / (threshold2 - threshold1))
-            // Simplified: 81 * (1 - (GrossMonthly - 3000) / 600)
         }
       }
     });
@@ -1588,15 +1596,14 @@
       return { incomeTax: tax, solidaritySurcharge: surcharge, totalTax: tax + surcharge };
     }
 
-    // --- Tax Credit Calculation Functions (2025) ---
     function calculateCIS(annualGrossSalary) {
         const CIS_CONFIG = CONFIG.TAX_CREDITS.CIS;
         if (annualGrossSalary < CIS_CONFIG.minAnnualGross || annualGrossSalary > CIS_CONFIG.maxAnnualGross) return 0;
-        if (annualGrossSalary <= CIS_CONFIG.threshold1) { // Up to 11,265
+        if (annualGrossSalary <= CIS_CONFIG.threshold1) { 
             return Math.min(CIS_CONFIG.amountTier2, CIS_CONFIG.amountTier1 + (annualGrossSalary - CIS_CONFIG.minAnnualGross) * CIS_CONFIG.rate1);
-        } else if (annualGrossSalary <= CIS_CONFIG.threshold2) { // 11,266 to 40,000
+        } else if (annualGrossSalary <= CIS_CONFIG.threshold2) { 
             return CIS_CONFIG.amountTier2;
-        } else { // 40,001 to 79,999.99
+        } else { 
             return Math.max(0, CIS_CONFIG.amountTier2 - (annualGrossSalary - CIS_CONFIG.threshold2) * CIS_CONFIG.rate2);
         }
     }
@@ -1604,9 +1611,9 @@
     function calculateCICO2(annualGrossSalary) {
         const CICO2_CONFIG = CONFIG.TAX_CREDITS.CICO2;
         if (annualGrossSalary < CICO2_CONFIG.minAnnualGross || annualGrossSalary > CICO2_CONFIG.maxAnnualGross) return 0;
-        if (annualGrossSalary <= CICO2_CONFIG.threshold) { // Up to 40,000
+        if (annualGrossSalary <= CICO2_CONFIG.threshold) { 
             return CICO2_CONFIG.amountFull;
-        } else { // 40,001 to 79,999.99
+        } else { 
             return Math.max(0, CICO2_CONFIG.amountFull - (annualGrossSalary - CICO2_CONFIG.threshold) * CICO2_CONFIG.reductionRate);
         }
     }
@@ -1614,18 +1621,38 @@
     function calculateCISSM(monthlyGrossSalary) {
         const CISSM_CONFIG = CONFIG.TAX_CREDITS.CISSM;
         if (monthlyGrossSalary < CISSM_CONFIG.minMonthlyGross) return 0;
-        if (monthlyGrossSalary <= CISSM_CONFIG.threshold1Monthly) { // 1800 to 3000
+        if (monthlyGrossSalary <= CISSM_CONFIG.threshold1Monthly) { 
             return CISSM_CONFIG.amountFullMonthly;
-        } else if (monthlyGrossSalary <= CISSM_CONFIG.threshold2Monthly) { // 3001 to 3600
+        } else if (monthlyGrossSalary <= CISSM_CONFIG.threshold2Monthly) { 
             return Math.max(0, CISSM_CONFIG.amountFullMonthly * (1 - (monthlyGrossSalary - CISSM_CONFIG.threshold1Monthly) / (CISSM_CONFIG.threshold2Monthly - CISSM_CONFIG.threshold1Monthly)));
         }
-        return 0; // Above 3600
+        return 0; 
+    }
+
+    function validateTaxClassAndChildren() {
+        const taxClassEl = document.getElementById('taxClass');
+        const numChildrenEl = document.getElementById('numChildren');
+        const taxClassWarningDiv = document.getElementById('taxClassWarning');
+
+        if (!taxClassEl || !numChildrenEl || !taxClassWarningDiv) return;
+
+        const taxClass = taxClassEl.value;
+        const numChildren = parseInt(numChildrenEl.value, 10) || 0;
+
+        if (taxClass === '1' && numChildren > 0) {
+            taxClassWarningDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Note: Tax Class 1a is typically more beneficial for single taxpayers with children. Please verify your selection.`;
+            taxClassWarningDiv.classList.remove('d-none');
+        } else {
+            taxClassWarningDiv.innerHTML = '';
+            taxClassWarningDiv.classList.add('d-none');
+        }
     }
 
 
     function performCalculation() {
       if (appState.isCalculating) return; 
       showLoading(true); appState.salaryExceedsCeiling = false;
+      validateTaxClassAndChildren(); // Perform validation before calculation
       try {
         const salaryIn = sanitizeInput(document.getElementById('salaryInput')?.value, 'number');
         const taxCl = sanitizeInput(document.getElementById('taxClass')?.value, 'select') || '1';
@@ -1662,14 +1689,12 @@
         const annualTaxInc = Math.max(0, annualGrossSal - annualEmpSSC - totalAnnualDed);
         const taxCalc = calculateIncomeTax(annualTaxInc, taxCl);
         
-        // Calculate Tax Credits
         const annualCIS = calculateCIS(annualGrossSal);
         const annualCICO2 = calculateCICO2(annualGrossSal);
-        const annualCISSM = calculateCISSM(grossSal) * 12; // CISSM is monthly based
+        const monthlyCISSM = calculateCISSM(grossSal); // Calculate monthly CISSM
+        const annualCISSM = monthlyCISSM * 12; 
 
         const annualChildTaxCred = numChild * CONFIG.FAMILY_BENEFITS.childTaxCreditAnnual;
-        
-        // Apply all tax credits
         const totalTaxCredits = annualChildTaxCred + annualCIS + annualCICO2 + annualCISSM;
         const effAnnualTax = Math.max(0, taxCalc.totalTax - totalTaxCredits);
         
@@ -1684,13 +1709,11 @@
           employerContributions: employerContrib, employeeContributions: employeeContrib, 
           totalMonthlyEmployeeSSC: totalMonthlyEmpSSC, totalEmployerMonthlyContributions: totalEmployerMonthContrib,
           taxCalculation: taxCalc, 
-          taxCredits: { // Store calculated credits
-              annualCIS, annualCICO2, annualCISSM, annualChildTaxCredit
-          },
+          taxCredits: { annualCIS, annualCICO2, annualCISSM, annualChildTaxCredit, monthlyCISSM }, // Store monthlyCISSM too
           effectiveAnnualTax: effAnnualTax, monthlyTaxes: monthlyTax, 
           deductions: { totalAnnualDeductions: totalAnnualDed },
-          familyBenefits: { childAllowance: annualChildAllow, childTaxCredit: annualChildTaxCred }, // Keep for separate display
-          numChildren: numChild, taxClass: taxCl // Store taxClass for CIM note
+          familyBenefits: { childAllowance: annualChildAllow, childTaxCredit: annualChildTaxCred }, 
+          numChildren: numChild, taxClass: taxCl 
         };
         displayResults(appState.currentCalculationData);
         showNotification('Calculation complete!', 'success');
@@ -1717,10 +1740,9 @@
       updateElementText('monthlyChildAllowance', formatCurrency(CONFIG.FAMILY_BENEFITS.childAllowanceMonthly * results.numChildren));
       updateElementText('monthlyChildTaxCredit', formatCurrency(results.taxCredits.annualChildTaxCredit / 12));
 
-      // Populate Monthly Tax Credits Card
       updateElementText('monthlyCIS', formatCurrency(results.taxCredits.annualCIS / 12));
       updateElementText('monthlyCICO2', formatCurrency(results.taxCredits.annualCICO2 / 12));
-      updateElementText('monthlyCISSM', formatCurrency(results.taxCredits.annualCISSM / 12)); // CISSM is already monthly in calculation, then annualized, then monthly again. Simpler: calculateCISSM(results.grossSalary)
+      updateElementText('monthlyCISSM', formatCurrency(results.taxCredits.monthlyCISSM)); // Use direct monthly value
 
       const cimNoteMonthlyDiv = document.getElementById('cimNoteMonthly');
       if(cimNoteMonthlyDiv) {
@@ -1732,7 +1754,6 @@
               cimNoteMonthlyDiv.innerHTML = '';
           }
       }
-
 
       const ceilingNoteDiv = document.getElementById('ceilingNote');
       if (ceilingNoteDiv) {
@@ -1783,6 +1804,11 @@
       document.getElementById('grossBtn')?.addEventListener('click', () => toggleInputMode('gross'));
       document.getElementById('totalBtn')?.addEventListener('click', () => toggleInputMode('total'));
       document.getElementById('mutualityClass')?.addEventListener('change', handleSalaryInput);
+      
+      // Event listeners for tax class and children validation
+      document.getElementById('taxClass')?.addEventListener('change', validateTaxClassAndChildren);
+      document.getElementById('numChildren')?.addEventListener('input', validateTaxClassAndChildren);
+
       document.querySelectorAll('.tab').forEach(tab => tab.addEventListener('click', function() { switchTab(this.id.replace('Tab', '')); }));
       document.getElementById('exportBtn')?.addEventListener('click', exportResults);
       document.getElementById('shareBtn')?.addEventListener('click', shareResults);
@@ -1792,7 +1818,7 @@
           }
       });
       setupInputValidation();
-      console.log('Luxembourg Payroll Calculator initialized (v3.3.3)'); 
+      console.log('Luxembourg Payroll Calculator initialized (v3.3.4)'); 
     });
 
     function setupInputValidation() {
@@ -1816,6 +1842,9 @@
       document.getElementById('conversionDisplay')?.classList.add('d-none');
       document.getElementById('resultsSection')?.classList.add('d-none');
       document.getElementById('errorMessage')?.classList.remove('show');
+      document.getElementById('taxClassWarning')?.classList.add('d-none'); // Hide tax class warning
+      document.getElementById('taxClassWarning').innerHTML = '';
+
       const canvas = document.getElementById('salaryChart');
       if (canvas?.getContext) canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
       appState.currentCalculationData = null;
@@ -1843,7 +1872,7 @@
       updateElementText('annualTotalCost', formatCurrency(annualEmployerCost));
       updateElementText('annualTotalDeductionsApplied', formatCurrency(data.deductions.totalAnnualDeductions));
       updateElementText('annualChildAllowance', formatCurrency(data.familyBenefits.childAllowance));
-      updateElementText('annualChildTaxCredit', formatCurrency(data.taxCredits.annualChildTaxCredit)); // Using from taxCredits object
+      updateElementText('annualChildTaxCredit', formatCurrency(data.taxCredits.annualChildTaxCredit)); 
       updateElementText('annualCIS', formatCurrency(data.taxCredits.annualCIS));
       updateElementText('annualCICO2', formatCurrency(data.taxCredits.annualCICO2));
       updateElementText('annualCISSM', formatCurrency(data.taxCredits.annualCISSM));
