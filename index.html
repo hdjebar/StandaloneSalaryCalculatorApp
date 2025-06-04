@@ -342,8 +342,8 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Error Message */
-    .error-message {
+    /* Error Message & Feedback Styles */
+    .error-message { /* General form error message */
       background-color: rgba(239, 68, 68, 0.1); 
       color: var(--danger-color);
       padding: var(--spacing-md);
@@ -358,6 +358,18 @@
       display: block;
       opacity: 1;
     }
+    .invalid-feedback { /* Per-field error message */
+        display: none; /* Hidden by default */
+        width: 100%;
+        margin-top: var(--spacing-xs);
+        font-size: var(--font-size-sm);
+        color: var(--danger-color);
+    }
+    .form-control.is-invalid ~ .invalid-feedback,
+    .form-select.is-invalid ~ .invalid-feedback {
+        display: block; /* Show when input is invalid */
+    }
+
 
     /* Tax Class Warning Style */
     .tax-class-warning {
@@ -743,8 +755,8 @@
           Salary Calculator
         </h2>
 
-        <!-- Error Message -->
-        <div class="error-message" id="errorMessage" role="alert"></div>
+        <!-- General Error Message Area -->
+        <div class="error-message" id="generalErrorMessage" role="alert"></div>
 
         <!-- Main Form -->
         <form id="payrollForm" novalidate>
@@ -789,7 +801,7 @@
               placeholder="e.g., 4055.61"
               min="0"
               step="0.01"
-              required
+              required 
               aria-describedby="salaryInputFeedback"
             />
             <div id="salaryInputFeedback" class="invalid-feedback">Please enter a valid salary.</div>
@@ -841,9 +853,11 @@
                   id="numChildren"
                   placeholder="0"
                   min="0"
-                  max="20"
+                  max="20" 
                   step="1"
+                  aria-describedby="numChildrenFeedback"
                 />
+                <div id="numChildrenFeedback" class="invalid-feedback">Please enter a valid number of children (0-20).</div>
                 <small class="form-text"
                   >€299.86/month allowance (Allocation Familiale) + €922.56/year
                   tax credit (Crédit d'Impôt) per child</small
@@ -1343,7 +1357,7 @@
       </p>
       <p>
         <i class="fas fa-heart text-danger"></i>
-        Made for Luxembourg's workforce | Version 3.3.4 (Tax Class Validation)
+        Made for Luxembourg's workforce | Version 3.4.0 (Centralized Validation)
       </p>
     </footer>
   </div>
@@ -1363,8 +1377,10 @@
   <script>
     /**
      * Luxembourg Payroll Calculator 2025 - Full 2025 Updates
-     * Version: 3.3.4 (Tax Class Validation)
+     * Version: 3.4.0 (Centralized Validation)
      * Includes:
+     * - Centralized form input validation logic.
+     * - Per-field error messages and styling.
      * - Updated 2025 Tax Brackets
      * - Updated Social Security Rates (Accident, Mutuality)
      * - Updated SSM for May 2025 and dependent ceilings/reductions
@@ -1448,6 +1464,9 @@
       salaryExceedsCeiling: false
     };
 
+    // ============================================
+    // UTILITY & UI FUNCTIONS
+    // ============================================
     function sanitizeInput(value, type = 'number') {
       if (value === null || typeof value === 'undefined') return type === 'number' ? 0 : '';
       const stringValue = String(value).trim();
@@ -1455,10 +1474,10 @@
         case 'number':
           const cleaned = stringValue.replace(/[^\d.-]/g, '');
           const number = parseFloat(cleaned);
-          return isNaN(number) ? 0 : Math.max(0, number); 
+          return isNaN(number) ? 0 : number; // Keep negative for intermediate, will be max(0, val) later
         case 'integer':
           const integer = parseInt(stringValue.replace(/[^\d]/g, ''), 10);
-          return isNaN(integer) ? 0 : Math.max(0, integer); 
+          return isNaN(integer) ? 0 : integer; // Keep negative for intermediate
         case 'select': return stringValue;
         default: return stringValue.replace(/[&<>"']/g, (match) => ({'&': '&amp;','<': '&lt;','>': '&gt;','"': '&quot;',"'": '&#39;'}[match]));
       }
@@ -1473,11 +1492,17 @@
       }, duration);
     }
 
-    function showError(message, duration = 6000) {
-      const el = document.getElementById('errorMessage'); if (!el) return;
+    function showGeneralError(message, duration = 6000) {
+      const el = document.getElementById('generalErrorMessage'); if (!el) return;
       el.textContent = message; el.classList.add('show'); 
       if (el.timeoutId) clearTimeout(el.timeoutId);
       el.timeoutId = setTimeout(() => el.classList.remove('show'), duration);
+    }
+    
+    function clearGeneralError() {
+        const el = document.getElementById('generalErrorMessage'); if (!el) return;
+        el.classList.remove('show');
+        el.textContent = '';
     }
 
     function showLoading(show = true) {
@@ -1543,6 +1568,129 @@
       els.conversionDisplay.classList.remove('d-none');
     }
 
+    // ============================================
+    // VALIDATION FUNCTIONS
+    // ============================================
+    function setFieldValidationState(inputEl, feedbackEl, isValid, message = '') {
+        if (!inputEl || !feedbackEl) return;
+        inputEl.classList.toggle('is-invalid', !isValid);
+        inputEl.classList.toggle('is-valid', isValid);
+        inputEl.setAttribute('aria-invalid', String(!isValid));
+        feedbackEl.textContent = isValid ? '' : message;
+    }
+
+    function validateRequiredSelect(inputId, feedbackId, fieldName) {
+        const inputEl = document.getElementById(inputId);
+        const feedbackEl = document.getElementById(feedbackId);
+        if (!inputEl || !feedbackEl) return false;
+
+        const value = inputEl.value;
+        if (!value) {
+            setFieldValidationState(inputEl, feedbackEl, false, `Please select a ${fieldName.toLowerCase()}.`);
+            return false;
+        }
+        setFieldValidationState(inputEl, feedbackEl, true);
+        return true;
+    }
+
+    function validateNumericInput(inputId, feedbackId, fieldName, { min = -Infinity, max = Infinity, allowZero = false, integerOnly = false } = {}) {
+        const inputEl = document.getElementById(inputId);
+        const feedbackEl = document.getElementById(feedbackId);
+        if (!inputEl || !feedbackEl) return false;
+
+        const rawValue = inputEl.value.trim();
+        if (rawValue === '' && inputEl.placeholder !== '0') { // Allow empty if placeholder is not 0 (optional fields)
+             if (inputEl.hasAttribute('required')) { // If it's explicitly required, empty is invalid
+                setFieldValidationState(inputEl, feedbackEl, false, `${fieldName} is required.`);
+                return false;
+             }
+             setFieldValidationState(inputEl, feedbackEl, true); // Optional and empty is fine
+             return true;
+        }
+        
+        const value = integerOnly ? sanitizeInput(rawValue, 'integer') : sanitizeInput(rawValue, 'number');
+
+        if (isNaN(value)) {
+            setFieldValidationState(inputEl, feedbackEl, false, `Please enter a valid number for ${fieldName.toLowerCase()}.`);
+            return false;
+        }
+        if (!allowZero && value <= 0 && inputEl.hasAttribute('required')) { // Check for required and <=0
+             setFieldValidationState(inputEl, feedbackEl, false, `${fieldName} must be greater than 0.`);
+             return false;
+        }
+        if (value < min) {
+            setFieldValidationState(inputEl, feedbackEl, false, `${fieldName} must be at least ${min}.`);
+            return false;
+        }
+        if (value > max) {
+            setFieldValidationState(inputEl, feedbackEl, false, `${fieldName} cannot exceed ${max}.`);
+            return false;
+        }
+        if (integerOnly && !Number.isInteger(parseFloat(rawValue))) { // Check original input for float if integerOnly
+             setFieldValidationState(inputEl, feedbackEl, false, `${fieldName} must be a whole number.`);
+             return false;
+        }
+
+        setFieldValidationState(inputEl, feedbackEl, true);
+        return true;
+    }
+    
+    function validateTaxClassAndChildrenRule() { // This remains for the non-blocking warning
+        const taxClassEl = document.getElementById('taxClass');
+        const numChildrenEl = document.getElementById('numChildren');
+        const taxClassWarningDiv = document.getElementById('taxClassWarning');
+
+        if (!taxClassEl || !numChildrenEl || !taxClassWarningDiv) return;
+
+        const taxClass = taxClassEl.value;
+        const numChildren = parseInt(numChildrenEl.value, 10); // Use parsed value
+
+        if (taxClass === '1' && !isNaN(numChildren) && numChildren > 0) {
+            taxClassWarningDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Note: Tax Class 1a is typically more beneficial for single taxpayers with children. Please verify your selection.`;
+            taxClassWarningDiv.classList.remove('d-none');
+        } else {
+            taxClassWarningDiv.innerHTML = '';
+            taxClassWarningDiv.classList.add('d-none');
+        }
+    }
+
+    function validateFormInputs() {
+        clearGeneralError(); // Clear any previous general error messages
+        let isFormValid = true;
+
+        // Validate Salary Input
+        if (!validateNumericInput('salaryInput', 'salaryInputFeedback', 'Salary', { min: 0.01, allowZero: false })) {
+            isFormValid = false;
+        }
+        // Validate Tax Class
+        if (!validateRequiredSelect('taxClass', 'taxClassFeedback', 'Tax Class')) {
+            isFormValid = false;
+        }
+        // Validate Mutuality Class
+        if (!validateRequiredSelect('mutualityClass', 'mutualityClassFeedback', 'Mutuality Class')) {
+            isFormValid = false;
+        }
+        // Validate Number of Children (optional, but if provided, must be valid)
+        if (!validateNumericInput('numChildren', 'numChildrenFeedback', 'Number of Children', { min: 0, max: 20, integerOnly: true, allowZero: true })) {
+           isFormValid = false;
+        }
+
+
+        // Non-blocking warning for Tax Class / Children
+        validateTaxClassAndChildrenRule(); 
+
+        // Add more specific validations for other fields if needed here, e.g.:
+        // validateNumericInput('childcareExpenses', 'childcareExpensesFeedback', 'Childcare Expenses', { min: 0, allowZero: true });
+        // ... and so on for other numeric fields if they had specific feedback divs and stricter rules.
+        // For now, other fields are sanitized but don't have blocking validation apart from their min/max attributes.
+
+        return isFormValid;
+    }
+
+
+    // ============================================
+    // CALCULATION LOGIC
+    // ============================================
     function applyMonthlyCeilingAndCalculate(grossMonthlySalary, monthlyIncomeCeiling, rate) {
         const cappedSalary = Math.min(grossMonthlySalary, monthlyIncomeCeiling);
         return cappedSalary * rate;
@@ -1629,40 +1777,30 @@
         return 0; 
     }
 
-    function validateTaxClassAndChildren() {
-        const taxClassEl = document.getElementById('taxClass');
-        const numChildrenEl = document.getElementById('numChildren');
-        const taxClassWarningDiv = document.getElementById('taxClassWarning');
-
-        if (!taxClassEl || !numChildrenEl || !taxClassWarningDiv) return;
-
-        const taxClass = taxClassEl.value;
-        const numChildren = parseInt(numChildrenEl.value, 10) || 0;
-
-        if (taxClass === '1' && numChildren > 0) {
-            taxClassWarningDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Note: Tax Class 1a is typically more beneficial for single taxpayers with children. Please verify your selection.`;
-            taxClassWarningDiv.classList.remove('d-none');
-        } else {
-            taxClassWarningDiv.innerHTML = '';
-            taxClassWarningDiv.classList.add('d-none');
-        }
-    }
-
-
     function performCalculation() {
       if (appState.isCalculating) return; 
-      showLoading(true); appState.salaryExceedsCeiling = false;
-      validateTaxClassAndChildren(); // Perform validation before calculation
+      
+      if (!validateFormInputs()) {
+          showGeneralError('Please correct the highlighted errors before calculating.');
+          // Ensure loading is not shown if validation fails early
+          const calculateBtn = document.getElementById('calculateBtn');
+          if (calculateBtn && calculateBtn.classList.contains('loading')) {
+              showLoading(false);
+          }
+          return;
+      }
+      
+      showLoading(true); 
+      appState.salaryExceedsCeiling = false;
+      
       try {
-        const salaryIn = sanitizeInput(document.getElementById('salaryInput')?.value, 'number');
-        const taxCl = sanitizeInput(document.getElementById('taxClass')?.value, 'select') || '1';
-        const mutVal = document.getElementById('mutualityClass')?.value;
-        const mutCl = parseFloat(sanitizeInput(mutVal, 'select')) || 1.0;
-        const numChild = sanitizeInput(document.getElementById('numChildren')?.value, 'integer');
-
-        if (salaryIn <= 0) { showError('Salary must be > 0.'); showLoading(false); return; }
-        if (!taxCl) { showError('Select Tax Class.'); showLoading(false); return; }
-        if (!mutVal) { showError('Select Mutuality Class.'); showLoading(false); return; }
+        // Get already sanitized and validated (to some extent) values
+        const salaryIn = parseFloat(document.getElementById('salaryInput')?.value); // Already validated as numeric > 0
+        const taxCl = document.getElementById('taxClass')?.value; // Already validated as selected
+        const mutVal = document.getElementById('mutualityClass')?.value; // Already validated as selected
+        const mutCl = parseFloat(mutVal);
+        const numChildRaw = document.getElementById('numChildren')?.value;
+        const numChild = numChildRaw ? parseInt(numChildRaw, 10) : 0; // Already validated as integer 0-20
 
         let grossSal = (appState.currentInputMode === 'gross') ? salaryIn : calculateGrossFromTotal(salaryIn, mutCl); 
         if (grossSal > CONFIG.SOCIAL_SECURITY_PARAMETERS.monthlyIncomeCeiling) appState.salaryExceedsCeiling = true;
@@ -1691,7 +1829,7 @@
         
         const annualCIS = calculateCIS(annualGrossSal);
         const annualCICO2 = calculateCICO2(annualGrossSal);
-        const monthlyCISSM = calculateCISSM(grossSal); // Calculate monthly CISSM
+        const monthlyCISSM = calculateCISSM(grossSal); 
         const annualCISSM = monthlyCISSM * 12; 
 
         const annualChildTaxCred = numChild * CONFIG.FAMILY_BENEFITS.childTaxCreditAnnual;
@@ -1709,7 +1847,7 @@
           employerContributions: employerContrib, employeeContributions: employeeContrib, 
           totalMonthlyEmployeeSSC: totalMonthlyEmpSSC, totalEmployerMonthlyContributions: totalEmployerMonthContrib,
           taxCalculation: taxCalc, 
-          taxCredits: { annualCIS, annualCICO2, annualCISSM, annualChildTaxCredit, monthlyCISSM }, // Store monthlyCISSM too
+          taxCredits: { annualCIS, annualCICO2, annualCISSM, annualChildTaxCredit, monthlyCISSM }, 
           effectiveAnnualTax: effAnnualTax, monthlyTaxes: monthlyTax, 
           deductions: { totalAnnualDeductions: totalAnnualDed },
           familyBenefits: { childAllowance: annualChildAllow, childTaxCredit: annualChildTaxCred }, 
@@ -1717,10 +1855,17 @@
         };
         displayResults(appState.currentCalculationData);
         showNotification('Calculation complete!', 'success');
-      } catch (e) { console.error('Calc error:', e); showError('Error in calculation.');
-      } finally { showLoading(false); }
+      } catch (e) { 
+          console.error('Calculation error:', e); 
+          showGeneralError('An unexpected error occurred during calculation. Please check your inputs or try again later.');
+      } finally { 
+          showLoading(false); 
+      }
     }
 
+    // ============================================
+    // DISPLAY & UI UPDATE FUNCTIONS
+    // ============================================
     function displayResults(results) {
       updateElementText('monthlyGrossSalary', formatCurrency(results.grossSalary));
       updateElementText('monthlyNetSalary', formatCurrency(results.netSalary));
@@ -1742,7 +1887,7 @@
 
       updateElementText('monthlyCIS', formatCurrency(results.taxCredits.annualCIS / 12));
       updateElementText('monthlyCICO2', formatCurrency(results.taxCredits.annualCICO2 / 12));
-      updateElementText('monthlyCISSM', formatCurrency(results.taxCredits.monthlyCISSM)); // Use direct monthly value
+      updateElementText('monthlyCISSM', formatCurrency(results.taxCredits.monthlyCISSM));
 
       const cimNoteMonthlyDiv = document.getElementById('cimNoteMonthly');
       if(cimNoteMonthlyDiv) {
@@ -1797,6 +1942,9 @@
         return value.toFixed(2) + '%';
     }
 
+    // ============================================
+    // EVENT LISTENERS & INITIALIZATION
+    // ============================================
     document.addEventListener('DOMContentLoaded', function () {
       toggleInputMode('gross'); 
       document.getElementById('salaryInput')?.addEventListener('input', handleSalaryInput);
@@ -1805,32 +1953,54 @@
       document.getElementById('totalBtn')?.addEventListener('click', () => toggleInputMode('total'));
       document.getElementById('mutualityClass')?.addEventListener('change', handleSalaryInput);
       
-      // Event listeners for tax class and children validation
-      document.getElementById('taxClass')?.addEventListener('change', validateTaxClassAndChildren);
-      document.getElementById('numChildren')?.addEventListener('input', validateTaxClassAndChildren);
+      // Event listeners for real-time tax class/children warning
+      document.getElementById('taxClass')?.addEventListener('change', validateTaxClassAndChildrenRule);
+      document.getElementById('numChildren')?.addEventListener('input', validateTaxClassAndChildrenRule);
 
       document.querySelectorAll('.tab').forEach(tab => tab.addEventListener('click', function() { switchTab(this.id.replace('Tab', '')); }));
       document.getElementById('exportBtn')?.addEventListener('click', exportResults);
       document.getElementById('shareBtn')?.addEventListener('click', shareResults);
       document.getElementById('clearBtn')?.addEventListener('click', () => { 
-          if (window.confirm('Clear form and results?')) {
+          // Using a custom modal for confirmation is preferred, but window.confirm is used here for simplicity.
+          // In a real app, replace with a custom modal to avoid issues in iframe environments.
+          if (window.confirm('Are you sure you want to clear the form and results? This action cannot be undone.')) {
             clearForm();
           }
       });
-      setupInputValidation();
-      console.log('Luxembourg Payroll Calculator initialized (v3.3.4)'); 
+      setupInputBlurSanitization(); // Renamed for clarity
+      console.log('Luxembourg Payroll Calculator initialized (v3.4.0)'); 
     });
 
-    function setupInputValidation() {
+    function setupInputBlurSanitization() { // Renamed for clarity
       const numInputs = ['salaryInput', 'numChildren', 'professionalExpenses', 'transportDeduction', 'childcareExpenses', 'pensionContributions', 'mortgageInterest', 'insurancePremiums', 'medicalExpenses', 'charitableDonations'];
       numInputs.forEach(id => {
         const input = document.getElementById(id);
         if (input) {
           input.addEventListener('blur', function() {
-            const type = (id === 'numChildren' || (id === 'salaryInput' && this.step === '1')) ? 'integer' : 'number';
-            const val = sanitizeInput(this.value, type);
-            if (type === 'number' && !isNaN(parseFloat(val))) this.value = parseFloat(val).toFixed(this.step === "0.01" ? 2 : 0);
-            else this.value = val;
+            const isIntegerField = (id === 'numChildren' || (id === 'salaryInput' && this.step === '1')); // Example, refine if salary can be integer
+            const type = isIntegerField ? 'integer' : 'number';
+            let val = sanitizeInput(this.value, type);
+
+            // Apply min/max from attributes if they exist
+            const minAttr = parseFloat(this.min);
+            const maxAttr = parseFloat(this.max);
+            if (!isNaN(minAttr) && val < minAttr) val = minAttr;
+            if (!isNaN(maxAttr) && val > maxAttr) val = maxAttr;
+            
+            if (type === 'number' && !isNaN(parseFloat(val))) {
+                 this.value = parseFloat(val).toFixed(this.step === "0.01" ? 2 : 0);
+            } else if (type === 'integer' && !isNaN(parseInt(val))) {
+                 this.value = parseInt(val);
+            } else if (this.value.trim() !== '') { // If not a valid number but not empty, keep original for validation to catch
+                 // this.value = ''; // Or clear if preferred
+            }
+            // Trigger validation for the specific field on blur for immediate feedback
+            // This could be expanded to call parts of validateFormInputs for the specific field
+            if (id === 'salaryInput') validateNumericInput('salaryInput', 'salaryInputFeedback', 'Salary', { min: 0.01, allowZero: false });
+            if (id === 'taxClass') validateRequiredSelect('taxClass', 'taxClassFeedback', 'Tax Class');
+            if (id === 'mutualityClass') validateRequiredSelect('mutualityClass', 'mutualityClassFeedback', 'Mutuality Class');
+            if (id === 'numChildren') validateNumericInput('numChildren', 'numChildrenFeedback', 'Number of Children', { min: 0, max: 20, integerOnly: true, allowZero: true });
+
           });
         }
       });
@@ -1841,8 +2011,24 @@
       toggleInputMode('gross'); 
       document.getElementById('conversionDisplay')?.classList.add('d-none');
       document.getElementById('resultsSection')?.classList.add('d-none');
-      document.getElementById('errorMessage')?.classList.remove('show');
-      document.getElementById('taxClassWarning')?.classList.add('d-none'); // Hide tax class warning
+      clearGeneralError();
+      
+      // Clear all field-specific validation states
+      const fieldsToClear = [
+          { inputId: 'salaryInput', feedbackId: 'salaryInputFeedback' },
+          { inputId: 'taxClass', feedbackId: 'taxClassFeedback' },
+          { inputId: 'mutualityClass', feedbackId: 'mutualityClassFeedback' },
+          { inputId: 'numChildren', feedbackId: 'numChildrenFeedback' }
+      ];
+      fieldsToClear.forEach(field => {
+          const inputEl = document.getElementById(field.inputId);
+          const feedbackEl = document.getElementById(field.feedbackId);
+          if (inputEl && feedbackEl) {
+              setFieldValidationState(inputEl, feedbackEl, true); // Resets to valid state
+          }
+      });
+
+      document.getElementById('taxClassWarning')?.classList.add('d-none'); 
       document.getElementById('taxClassWarning').innerHTML = '';
 
       const canvas = document.getElementById('salaryChart');
@@ -1858,6 +2044,9 @@
       showNotification('Form and results cleared.', 'info');
     }
 
+    // ============================================
+    // ANNUAL SUMMARY, CHART, EXPORT, SHARE
+    // ============================================
     function loadAnnualSummary(data) {
       if (!data) return;
       const annualGross = data.grossSalary * 12;
@@ -1893,8 +2082,13 @@
       const canvas = document.getElementById('salaryChart');
       if (canvas?.getContext) {
         const ctx = canvas.getContext('2d');
-        canvas.width = canvas.offsetWidth; 
-        canvas.height = canvas.offsetHeight;
+        // Ensure canvas is responsive to container size changes before drawing
+        // This should ideally be handled if the container can resize dynamically
+        // For now, setting it once based on offsetWidth/Height is a good start
+        if (canvas.width !== canvas.offsetWidth || canvas.height !== canvas.offsetHeight) {
+             canvas.width = canvas.offsetWidth; 
+             canvas.height = canvas.offsetHeight;
+        }
         updateSalaryBreakdownChart(ctx, data);
       }
     }
@@ -1930,12 +2124,12 @@
             { name: 'Employee SS', value: totalEmployeeSSC, color: '#FF9800' },
             { name: 'Taxes', value: taxes, color: '#F44336' },
             { name: 'Employer SS', value: totalEmployerSSC, color: '#2196F3' }
-        ].filter(slice => slice.value > 0.001 * totalEmployerCost);
+        ].filter(slice => slice.value > 0.001 * totalEmployerCost); // Filter out very small slices
 
         let currentAngle = -Math.PI / 2; 
         pieSlices.forEach(slice => {
             const sliceAngle = (slice.value / totalEmployerCost) * 2 * Math.PI;
-            if (sliceAngle < 0.001) return;
+            if (sliceAngle < 0.001) return; // Don't draw extremely small slices
             ctx.beginPath(); ctx.moveTo(centerX, centerY);
             ctx.arc(centerX, centerY, chartMaxRadius, currentAngle, currentAngle + sliceAngle);
             ctx.closePath(); ctx.fillStyle = slice.color; ctx.fill();
@@ -1943,20 +2137,22 @@
             currentAngle += sliceAngle;
         });
 
+        // Central text
         ctx.fillStyle = '#333333'; ctx.textAlign = 'center';
-        const centralTextBaseSize = Math.max(9, chartMaxRadius * 0.12);
+        const centralTextBaseSize = Math.max(9, chartMaxRadius * 0.12); // Responsive font size
         ctx.font = `bold ${centralTextBaseSize}px Inter, Arial, sans-serif`;
         ctx.fillText('Total Cost', centerX, centerY - centralTextBaseSize * 0.6);
         ctx.font = `bold ${centralTextBaseSize * 1.2}px Inter, Arial, sans-serif`;
         ctx.fillText(formatCurrency(totalEmployerCost), centerX, centerY + centralTextBaseSize * 0.9);
 
-        const legendX = pieAreaWidth + 15;
+        // Legend
+        const legendX = pieAreaWidth + 15; // Start legend to the right of the pie
         let legendY = 15;
         const legendItemMinHeight = 18; 
         const legendColorBoxSize = 10;
         const legendFontSize = 9.5; 
         const legendLineSpacing = 4; 
-        const maxLegendItemWidth = legendAreaWidth - 25; 
+        const maxLegendItemWidth = legendAreaWidth - 25; // Max width for legend text
 
         ctx.textAlign = 'left';
         ctx.font = `bold ${legendFontSize + 1}px Inter, Arial, sans-serif`;
@@ -1969,14 +2165,14 @@
         const legendItems = [
             { name: 'Total Employer Cost', value: totalEmployerCost, isTotal: true },
             { name: 'Employer Social Security', value: totalEmployerSSC, color: '#2196F3' },
-            { name: 'Gross Salary', value: data.grossSalary, isInformational: true },
+            { name: 'Gross Salary', value: data.grossSalary, isInformational: true }, // Informational, not part of pie directly
             { name: 'Employee Social Security', value: totalEmployeeSSC, color: '#FF9800'},
             { name: 'Taxes & Surcharges', value: taxes, color: '#F44336' },
             { name: 'Net Salary', value: netSalary, color: '#4CAF50' }
         ];
         
         legendItems.forEach(item => {
-            if (legendY + legendItemMinHeight > height - 5) return; 
+            if (legendY + legendItemMinHeight > height - 5) return; // Prevent overflow
             const percentage = totalEmployerCost > 0 ? (item.value / totalEmployerCost * 100).toFixed(1) : "0.0";
             let text = `${item.name}: ${formatCurrency(item.value)} (${percentage}%)`;
             if (item.isTotal) text = `${item.name}: ${formatCurrency(item.value)} (100.0%)`;
@@ -1989,20 +2185,21 @@
             }
             ctx.fillStyle = '#333333';
             
+            // Truncate text if too long for the legend area
             let textToDraw = text;
             if (ctx.measureText(textToDraw).width > maxLegendItemWidth) {
-                while(ctx.measureText(textToDraw + "...").width > maxLegendItemWidth && textToDraw.length > 15) {
+                while(ctx.measureText(textToDraw + "...").width > maxLegendItemWidth && textToDraw.length > 15) { // Heuristic length
                     textToDraw = textToDraw.slice(0,-1);
                 }
                 textToDraw += "...";
             }
-            ctx.fillText(textToDraw, textX, legendY + legendItemMinHeight / 2 + legendFontSize / 3 - 1);
+            ctx.fillText(textToDraw, textX, legendY + legendItemMinHeight / 2 + legendFontSize / 3 - 1); // Adjusted for better vertical alignment
             legendY += legendItemMinHeight + legendLineSpacing;
         });
     }
 
     function exportResults() {
-      if (!appState.currentCalculationData) { showError('No calculation data to export.'); return; }
+      if (!appState.currentCalculationData) { showGeneralError('No calculation data to export.'); return; }
       const dataToExport = { ...appState.currentCalculationData, calculationDate: new Date().toISOString() };
       const dataStr = JSON.stringify(dataToExport, null, 2); 
       const dataBlob = new Blob([dataStr], { type: 'application/json;charset=utf-8;' });
@@ -2015,7 +2212,7 @@
     }
 
     async function shareResults() {
-      if (!appState.currentCalculationData) { showError('No calculation data to share.'); return; }
+      if (!appState.currentCalculationData) { showGeneralError('No calculation data to share.'); return; }
       const d = appState.currentCalculationData;
       const text = `Lux Payroll Estimate:\nGross: ${formatCurrency(d.grossSalary)}\nNet: ${formatCurrency(d.netSalary)}\nTotal Cost: ${formatCurrency(d.totalEmployerCost)}`;
       const shareData = { title: 'Luxembourg Payroll Estimate', text: text, url: window.location.href };
@@ -2029,12 +2226,12 @@
       if (navigator.clipboard?.writeText) {
         navigator.clipboard.writeText(text)
           .then(() => showNotification('Results copied to clipboard!', 'success'))
-          .catch(() => showError('Could not copy results.'));
+          .catch(() => showGeneralError('Could not copy results to clipboard.'));
       } else { 
         const ta = document.createElement("textarea"); ta.value = text; ta.style.position = "fixed"; 
         document.body.appendChild(ta); ta.focus(); ta.select();
-        try { document.execCommand('copy'); showNotification('Results copied!', 'success'); }
-        catch (err) { showError('Failed to copy.'); }
+        try { document.execCommand('copy'); showNotification('Results copied to clipboard!', 'success'); }
+        catch (err) { showGeneralError('Failed to copy results to clipboard.'); }
         document.body.removeChild(ta);
       }
     }
