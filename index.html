@@ -38,10 +38,10 @@
 
   <title>🇱🇺 Luxembourg Payroll Calculator 2025</title>
 
-  <!-- Inline CSS (from style.css) -->
+  <!-- Inline CSS -->
   <style>
     /* ============================================
-       GLOBAL & ROOT VARIABLES (example placeholders)
+       GLOBAL & ROOT VARIABLES
        ============================================ */
     :root {
       --spacing-xs: 4px;
@@ -50,29 +50,33 @@
       --spacing-lg: 24px;
       --spacing-xl: 32px;
       --border-radius: 8px;
-      --border-color: #ccc;
-      --white-bg: #fff;
-      --light-bg: #f9f9f9;
-      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
-      --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.15);
-      --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.2);
-      --info-color: #3b82f6;
-      --success-color: #10b981;
-      --warning-color: #f59e0b; /* Standard warning color */
-      --warning-bg-light: #fffbeb; /* Light yellow for warning background */
-      --warning-border-light: #fef3c7; /* Lighter yellow for warning border */
-      --warning-text-dark: #713f12; /* Darker yellow/brown for warning text */
-      --danger-color: #ef4444;
-      --text-muted: #6c757d;
-      --dark-bg: #333;
-      --text-primary: #212529;
-      --text-secondary: #495057;
+      --border-color: #e2e8f0; /* Lighter border */
+      --white-bg: #ffffff;
+      --light-bg: #f7fafc; /* Slightly different light bg */
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --primary-color: #4A5568; /* Darker primary for text */
+      --primary-accent: #667eea; /* Indigo accent */
+      --primary-accent-dark: #5a67d8;
+      --success-color: #38a169; /* Green */
+      --warning-color: #dd6b20; /* Orange */
+      --warning-bg-light: #fffaf0;
+      --warning-border-light: #fbd38d;
+      --warning-text-dark: #7b341e;
+      --danger-color: #e53e3e; /* Red */
+      --text-primary: #2d3748; /* Darker text */
+      --text-secondary: #4a5568;
+      --text-muted: #718096;
       --font-size-sm: 0.875rem;
       --primary-gradient: linear-gradient(90deg, #667eea, #764ba2);
-      --transition: all 0.3s ease-in-out; /* Added for card hover */
+      --transition: all 0.2s ease-in-out;
     }
 
     /* Basic Reset & Body Styles */
+    *, *::before, *::after {
+        box-sizing: border-box;
+    }
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
         Helvetica, Arial, sans-serif;
@@ -85,6 +89,8 @@
       flex-direction: column;
       align-items: center;
       min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
     .container {
@@ -93,7 +99,7 @@
       border-radius: var(--border-radius);
       box-shadow: var(--shadow-lg);
       width: 100%;
-      max-width: 900px; /* Increased max-width for better layout */
+      max-width: 900px;
       margin: var(--spacing-md) auto;
     }
     
@@ -105,14 +111,14 @@
       border-bottom: 1px solid var(--border-color);
     }
     .header h1 {
-      font-size: 1.8rem; /* Adjusted for responsiveness */
+      font-size: clamp(1.5rem, 5vw, 1.8rem); /* Responsive font size */
       font-weight: 700;
       color: var(--text-primary);
       margin-bottom: var(--spacing-sm);
     }
     .header h1 .fas {
       margin-right: var(--spacing-sm);
-      color: var(--info-color);
+      color: var(--primary-accent);
     }
     .header p {
       font-size: 1rem;
@@ -127,7 +133,7 @@
       font-size: 1.5rem;
       margin-bottom: var(--spacing-lg);
       color: var(--text-primary);
-      border-bottom: 2px solid var(--info-color);
+      border-bottom: 2px solid var(--primary-accent);
       padding-bottom: var(--spacing-sm);
     }
     .form-section h2 .fas {
@@ -153,12 +159,13 @@
       border-radius: var(--border-radius);
       font-size: 1rem;
       transition: border-color 0.2s ease, box-shadow 0.2s ease;
-      box-sizing: border-box; /* Ensures padding doesn't expand element */
+      background-color: var(--white-bg);
+      color: var(--text-primary);
     }
     .form-control:focus,
     .form-select:focus {
-      border-color: var(--info-color);
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+      border-color: var(--primary-accent);
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.25);
       outline: none;
     }
     .form-text {
@@ -184,21 +191,21 @@
       display: flex;
       border-radius: var(--border-radius);
       overflow: hidden;
-      border: 1px solid var(--info-color);
+      border: 1px solid var(--primary-accent);
     }
     .input-mode-toggle .btn {
       flex-grow: 1;
       background-color: var(--white-bg);
-      color: var(--info-color);
+      color: var(--primary-accent);
       border: none;
-      border-radius: 0; /* Remove individual button radius */
+      border-radius: 0;
     }
     .input-mode-toggle .btn.active {
-      background-color: var(--info-color);
+      background-color: var(--primary-accent);
       color: var(--white-bg);
     }
     .input-mode-toggle .btn:not(:last-child) {
-      border-right: 1px solid var(--info-color);
+      border-right: 1px solid var(--primary-accent);
     }
 
     /* Conversion Display */
@@ -223,26 +230,32 @@
       font-weight: 600;
       border-radius: var(--border-radius);
       cursor: pointer;
-      transition: background-color 0.2s ease, transform 0.1s ease;
+      transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
       border: 1px solid transparent;
       text-align: center;
+      text-decoration: none;
+      display: inline-flex; /* For icon alignment */
+      align-items: center;
+      justify-content: center;
     }
     .btn .fas {
       margin-right: var(--spacing-sm);
     }
     .btn:hover {
       opacity: 0.9;
+      box-shadow: var(--shadow-md);
     }
     .btn:active {
       transform: translateY(1px);
+      box-shadow: var(--shadow-sm);
     }
     .btn-primary {
-      background-color: var(--info-color);
+      background-color: var(--primary-accent);
       color: var(--white-bg);
-      border-color: var(--info-color);
+      border-color: var(--primary-accent);
     }
     .btn-primary:hover {
-      background-color: #2563eb; /* Darker shade of info */
+      background-color: var(--primary-accent-dark);
     }
     .btn-secondary {
       background-color: var(--text-muted);
@@ -250,16 +263,21 @@
       border-color: var(--text-muted);
     }
     .btn-secondary:hover {
-      background-color: #5a6268; /* Darker shade of muted */
+      background-color: #5a6268;
     }
     .btn-success {
       background-color: var(--success-color);
       color: var(--white-bg);
     }
     .btn-info {
-        background-color: var(--info-color);
+        background-color: #3182ce; /* Blue */
         color: var(--white-bg);
     }
+    .btn-danger {
+        background-color: var(--danger-color);
+        color: var(--white-bg);
+    }
+
 
     /* Results Section */
     .results {
@@ -303,6 +321,7 @@
     }
     .result-value {
       font-weight: 600;
+      color: var(--text-primary);
     }
 
     /* Tabs */
@@ -323,11 +342,11 @@
       transition: color 0.2s ease, border-color 0.2s ease;
     }
     .tab:hover {
-      color: var(--info-color);
+      color: var(--primary-accent);
     }
     .tab.active {
-      color: var(--info-color);
-      border-bottom-color: var(--info-color);
+      color: var(--primary-accent);
+      border-bottom-color: var(--primary-accent);
       font-weight: 600;
     }
     .tab-content {
@@ -343,8 +362,8 @@
     }
 
     /* Error Message & Feedback Styles */
-    .error-message { /* General form error message */
-      background-color: rgba(239, 68, 68, 0.1); 
+    .error-message { 
+      background-color: rgba(229, 62, 62, 0.1); 
       color: var(--danger-color);
       padding: var(--spacing-md);
       border-radius: var(--border-radius);
@@ -358,8 +377,8 @@
       display: block;
       opacity: 1;
     }
-    .invalid-feedback { /* Per-field error message */
-        display: none; /* Hidden by default */
+    .invalid-feedback { 
+        display: none; 
         width: 100%;
         margin-top: var(--spacing-xs);
         font-size: var(--font-size-sm);
@@ -367,9 +386,24 @@
     }
     .form-control.is-invalid ~ .invalid-feedback,
     .form-select.is-invalid ~ .invalid-feedback {
-        display: block; /* Show when input is invalid */
+        display: block; 
     }
-
+    .form-control.is-invalid, .form-select.is-invalid {
+      border-color: var(--danger-color);
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23e53e3e'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23e53e3e' stroke='none'/%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right calc(0.375em + 0.1875rem) center;
+      background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+      padding-right: calc(1.5em + 0.75rem); /* Make space for icon */
+    }
+    .form-control.is-valid, .form-select.is-valid {
+      border-color: var(--success-color);
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%2338a169' d='M2.3 6.73L.63 5.05l.68-.68L2.3 5.38l3.72-3.72.68.68L2.3 6.73z'/%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right calc(0.375em + 0.1875rem) center;
+      background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+      padding-right: calc(1.5em + 0.75rem); /* Make space for icon */
+    }
 
     /* Tax Class Warning Style */
     .tax-class-warning {
@@ -386,24 +420,30 @@
         color: var(--warning-color);
     }
 
-
-    /* Loading Overlay */
+    /* Loading Overlay & Button Spinner */
     .loading-overlay {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background-color: rgba(255, 255, 255, 0.8);
+      background-color: rgba(255, 255, 255, 0.85);
       display: flex;
       justify-content: center;
       align-items: center;
-      z-index: 1000;
-      transition: opacity 0.3s ease;
+      z-index: 10000; /* High z-index */
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+    }
+    .loading-overlay.show {
+        opacity: 1;
+        visibility: visible;
+        transition: opacity 0.3s ease, visibility 0s linear 0s;
     }
     .loading-spinner {
       border: 5px solid var(--light-bg);
-      border-top: 5px solid var(--info-color);
+      border-top: 5px solid var(--primary-accent);
       border-radius: 50%;
       width: 50px;
       height: 50px;
@@ -416,6 +456,7 @@
     .btn.loading {
       position: relative;
       color: transparent !important; 
+      pointer-events: none; /* Prevent clicks while loading */
     }
     .btn.loading::after {
       content: '';
@@ -437,23 +478,75 @@
       position: fixed;
       bottom: 20px;
       left: 50%;
-      transform: translateX(-50%);
+      transform: translateX(-50%) translateY(100%); /* Start off-screen */
       padding: var(--spacing-md) var(--spacing-lg);
       border-radius: var(--border-radius);
       color: var(--white-bg);
-      z-index: 1001;
+      z-index: 10001; /* Higher than loading overlay */
       opacity: 0;
       transition: opacity 0.3s ease, transform 0.3s ease;
       box-shadow: var(--shadow-md);
+      min-width: 250px;
+      text-align: center;
     }
     .notification.show {
       opacity: 1;
       transform: translateX(-50%) translateY(0);
     }
-    .notification.info { background-color: var(--info-color); }
+    .notification.info { background-color: var(--primary-accent); }
     .notification.success { background-color: var(--success-color); }
-    .notification.warning { background-color: var(--warning-color); color: #333; }
+    .notification.warning { background-color: var(--warning-color); color: var(--text-primary); }
     .notification.error { background-color: var(--danger-color); }
+
+    /* Confirmation Modal Styles */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.6);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10002; /* Highest z-index */
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+    }
+    .modal-overlay.show {
+        opacity: 1;
+        visibility: visible;
+        transition: opacity 0.3s ease, visibility 0s linear 0s;
+    }
+    .modal-content {
+        background-color: var(--white-bg);
+        padding: var(--spacing-xl);
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow-lg);
+        width: 90%;
+        max-width: 450px;
+        text-align: center;
+        transform: scale(0.95);
+        transition: transform 0.3s ease;
+    }
+    .modal-overlay.show .modal-content {
+        transform: scale(1);
+    }
+    .modal-content h3 {
+        margin-top: 0;
+        margin-bottom: var(--spacing-md);
+        color: var(--text-primary);
+    }
+    .modal-content p {
+        margin-bottom: var(--spacing-lg);
+        color: var(--text-secondary);
+    }
+    .modal-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: var(--spacing-md);
+    }
 
 
     /* ============================================
@@ -463,6 +556,7 @@
       body {
         padding: 0;
         background-color: var(--white-bg);
+        color: #000; /* Ensure basic black text for print */
       }
       .container {
         box-shadow: none;
@@ -470,7 +564,10 @@
         max-width: 100%;
         padding: var(--spacing-md);
       }
-      .header, .form-section, .action-buttons, .footer, .install-btn, .tabs button:not(#monthlyTab):not(#annualTab) {
+      /* Hide non-essential elements for print */
+      .header, .form-section, .action-buttons button:not(#printBtn), .footer, .install-btn, 
+      .tabs button:not(#monthlyTab):not(#annualTab), .loading-overlay, .notification, .modal-overlay,
+      .input-mode-toggle, .conversion-display {
         display: none !important;
       }
       .results {
@@ -488,14 +585,21 @@
       }
       .result-card {
         break-inside: avoid;
-        border: 1px solid #000;
+        border: 1px solid #ccc; /* Lighter border for print */
         margin-bottom: 1rem;
         box-shadow: none;
         padding: var(--spacing-md);
       }
       .chart-container {
         page-break-inside: avoid;
-        border: 1px solid #000;
+        border: 1px solid #ccc;
+      }
+      /* Ensure text colors are suitable for print */
+      .result-value, .result-label, h1, h2, h3, p, span, div {
+          color: #000 !important; /* Override other colors for print */
+      }
+      .result-value.text-success, .result-value.text-info {
+          font-weight: bold; /* Maintain emphasis without color */
       }
     }
 
@@ -513,7 +617,6 @@
       box-shadow: var(--shadow-sm);
       overflow: hidden; 
     }
-
     .chart-canvas {
       width: 100%;
       height: 100%;
@@ -521,20 +624,17 @@
 
     /* Ceiling Note Style */
     .ceiling-note {
-        background-color: #eef2ff; 
-        border: 1px solid #c7d2fe; 
-        color: #4338ca; 
+        background-color: #e6fffa; /* Light teal */
+        border: 1px solid #b2f5ea; 
+        color: #234e52; 
         padding: var(--spacing-md);
         margin-top: var(--spacing-lg);
         border-radius: var(--border-radius);
         font-size: var(--font-size-sm);
     }
-    .ceiling-note p {
-        margin: var(--spacing-xs) 0;
-    }
-    .ceiling-note strong {
-        font-weight: 600;
-    }
+    .ceiling-note p { margin: var(--spacing-xs) 0; }
+    .ceiling-note strong { font-weight: 600; }
+
     /* CIM Note Style */
     .cim-note {
         background-color: var(--warning-bg-light); 
@@ -548,56 +648,35 @@
     .cim-note p { margin: var(--spacing-xs) 0; }
     .cim-note strong { font-weight: 600; }
 
-
     /* ============================================
        UTILITY CLASSES
        ============================================ */
     .text-center { text-align: center; }
     .text-right { text-align: right; }
     .text-left { text-align: left; }
-    .mt-0 { margin-top: 0; }
-    .mt-1 { margin-top: var(--spacing-xs); }
-    .mt-2 { margin-top: var(--spacing-sm); }
-    .mt-3 { margin-top: var(--spacing-md); }
-    .mt-4 { margin-top: var(--spacing-lg); }
-    .mt-5 { margin-top: var(--spacing-xl); }
-    .mb-0 { margin-bottom: 0; }
-    .mb-1 { margin-bottom: var(--spacing-xs); }
-    .mb-2 { margin-bottom: var(--spacing-sm); }
-    .mb-3 { margin-bottom: var(--spacing-md); }
-    .mb-4 { margin-bottom: var(--spacing-lg); }
-    .mb-5 { margin-bottom: var(--spacing-xl); }
-    .p-0 { padding: 0; }
-    .p-1 { padding: var(--spacing-xs); }
-    .p-2 { padding: var(--spacing-sm); }
-    .p-3 { padding: var(--spacing-md); }
-    .p-4 { padding: var(--spacing-lg); }
-    .p-5 { padding: var(--spacing-xl); }
+    .mt-0 { margin-top: 0; } .mt-1 { margin-top: var(--spacing-xs); } .mt-2 { margin-top: var(--spacing-sm); }
+    .mt-3 { margin-top: var(--spacing-md); } .mt-4 { margin-top: var(--spacing-lg); } .mt-5 { margin-top: var(--spacing-xl); }
+    .mb-0 { margin-bottom: 0; } .mb-1 { margin-bottom: var(--spacing-xs); } .mb-2 { margin-bottom: var(--spacing-sm); }
+    .mb-3 { margin-bottom: var(--spacing-md); } .mb-4 { margin-bottom: var(--spacing-lg); } .mb-5 { margin-bottom: var(--spacing-xl); }
+    .p-0 { padding: 0; } .p-1 { padding: var(--spacing-xs); } .p-2 { padding: var(--spacing-sm); }
+    .p-3 { padding: var(--spacing-md); } .p-4 { padding: var(--spacing-lg); } .p-5 { padding: var(--spacing-xl); }
     .d-none { display: none !important; } 
-    .d-block { display: block; }
-    .d-flex { display: flex; }
-    .d-grid { display: grid; }
+    .d-block { display: block; } .d-flex { display: flex; } .d-grid { display: grid; }
     .justify-content-between { justify-content: space-between; }
-    .w-100 { width: 100%; }
-    .h-100 { height: 100%; }
-    .text-success { color: var(--success-color); }
-    .text-warning { color: var(--warning-color); }
-    .text-danger { color: var(--danger-color); }
-    .text-info { color: var(--info-color); }
-    .text-muted { color: var(--text-muted); }
-    .bg-light { background-color: var(--light-bg); }
-    .bg-white { background-color: var(--white-bg); }
-    .border { border: 1px solid var(--border-color); }
-    .border-0 { border: none; }
+    .w-100 { width: 100%; } .h-100 { height: 100%; }
+    .text-success { color: var(--success-color) !important; } /* Use !important carefully if needed for overrides */
+    .text-warning { color: var(--warning-color) !important; }
+    .text-danger { color: var(--danger-color) !important; }
+    .text-info { color: #3182ce !important; }
+    .text-muted { color: var(--text-muted) !important; }
+    .bg-light { background-color: var(--light-bg); } .bg-white { background-color: var(--white-bg); }
+    .border { border: 1px solid var(--border-color); } .border-0 { border: none; }
     .rounded { border-radius: var(--border-radius); }
-    .shadow-sm { box-shadow: var(--shadow-sm); }
-    .shadow { box-shadow: var(--shadow-md); }
-    .shadow-lg { box-shadow: var(--shadow-lg); }
+    .shadow-sm { box-shadow: var(--shadow-sm); } .shadow { box-shadow: var(--shadow-md); } .shadow-lg { box-shadow: var(--shadow-lg); }
 
     /* ============================================
        COMPONENT SPECIFIC STYLES
        ============================================ */
-
     .install-btn {
       position: fixed;
       bottom: 20px;
@@ -612,11 +691,10 @@
       box-shadow: var(--shadow-lg);
       animation: pulse 2s infinite;
     }
-
     @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-      100% { transform: scale(1); }
+      0% { transform: scale(1); box-shadow: var(--shadow-lg); }
+      50% { transform: scale(1.05); box-shadow: 0 15px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1); }
+      100% { transform: scale(1); box-shadow: var(--shadow-lg); }
     }
 
     .footer {
@@ -629,7 +707,7 @@
       max-width: 900px; 
       margin: var(--spacing-xl) auto 0 auto;
     }
-    .footer a { color: var(--info-color); text-decoration: none; }
+    .footer a { color: var(--primary-accent); text-decoration: none; }
     .footer a:hover { text-decoration: underline; }
 
     .action-buttons {
@@ -641,30 +719,13 @@
     }
     .action-buttons .btn { min-width: 150px; }
 
-    .form-control.is-valid, .form-select.is-valid {
-      border-color: var(--success-color);
-      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%2310b981' d='M2.3 6.73L.63 5.05l.68-.68L2.3 5.38l3.72-3.72.68.68L2.3 6.73z'/%3e%3c/svg%3e");
-      background-repeat: no-repeat;
-      background-position: right calc(0.375em + 0.1875rem) center;
-      background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
-      padding-right: calc(1.5em + 0.75rem);
-    }
-    .form-control.is-invalid, .form-select.is-invalid {
-      border-color: var(--danger-color);
-      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23ef4444'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23ef4444' stroke='none'/%3e%3c/svg%3e");
-      background-repeat: no-repeat;
-      background-position: right calc(0.375em + 0.1875rem) center;
-      background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
-      padding-right: calc(1.5em + 0.75rem);
-    }
-
     .tooltip {
       position: relative; display: inline-block; cursor: help;
     }
     .tooltip .tooltiptext {
-      visibility: hidden; width: 220px; background-color: var(--dark-bg);
+      visibility: hidden; width: 220px; background-color: var(--text-primary); /* Darker for contrast */
       color: var(--white-bg); text-align: left; border-radius: var(--border-radius);
-      padding: var(--spacing-sm) var(--spacing-md); position: absolute; z-index: 1;
+      padding: var(--spacing-sm) var(--spacing-md); position: absolute; z-index: 10;
       bottom: 125%; left: 50%; margin-left: -110px; opacity: 0;
       transition: opacity 0.3s; font-size: var(--font-size-sm); box-shadow: var(--shadow-md);
     }
@@ -684,14 +745,18 @@
       font-weight: 700; line-height: 1; text-align: center; white-space: nowrap;
       vertical-align: baseline; border-radius: var(--border-radius);
     }
-    .badge-primary { background-color: var(--info-color); color: var(--white-bg); }
+    .badge-primary { background-color: var(--primary-accent); color: var(--white-bg); }
     .badge-success { background-color: var(--success-color); color: var(--white-bg); }
-    .badge-warning { background-color: var(--warning-color); color: var(--dark-bg); }
+    .badge-warning { background-color: var(--warning-color); color: var(--text-primary); }
     .badge-danger { background-color: var(--danger-color); color: var(--white-bg); }
 
-    .form-control:focus-visible, .form-select:focus-visible, .btn:focus-visible, .tab:focus-visible {
-      outline: 3px solid var(--info-color); outline-offset: 2px;
-      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+    /* Focus visible styles for accessibility */
+    .form-control:focus-visible, .form-select:focus-visible, 
+    .btn:focus-visible, .tab:focus-visible,
+    .input-mode-toggle .btn:focus-visible {
+      outline: 3px solid var(--primary-accent); 
+      outline-offset: 2px;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.35);
     }
 
     .results-table {
@@ -707,6 +772,7 @@
     .form-row .form-group { flex: 1; min-width: 250px; margin-bottom: 0; }
     .form-row .form-group:only-child { flex-basis: 100%; }
     
+    /* Responsive Adjustments */
     @media (max-width: 768px) {
       .container { padding: var(--spacing-md); }
       .header h1 { font-size: 1.5rem; }
@@ -714,12 +780,13 @@
       .results-grid { grid-template-columns: 1fr; }
       .tabs { flex-direction: column; }
       .tab { border-bottom: 1px solid var(--border-color); margin-bottom: var(--spacing-xs); }
-      .tab.active { border-bottom-color: var(--info-color); }
+      .tab.active { border-bottom-color: var(--primary-accent); }
       .action-buttons .btn { width: 100%; margin-bottom: var(--spacing-sm); }
       .action-buttons .btn:last-child { margin-bottom: 0; }
-      .chart-container { height: auto; min-height: 320px; }
+      .chart-container { height: auto; min-height: 300px; /* Adjusted min-height */ }
       .form-row { flex-direction: column; gap: var(--spacing-lg); }
       .form-row .form-group { margin-bottom: var(--spacing-lg); min-width: 100%; }
+      .modal-content { width: 95%; }
     }
 
     @media (max-width: 480px) {
@@ -727,9 +794,11 @@
       .container { padding: var(--spacing-sm); }
       .header h1 { font-size: 1.3rem; }
       .form-control, .form-select, .btn { font-size: 0.9rem; padding: var(--spacing-sm); }
-      .chart-container { min-height: 380px; }
+      .chart-container { min-height: 280px; /* Further adjusted */ }
+      .results h3 { font-size: 1.2rem; }
+      .form-section h2 { font-size: 1.2rem; }
+      .action-buttons { flex-direction: column; }
     }
-
   </style>
 </head>
 <body>
@@ -749,20 +818,20 @@
     <!-- Main Content -->
     <main>
       <!-- Calculator Section -->
-      <section class="form-section">
-        <h2>
+      <section class="form-section" aria-labelledby="calculator-heading">
+        <h2 id="calculator-heading">
           <i class="fas fa-euro-sign" aria-hidden="true"></i>
           Salary Calculator
         </h2>
 
         <!-- General Error Message Area -->
-        <div class="error-message" id="generalErrorMessage" role="alert"></div>
+        <div class="error-message" id="generalErrorMessage" role="alert" aria-live="assertive"></div>
 
         <!-- Main Form -->
         <form id="payrollForm" novalidate>
           <!-- Input Mode Toggle -->
-          <div class="form-group" role="radiogroup" aria-label="Input Mode">
-            <label class="form-label">Input Mode</label>
+          <div class="form-group" role="radiogroup" aria-labelledby="input-mode-label">
+            <label class="form-label" id="input-mode-label">Input Mode</label>
             <div class="btn-group input-mode-toggle">
               <button
                 type="button"
@@ -772,7 +841,7 @@
                 aria-checked="true"
                 aria-label="Calculate based on Gross Salary"
               >
-                <i class="fas fa-euro-sign"></i>
+                <i class="fas fa-euro-sign" aria-hidden="true"></i>
                 Gross Salary
               </button>
               <button
@@ -783,7 +852,7 @@
                 aria-checked="false"
                 aria-label="Calculate based on Total Employer Cost"
               >
-                <i class="fas fa-building"></i>
+                <i class="fas fa-building" aria-hidden="true"></i>
                 Total Employer Cost
               </button>
             </div>
@@ -791,9 +860,7 @@
 
           <!-- Salary Input -->
           <div class="form-group">
-            <label for="salaryInput" id="salaryLabel"
-              >Monthly Gross Salary (€)</label
-            >
+            <label for="salaryInput" id="salaryLabel">Monthly Gross Salary (€)</label>
             <input
               type="number"
               class="form-control"
@@ -803,8 +870,9 @@
               step="0.01"
               required 
               aria-describedby="salaryInputFeedback"
+              aria-invalid="false"
             />
-            <div id="salaryInputFeedback" class="invalid-feedback">Please enter a valid salary.</div>
+            <div id="salaryInputFeedback" class="invalid-feedback" aria-live="polite"></div>
           </div>
 
           <!-- Conversion Display -->
@@ -816,20 +884,20 @@
           <!-- Tax Class -->
           <div class="form-group">
             <label for="taxClass">Tax Class</label>
-            <select class="form-select" id="taxClass" required aria-describedby="taxClassFeedback">
+            <select class="form-select" id="taxClass" required aria-describedby="taxClassFeedback" aria-invalid="false">
               <option value="">Select Tax Class</option>
               <option value="1">Class 1 - Single Person</option>
               <option value="1a">Class 1a - Single with Children/65+</option>
               <option value="2">Class 2 - Married/Civil Partnership</option>
             </select>
-            <div id="taxClassFeedback" class="invalid-feedback">Please select a tax class.</div>
-            <div id="taxClassWarning" class="tax-class-warning d-none mt-2"></div> <!-- New warning div -->
+            <div id="taxClassFeedback" class="invalid-feedback" aria-live="polite"></div>
+            <div id="taxClassWarning" class="tax-class-warning d-none mt-2" aria-live="polite"></div>
           </div>
 
           <!-- Mutuality Class -->
           <div class="form-group">
             <label for="mutualityClass">Mutuality Class</label>
-            <select class="form-select" id="mutualityClass" required aria-describedby="mutualityClassFeedback">
+            <select class="form-select" id="mutualityClass" required aria-describedby="mutualityClassFeedback" aria-invalid="false">
               <option value="">Select Mutuality Class</option>
               <option value="0.85">Class A - 0.85 (Excellent record)</option>
               <option value="1.0" selected>Class B - 1.0 (Standard)</option>
@@ -837,14 +905,14 @@
               <option value="1.3">Class D - 1.3 (High absenteeism)</option>
               <option value="1.5">Class E - 1.5 (Very high absenteeism)</option>
             </select>
-            <div id="mutualityClassFeedback" class="invalid-feedback">Please select a mutuality class.</div>
+            <div id="mutualityClassFeedback" class="invalid-feedback" aria-live="polite"></div>
           </div>
 
           <!-- Additional Options -->
           <fieldset class="form-group">
             <legend>Additional Deductions & Benefits</legend>
 
-            <div class="form-row"> <!-- New wrapper for side-by-side layout -->
+            <div class="form-row">
               <div class="form-group">
                 <label for="numChildren">Number of Children</label>
                 <input
@@ -855,12 +923,13 @@
                   min="0"
                   max="20" 
                   step="1"
-                  aria-describedby="numChildrenFeedback"
+                  aria-describedby="numChildrenFeedback numChildrenHelp"
+                  aria-invalid="false"
                 />
-                <div id="numChildrenFeedback" class="invalid-feedback">Please enter a valid number of children (0-20).</div>
-                <small class="form-text"
+                <div id="numChildrenFeedback" class="invalid-feedback" aria-live="polite"></div>
+                <small class="form-text" id="numChildrenHelp"
                   >€299.86/month allowance (Allocation Familiale) + €922.56/year
-                  tax credit (Crédit d'Impôt) per child</small
+                  tax credit (Crédit d'Impôt) per child.</small
                 >
               </div>
 
@@ -873,20 +942,18 @@
                   placeholder="0"
                   min="0"
                   step="1"
-                  aria-describedby="childcareExpensesFeedback"
+                  aria-describedby="childcareExpensesFeedback childcareExpensesHelp"
+                  aria-invalid="false"
                 />
-                <div id="childcareExpensesFeedback" class="invalid-feedback">Please enter valid childcare expenses.</div>
-                <small class="form-text"
-                  >Maximum €11,400/year per child for daycare, after-school care
-                  (Frais de Garde)</small
+                <div id="childcareExpensesFeedback" class="invalid-feedback" aria-live="polite"></div>
+                <small class="form-text" id="childcareExpensesHelp"
+                  >Max €11,400/year per child for daycare, after-school care (Frais de Garde).</small
                 >
               </div>
-            </div> <!-- End of form-row -->
+            </div> 
 
             <div class="form-group">
-              <label for="professionalExpenses"
-                >Professional Expenses (Annual €)</label
-              >
+              <label for="professionalExpenses">Professional Expenses (Annual €)</label>
               <input
                 type="number"
                 class="form-control"
@@ -894,14 +961,13 @@
                 placeholder="540"
                 min="0"
                 step="1"
+                aria-describedby="professionalExpensesHelp"
               />
-              <small class="form-text">Minimum €540/year automatically applied</small>
+              <small class="form-text" id="professionalExpensesHelp">Minimum €540/year automatically applied.</small>
             </div>
 
             <div class="form-group">
-              <label for="transportDeduction"
-                >Transport Deduction (Annual €)</label
-              >
+              <label for="transportDeduction">Transport Deduction (Annual €)</label>
               <input
                 type="number"
                 class="form-control"
@@ -910,14 +976,13 @@
                 min="0"
                 max="4620"
                 step="1"
+                aria-describedby="transportDeductionHelp"
               />
-              <small class="form-text">Maximum €4,620/year for commuting costs</small>
+              <small class="form-text" id="transportDeductionHelp">Maximum €4,620/year for commuting costs.</small>
             </div>
 
             <div class="form-group">
-              <label for="pensionContributions"
-                >Private Pension Contributions (Annual €)</label
-              >
+              <label for="pensionContributions">Private Pension Contributions (Annual €)</label>
               <input
                 type="number"
                 class="form-control"
@@ -926,10 +991,9 @@
                 min="0"
                 max="3200"
                 step="1"
+                aria-describedby="pensionContributionsHelp"
               />
-              <small class="form-text"
-                >Maximum €3,200/year for private pension plans and life insurance</small
-              >
+              <small class="form-text" id="pensionContributionsHelp">Maximum €3,200/year for private pension plans and life insurance.</small>
             </div>
 
             <div class="form-group">
@@ -941,10 +1005,9 @@
                 placeholder="0"
                 min="0"
                 step="1"
+                aria-describedby="mortgageInterestHelp"
               />
-              <small class="form-text"
-                >Interest on home loans and energy-efficient renovations</small
-              >
+              <small class="form-text" id="mortgageInterestHelp">Interest on home loans and energy-efficient renovations.</small>
             </div>
 
             <div class="form-group">
@@ -957,10 +1020,9 @@
                 min="0"
                 max="672"
                 step="1"
+                aria-describedby="insurancePremiumsHelp"
               />
-              <small class="form-text"
-                >Maximum €672/year for personal insurance premiums</small
-              >
+              <small class="form-text" id="insurancePremiumsHelp">Maximum €672/year for personal insurance premiums.</small>
             </div>
 
             <div class="form-group">
@@ -972,16 +1034,13 @@
                 placeholder="0"
                 min="0"
                 step="1"
+                aria-describedby="medicalExpensesHelp"
               />
-              <small class="form-text"
-                >Healthcare costs exceeding 2.5% of income (Frais Médicaux)</small
-              >
+              <small class="form-text" id="medicalExpensesHelp">Healthcare costs exceeding 2.5% of income (Frais Médicaux).</small>
             </div>
 
             <div class="form-group">
-              <label for="charitableDonations"
-                >Charitable Donations (Annual €)</label
-              >
+              <label for="charitableDonations">Charitable Donations (Annual €)</label>
               <input
                 type="number"
                 class="form-control"
@@ -989,27 +1048,20 @@
                 placeholder="0"
                 min="0"
                 step="1"
+                aria-describedby="charitableDonationsHelp"
               />
-              <small class="form-text">Minimum €120/year, maximum 20% of income</small>
+              <small class="form-text" id="charitableDonationsHelp">Minimum €120/year, maximum 20% of income.</small>
             </div>
           </fieldset>
 
           <!-- Action Buttons -->
           <div class="action-buttons">
-            <button
-              type="submit"
-              class="btn btn-primary"
-              id="calculateBtn"
-            >
-              <i class="fas fa-calculator"></i>
+            <button type="submit" class="btn btn-primary" id="calculateBtn">
+              <i class="fas fa-calculator" aria-hidden="true"></i>
               Calculate Payroll
             </button>
-            <button
-              type="button"
-              class="btn btn-secondary"
-              id="clearBtn"
-            >
-              <i class="fas fa-undo"></i>
+            <button type="button" class="btn btn-secondary" id="clearBtn">
+              <i class="fas fa-undo" aria-hidden="true"></i>
               Clear Form
             </button>
           </div>
@@ -1017,8 +1069,9 @@
       </section>
 
       <!-- Results Section -->
-      <section class="results d-none" id="resultsSection"> 
-        <div class="tabs" role="tablist">
+      <section class="results d-none" id="resultsSection" aria-labelledby="results-heading"> 
+        <h2 id="results-heading" class="d-none">Calculation Results</h2> <!-- Hidden heading for screen readers -->
+        <div class="tabs" role="tablist" aria-label="Results view">
           <button
             class="tab active"
             id="monthlyTab"
@@ -1026,7 +1079,7 @@
             aria-selected="true"
             aria-controls="monthlyContent"
           >
-            <i class="fas fa-calendar-alt"></i> 
+            <i class="fas fa-calendar-alt" aria-hidden="true"></i> 
             Monthly
           </button>
           <button
@@ -1036,7 +1089,7 @@
             aria-selected="false"
             aria-controls="annualContent"
           >
-            <i class="fas fa-calendar-check"></i> 
+            <i class="fas fa-calendar-check" aria-hidden="true"></i> 
             Annual
           </button>
         </div>
@@ -1047,148 +1100,85 @@
           id="monthlyContent"
           role="tabpanel"
           aria-labelledby="monthlyTab"
-          aria-hidden="false"
         >
           <div class="results-grid"> 
             <!-- Monthly Summary -->
             <div class="result-card"> 
               <h3>
-                <i class="fas fa-file-invoice-dollar"></i> 
+                <i class="fas fa-file-invoice-dollar" aria-hidden="true"></i> 
                 Monthly Summary
-                <small
-                  class="text-muted"
-                  style="
-                    font-size: 0.7em;
-                    font-weight: normal;
-                    display: block;
-                    margin-top: 0.25rem;
-                  "
-                  >(Résumé Mensuel)</small
-                >
+                <small class="text-muted d-block mt-1" style="font-size: 0.7em; font-weight: normal;">(Résumé Mensuel)</small>
               </h3>
               <div class="result-item">
                 <span class="result-label">Gross Salary</span>
-                <span class="result-value" id="monthlyGrossSalary"
-                  >€0.00</span
-                >
+                <span class="result-value" id="monthlyGrossSalary">€0.00</span>
               </div>
               <div class="result-item">
                 <span class="result-label">Net Salary</span>
-                <span
-                  class="result-value text-success"
-                  id="monthlyNetSalary"
-                  >€0.00</span
-                >
+                <span class="result-value text-success" id="monthlyNetSalary">€0.00</span>
               </div>
               <div class="result-item">
                 <span class="result-label">Total Employer Cost</span>
-                <span
-                  class="result-value text-info"
-                  id="monthlyTotalCost"
-                  >€0.00</span
-                >
+                <span class="result-value text-info" id="monthlyTotalCost">€0.00</span>
               </div>
             </div>
 
             <!-- Employer Social Security Contributions -->
             <div class="result-card">
               <h3>
-                <i class="fas fa-landmark"></i> 
+                <i class="fas fa-landmark" aria-hidden="true"></i> 
                 Employer Social Security
-                <small
-                  class="text-muted"
-                  style="
-                    font-size: 0.7em;
-                    font-weight: normal;
-                    display: block;
-                    margin-top: 0.25rem;
-                  "
-                  >(Cotisations Sociales Employeur)</small
-                >
+                <small class="text-muted d-block mt-1" style="font-size: 0.7em; font-weight: normal;">(Cotisations Sociales Employeur)</small>
               </h3>
               <div class="result-item">
                 <span class="result-label">Health Insurance</span>
-                <span class="result-value" id="employerHealth"
-                  >€0.00</span
-                >
+                <span class="result-value" id="employerHealth">€0.00</span>
               </div>
               <div class="result-item">
                 <span class="result-label">Pension Insurance</span>
-                <span class="result-value" id="employerPension"
-                  >€0.00</span
-                >
+                <span class="result-value" id="employerPension">€0.00</span>
               </div>
               <div class="result-item">
                 <span class="result-label">Accident Insurance</span>
-                <span class="result-value" id="employerAccident"
-                  >€0.00</span
-                >
+                <span class="result-value" id="employerAccident">€0.00</span>
               </div>
               <div class="result-item">
                 <span class="result-label">Employers' Mutuality</span>
-                <span class="result-value" id="employerMutuality"
-                  >€0.00</span
-                >
+                <span class="result-value" id="employerMutuality">€0.00</span>
               </div>
               <div class="result-item">
                 <span class="result-label">Occupational Health</span>
-                <span class="result-value" id="employerOccupational"
-                  >€0.00</span
-                >
+                <span class="result-value" id="employerOccupational">€0.00</span>
               </div>
             </div>
 
             <!-- Employee Social Security Contributions -->
             <div class="result-card">
               <h3>
-                <i class="fas fa-user-shield"></i> 
+                <i class="fas fa-user-shield" aria-hidden="true"></i> 
                 Employee Social Security
-                <small
-                  class="text-muted"
-                  style="
-                    font-size: 0.7em;
-                    font-weight: normal;
-                    display: block;
-                    margin-top: 0.25rem;
-                  "
-                  >(Cotisations Sociales Employé)</small
-                >
+                <small class="text-muted d-block mt-1" style="font-size: 0.7em; font-weight: normal;">(Cotisations Sociales Employé)</small>
               </h3>
               <div class="result-item">
                 <span class="result-label">Health Insurance</span>
-                <span class="result-value" id="employeeHealth"
-                  >€0.00</span
-                >
+                <span class="result-value" id="employeeHealth">€0.00</span>
               </div>
               <div class="result-item">
                 <span class="result-label">Pension Insurance</span>
-                <span class="result-value" id="employeePension"
-                  >€0.00</span
-                >
+                <span class="result-value" id="employeePension">€0.00</span>
               </div>
               <div class="result-item">
                 <span class="result-label">Dependency Insurance</span>
-                <span class="result-value" id="employeeDependency"
-                  >€0.00</span
-                >
+                <span class="result-value" id="employeeDependency">€0.00</span>
               </div>
             </div>
 
             <!-- Taxes & Surcharges -->
             <div class="result-card">
               <h3>
-                <i class="fas fa-percentage"></i> 
+                <i class="fas fa-percentage" aria-hidden="true"></i> 
                 Taxes & Surcharges
-                <small
-                  class="text-muted"
-                  style="
-                    font-size: 0.7em;
-                    font-weight: normal;
-                    display: block;
-                    margin-top: 0.25rem;
-                  "
-                  >(Impôts et Taxes)</small
-                >
+                <small class="text-muted d-block mt-1" style="font-size: 0.7em; font-weight: normal;">(Impôts et Taxes)</small>
               </h3>
               <div class="result-item">
                 <span class="result-label">Income Tax (before credits)</span>
@@ -1203,11 +1193,9 @@
             <!-- Monthly Deductions & Benefits Card -->
             <div class="result-card">
               <h3>
-                <i class="fas fa-gifts"></i> 
+                <i class="fas fa-gifts" aria-hidden="true"></i> 
                 Monthly Deductions & Benefits
-                <small class="text-muted" style="font-size: 0.7em; font-weight: normal; display: block; margin-top: 0.25rem;">
-                    (Déductions et Avantages Mensuels)
-                </small>
+                <small class="text-muted d-block mt-1" style="font-size: 0.7em; font-weight: normal;">(Déductions et Avantages Mensuels)</small>
               </h3>
               <div class="result-item">
                 <span class="result-label">Total Monthly Deductions Applied</span>
@@ -1226,11 +1214,9 @@
             <!-- Monthly Tax Credits Card -->
             <div class="result-card">
               <h3>
-                <i class="fas fa-hand-holding-usd"></i> 
+                <i class="fas fa-hand-holding-usd" aria-hidden="true"></i> 
                 Tax Credits (Monthly Estimate)
-                <small class="text-muted" style="font-size: 0.7em; font-weight: normal; display: block; margin-top: 0.25rem;">
-                    (Crédits d'Impôt Mensuels)
-                </small>
+                <small class="text-muted d-block mt-1" style="font-size: 0.7em; font-weight: normal;">(Crédits d'Impôt Mensuels)</small>
               </h3>
               <div class="result-item">
                 <span class="result-label">Employee Tax Credit (CIS)</span>
@@ -1244,27 +1230,31 @@
                 <span class="result-label">Min. Social Wage Tax Credit (CISSM)</span>
                 <span class="result-value text-success" id="monthlyCISSM">€0.00</span>
               </div>
-              <div id="cimNoteMonthly" class="cim-note d-none"></div>
+              <div id="cimNoteMonthly" class="cim-note d-none" aria-live="polite"></div>
             </div>
           </div>
 
           <!-- Ceiling Calculation Note -->
-          <div id="ceilingNote" class="ceiling-note d-none"></div>
+          <div id="ceilingNote" class="ceiling-note d-none" aria-live="polite"></div>
 
           <!-- Chart Container -->
           <div class="chart-container mt-4">
-            <canvas id="salaryChart" class="chart-canvas" aria-label="Salary breakdown pie chart"></canvas>
+            <canvas id="salaryChart" class="chart-canvas" role="img" aria-label="Salary breakdown pie chart"></canvas>
           </div>
 
           <!-- Export Actions -->
           <div class="action-buttons">
-            <button class="btn btn-success" id="exportBtn" aria-label="Export results as JSON">
-              <i class="fas fa-download"></i>
+            <button type="button" class="btn btn-success" id="exportBtn" aria-label="Export results as JSON">
+              <i class="fas fa-download" aria-hidden="true"></i>
               Export Results
             </button>
-            <button class="btn btn-info" id="shareBtn" aria-label="Share calculation results">
-              <i class="fas fa-share-alt"></i> 
+            <button type="button" class="btn btn-info" id="shareBtn" aria-label="Share calculation results">
+              <i class="fas fa-share-alt" aria-hidden="true"></i> 
               Share Results
+            </button>
+            <button type="button" class="btn btn-secondary" id="printBtn" aria-label="Print results">
+                <i class="fas fa-print" aria-hidden="true"></i>
+                Print Results
             </button>
           </div>
         </div>
@@ -1275,23 +1265,13 @@
           id="annualContent"
           role="tabpanel"
           aria-labelledby="annualTab"
-          aria-hidden="true"
         >
           <div class="results-grid">
             <div class="result-card">
               <h3>
-                <i class="fas fa-calendar-check"></i> 
+                <i class="fas fa-calendar-check" aria-hidden="true"></i> 
                 Annual Summary
-                <small
-                  class="text-muted"
-                  style="
-                    font-size: 0.7em;
-                    font-weight: normal;
-                    display: block;
-                    margin-top: 0.25rem;
-                  "
-                  >(Résumé Annuel)</small
-                >
+                <small class="text-muted d-block mt-1" style="font-size: 0.7em; font-weight: normal;">(Résumé Annuel)</small>
               </h3>
               <div class="result-item">
                 <span class="result-label">Annual Gross Salary</span>
@@ -1317,12 +1297,12 @@
                 <span class="result-label">Annual Employer Cost</span>
                 <span class="result-value text-info" id="annualTotalCost">€0.00</span>
               </div>
-              <hr style="margin: var(--spacing-sm) 0;">
+              <hr style="margin: var(--spacing-sm) 0; border-color: var(--border-color);">
               <div class="result-item">
                 <span class="result-label">Total Annual Deductions Applied</span>
                 <span class="result-value" id="annualTotalDeductionsApplied">€0.00</span>
               </div>
-              <hr style="margin: var(--spacing-sm) 0;">
+              <hr style="margin: var(--spacing-sm) 0; border-color: var(--border-color);">
               <div class="result-item">
                 <span class="result-label">Child Allowance (Annually)</span>
                 <span class="result-value text-success" id="annualChildAllowance">€0.00</span>
@@ -1343,7 +1323,7 @@
                 <span class="result-label">Min. Social Wage Tax Credit (CISSM - Annual)</span>
                 <span class="result-value text-success" id="annualCISSM">€0.00</span>
               </div>
-              <div id="cimNoteAnnual" class="cim-note d-none"></div>
+              <div id="cimNoteAnnual" class="cim-note d-none" aria-live="polite"></div>
             </div>
           </div>
         </div>
@@ -1358,41 +1338,53 @@
         professional.
       </p>
       <p>
-        <i class="fas fa-heart text-danger"></i>
-        Made for Luxembourg's workforce | Version 3.4.2 (Childcare/Children Validation)
+        <i class="fas fa-heart text-danger" aria-hidden="true"></i>
+        Made for Luxembourg's workforce | Version 3.4.3 (UI & Code Cleanup)
       </p>
     </footer>
   </div>
 
   <!-- Loading Overlay -->
-  <div class="loading-overlay" id="loadingOverlay" style="display: none;">
-    <div class="loading-spinner"></div>
+  <div class="loading-overlay" id="loadingOverlay" aria-hidden="true">
+    <div class="loading-spinner" role="status" aria-label="Loading..."></div>
   </div>
 
+  <!-- Confirmation Modal -->
+  <div class="modal-overlay" id="confirmationModal" aria-hidden="true" role="dialog" aria-labelledby="modalTitle" aria-modal="true">
+    <div class="modal-content">
+        <h3 id="modalTitle">Confirm Action</h3>
+        <p id="modalMessage">Are you sure you want to proceed?</p>
+        <div class="modal-actions">
+            <button type="button" class="btn btn-secondary" id="modalCancelBtn">Cancel</button>
+            <button type="button" class="btn btn-danger" id="modalConfirmBtn">Confirm</button>
+        </div>
+    </div>
+  </div>
+
+
   <!-- PWA Install Button -->
-  <button class="install-btn" id="installBtn" style="display: none;">
-    <i class="fas fa-download"></i>
+  <button class="install-btn" id="installBtn" style="display: none;" aria-label="Install Application">
+    <i class="fas fa-download" aria-hidden="true"></i>
     Install App
   </button>
 
-  <!-- Inline JavaScript (from script.js) -->
+  <!-- Inline JavaScript -->
   <script>
     /**
-     * Luxembourg Payroll Calculator 2025 - Full 2025 Updates
-     * Version: 3.4.2 (Childcare/Children Validation)
-     * Includes:
-     * - Added blocking validation: If Childcare Expenses > 0, Number of Children must be > 0.
-     * - Updated Tax Class 1 / Children / Childcare Expenses cross-validation warning.
-     * - Centralized form input validation logic.
-     * - Per-field error messages and styling.
+     * Luxembourg Payroll Calculator 2025
+     * Version: 3.4.3 (UI & Code Cleanup)
+     * Description: Calculates Luxembourg payroll including taxes, social security, and benefits.
+     * This version includes UI enhancements, code cleanup, and a custom confirmation modal.
      */
     'use strict';
 
     // ============================================
     // CONFIGURATION & CONSTANTS
     // ============================================
-    const SSM_MONTHLY_UNQUALIFIED = 2703.74; 
+    const SSM_MONTHLY_UNQUALIFIED = 2703.74; // Social Minimum Wage (Unqualified) - Example for 2025
 
+    // Configuration object for various rates and parameters.
+    // Object.freeze prevents modification of the CONFIG object after initialization.
     const CONFIG = Object.freeze({
       EMPLOYER_RATES: { 
         healthInsurance: 0.0305, 
@@ -1424,6 +1416,7 @@
         insurancePremiums: 672,
         medicalExpensesThreshold: 0.025 
       },
+      // Tax brackets for income tax calculation (example values).
       TAX_BRACKETS: [ 
         { limit: 13230, rate: 0.00 }, { limit: 15435, rate: 0.08 }, { limit: 17640, rate: 0.09 },
         { limit: 19845, rate: 0.10 }, { limit: 22050, rate: 0.11 }, { limit: 24255, rate: 0.12 },
@@ -1434,34 +1427,59 @@
         { limit: 54090, rate: 0.38 }, { limit: 117450, rate: 0.39 }, { limit: 176160, rate: 0.40 },
         { limit: 234870, rate: 0.41 }, { limit: Infinity, rate: 0.42 }
       ],
+      // Tax credit parameters.
       TAX_CREDITS: {
-        CIS: { 
+        CIS: { // Employee Tax Credit
           minAnnualGross: 936, maxAnnualGross: 79999.99, threshold1: 11265,
           threshold2: 40000, amountTier1: 300, amountTier2: 600,
           rate1: 0.029, rate2: 0.015
         },
-        CICO2: { 
+        CICO2: { // CO2 Tax Credit
           minAnnualGross: 936, maxAnnualGross: 79999.99, threshold: 40000,
           amountFull: 192, reductionRate: 0.0048
         },
-        CISSM: { 
+        CISSM: { // Minimum Social Wage Tax Credit
             minMonthlyGross: 1800, threshold1Monthly: 3000, threshold2Monthly: 3600,
             amountFullMonthly: 81,
         }
       }
     });
 
+    // Application state object.
     const appState = {
-      currentInputMode: 'gross',
+      currentInputMode: 'gross', // 'gross' or 'total'
       isCalculating: false,
       currentCalculationData: null,
-      salaryChartInstance: null,
-      salaryExceedsCeiling: false
+      salaryChartInstance: null, // Currently unused as chart is drawn manually
+      salaryExceedsCeiling: false,
+      confirmationCallback: null // For custom modal
+    };
+
+    // DOM Element References (cached for performance)
+    const DOMElements = {
+        payrollForm: null, salaryInput: null, salaryLabel: null, taxClass: null, mutualityClass: null,
+        numChildren: null, childcareExpenses: null, professionalExpenses: null, transportDeduction: null,
+        pensionContributions: null, mortgageInterest: null, insurancePremiums: null, medicalExpenses: null,
+        charitableDonations: null, grossBtn: null, totalBtn: null, conversionDisplay: null,
+        conversionLabel: null, conversionValue: null, calculateBtn: null, clearBtn: null, printBtn: null,
+        resultsSection: null, monthlyTab: null, annualTab: null, exportBtn: null, shareBtn: null,
+        generalErrorMessage: null, taxClassWarning: null, salaryInputFeedback: null, taxClassFeedback: null,
+        mutualityClassFeedback: null, numChildrenFeedback: null, childcareExpensesFeedback: null,
+        loadingOverlay: null, ceilingNote: null, cimNoteMonthly: null, cimNoteAnnual: null,
+        confirmationModal: null, modalTitle: null, modalMessage: null, modalConfirmBtn: null, modalCancelBtn: null,
+        installBtn: null
     };
 
     // ============================================
     // UTILITY & UI FUNCTIONS
     // ============================================
+
+    /**
+     * Sanitizes input values based on type.
+     * @param {string|number|null|undefined} value - The input value.
+     * @param {string} [type='number'] - The type of sanitization ('number', 'integer', 'select', 'string').
+     * @returns {number|string} - The sanitized value.
+     */
     function sanitizeInput(value, type = 'number') {
       if (value === null || typeof value === 'undefined') return type === 'number' ? 0 : '';
       const stringValue = String(value).trim();
@@ -1473,69 +1491,152 @@
         case 'integer':
           const integer = parseInt(stringValue.replace(/[^\d]/g, ''), 10);
           return isNaN(integer) ? 0 : integer; 
-        case 'select': return stringValue;
-        default: return stringValue.replace(/[&<>"']/g, (match) => ({'&': '&amp;','<': '&lt;','>': '&gt;','"': '&quot;',"'": '&#39;'}[match]));
+        case 'select': return stringValue; // Select values are usually safe
+        default: // Basic XSS protection for general strings
+            return stringValue.replace(/[&<>"']/g, (match) => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            }[match]));
       }
     }
 
+    /**
+     * Displays a temporary notification message.
+     * @param {string} message - The message to display.
+     * @param {string} [type='info'] - Notification type ('info', 'success', 'warning', 'error').
+     * @param {number} [duration=3000] - Duration in milliseconds.
+     */
     function showNotification(message, type = 'info', duration = 3000) {
-      const el = document.createElement('div'); el.className = `notification ${type}`; el.textContent = message;
-      document.body.appendChild(el); el.offsetHeight; el.classList.add('show');
+      const el = document.createElement('div'); 
+      el.className = `notification ${type}`; 
+      el.textContent = message;
+      el.setAttribute('role', 'alert');
+      document.body.appendChild(el); 
+      // Trigger reflow to enable transition
+      el.offsetHeight; 
+      el.classList.add('show');
+      
       setTimeout(() => {
         el.classList.remove('show');
         el.addEventListener('transitionend', () => el.parentNode?.removeChild(el), { once: true });
       }, duration);
     }
 
+    /**
+     * Shows a general error message in the designated area.
+     * @param {string} message - The error message.
+     * @param {number} [duration=6000] - Duration in milliseconds.
+     */
     function showGeneralError(message, duration = 6000) {
-      const el = document.getElementById('generalErrorMessage'); if (!el) return;
-      el.textContent = message; el.classList.add('show'); 
+      const el = DOMElements.generalErrorMessage; if (!el) return;
+      el.textContent = message; 
+      el.classList.add('show'); 
       if (el.timeoutId) clearTimeout(el.timeoutId);
       el.timeoutId = setTimeout(() => el.classList.remove('show'), duration);
     }
     
+    /** Clears the general error message. */
     function clearGeneralError() {
-        const el = document.getElementById('generalErrorMessage'); if (!el) return;
+        const el = DOMElements.generalErrorMessage; if (!el) return;
         el.classList.remove('show');
         el.textContent = '';
     }
 
+    /**
+     * Shows or hides the loading indicator.
+     * @param {boolean} [show=true] - True to show, false to hide.
+     */
     function showLoading(show = true) {
-      const btn = document.getElementById('calculateBtn');
-      const overlay = document.getElementById('loadingOverlay');
+      const btn = DOMElements.calculateBtn;
+      const overlay = DOMElements.loadingOverlay;
       if (show) {
         if (btn) { btn.classList.add('loading'); btn.disabled = true; btn.setAttribute('aria-busy', 'true'); }
-        if (overlay) { overlay.style.display = 'flex'; overlay.offsetHeight; overlay.style.opacity = '1';}
+        if (overlay) { overlay.classList.add('show'); overlay.setAttribute('aria-hidden', 'false');}
         appState.isCalculating = true;
       } else {
         if (btn) { btn.classList.remove('loading'); btn.disabled = false; btn.removeAttribute('aria-busy');}
         if (overlay) {
-          overlay.style.opacity = '0';
-          overlay.addEventListener('transitionend', () => { if (overlay.style.opacity === '0') overlay.style.display = 'none'; }, { once: true });
+          overlay.classList.remove('show');
+          overlay.setAttribute('aria-hidden', 'true');
         }
         appState.isCalculating = false;
       }
     }
-
-    function switchTab(tabIdToActivate) {
-      document.querySelectorAll('.tab-content').forEach(el => { el.classList.remove('active'); el.setAttribute('aria-hidden', 'true'); });
-      document.querySelectorAll('.tab').forEach(el => { el.classList.remove('active'); el.setAttribute('aria-selected', 'false'); });
-      const activeContent = document.getElementById(tabIdToActivate + 'Content');
-      const activeTab = document.getElementById(tabIdToActivate + 'Tab');
-      if (activeContent) { activeContent.classList.add('active'); activeContent.setAttribute('aria-hidden', 'false'); }
-      if (activeTab) { activeTab.classList.add('active'); activeTab.setAttribute('aria-selected', 'true'); }
-      if (tabIdToActivate === 'annual' && appState.currentCalculationData) loadAnnualSummary(appState.currentCalculationData);
+    
+    /**
+     * Shows a custom confirmation modal.
+     * @param {string} title - The modal title.
+     * @param {string} message - The modal message.
+     * @param {function} callback - Function to call on confirmation.
+     */
+    function showConfirmationModal(title, message, callback) {
+        if (!DOMElements.confirmationModal || !DOMElements.modalTitle || !DOMElements.modalMessage) return;
+        DOMElements.modalTitle.textContent = title;
+        DOMElements.modalMessage.textContent = message;
+        appState.confirmationCallback = callback;
+        DOMElements.confirmationModal.classList.add('show');
+        DOMElements.confirmationModal.setAttribute('aria-hidden', 'false');
+        DOMElements.modalConfirmBtn?.focus(); // Focus on confirm button
     }
 
+    /** Hides the custom confirmation modal. */
+    function hideConfirmationModal() {
+        if (!DOMElements.confirmationModal) return;
+        DOMElements.confirmationModal.classList.remove('show');
+        DOMElements.confirmationModal.setAttribute('aria-hidden', 'true');
+        appState.confirmationCallback = null;
+    }
+
+
+    /**
+     * Switches between result tabs (Monthly/Annual).
+     * @param {string} tabIdToActivate - The ID of the tab content to activate (e.g., 'monthly').
+     */
+    function switchTab(tabIdToActivate) {
+      document.querySelectorAll('.tab-content').forEach(el => { 
+          el.classList.remove('active'); 
+          el.setAttribute('aria-hidden', 'true'); 
+      });
+      document.querySelectorAll('.tab').forEach(el => { 
+          el.classList.remove('active'); 
+          el.setAttribute('aria-selected', 'false'); 
+      });
+      
+      const activeContent = document.getElementById(tabIdToActivate + 'Content');
+      const activeTab = document.getElementById(tabIdToActivate + 'Tab');
+      
+      if (activeContent) { 
+          activeContent.classList.add('active'); 
+          activeContent.setAttribute('aria-hidden', 'false'); 
+      }
+      if (activeTab) { 
+          activeTab.classList.add('active'); 
+          activeTab.setAttribute('aria-selected', 'true'); 
+          activeTab.focus(); // Set focus to the active tab
+      }
+      
+      // Load annual summary if switching to annual tab and data exists
+      if (tabIdToActivate === 'annual' && appState.currentCalculationData) {
+          loadAnnualSummary(appState.currentCalculationData);
+      }
+    }
+
+    /**
+     * Toggles the salary input mode between 'Gross Salary' and 'Total Employer Cost'.
+     * @param {string} mode - The input mode ('gross' or 'total').
+     */
     function toggleInputMode(mode) {
       appState.currentInputMode = mode;
       const els = {
-        grossBtn: document.getElementById('grossBtn'), totalBtn: document.getElementById('totalBtn'),
-        salaryLabel: document.getElementById('salaryLabel'), salaryInput: document.getElementById('salaryInput'),
-        conversionLabel: document.getElementById('conversionLabel'), conversionDisplay: document.getElementById('conversionDisplay')
+        grossBtn: DOMElements.grossBtn, totalBtn: DOMElements.totalBtn,
+        salaryLabel: DOMElements.salaryLabel, salaryInput: DOMElements.salaryInput,
+        conversionLabel: DOMElements.conversionLabel, conversionDisplay: DOMElements.conversionDisplay
       };
-      els.grossBtn?.classList.toggle('active', mode === 'gross'); els.grossBtn?.setAttribute('aria-checked', mode === 'gross');
-      els.totalBtn?.classList.toggle('active', mode === 'total'); els.totalBtn?.setAttribute('aria-checked', mode === 'total');
+
+      els.grossBtn?.classList.toggle('active', mode === 'gross'); 
+      els.grossBtn?.setAttribute('aria-checked', String(mode === 'gross'));
+      els.totalBtn?.classList.toggle('active', mode === 'total'); 
+      els.totalBtn?.setAttribute('aria-checked', String(mode === 'total'));
+      
       if (mode === 'gross') {
         if (els.salaryLabel) els.salaryLabel.textContent = 'Monthly Gross Salary (€)';
         if (els.salaryInput) els.salaryInput.placeholder = 'e.g., 4055.61';
@@ -1545,20 +1646,33 @@
         if (els.salaryInput) els.salaryInput.placeholder = 'e.g., 4566.21';
         if (els.conversionLabel) els.conversionLabel.textContent = 'Calculated Gross Salary:';
       }
-      if (els.salaryInput?.value) handleSalaryInput(); else els.conversionDisplay?.classList.add('d-none');
+      
+      // Update conversion display if salary input has a value
+      if (els.salaryInput?.value) handleSalaryInput(); 
+      else els.conversionDisplay?.classList.add('d-none');
     }
 
+    /** Handles real-time conversion display as salary input changes. */
     function handleSalaryInput() {
       const els = {
-        salaryInput: document.getElementById('salaryInput'),
-        conversionDisplay: document.getElementById('conversionDisplay'),
-        conversionValue: document.getElementById('conversionValue')
+        salaryInput: DOMElements.salaryInput,
+        conversionDisplay: DOMElements.conversionDisplay,
+        conversionValue: DOMElements.conversionValue,
+        mutualityClassSelect: DOMElements.mutualityClass
       };
-      if (!els.salaryInput || !els.conversionDisplay || !els.conversionValue) return;
+      if (!els.salaryInput || !els.conversionDisplay || !els.conversionValue || !els.mutualityClassSelect) return;
+
       const inputValue = sanitizeInput(els.salaryInput.value, 'number');
-      if (inputValue <= 0) { els.conversionDisplay.classList.add('d-none'); return; }
-      const mutualityClass = parseFloat(sanitizeInput(document.getElementById('mutualityClass')?.value, 'select')) || 1.0;
-      let convertedValue = appState.currentInputMode === 'gross' ? calculateTotalEmployerCost(inputValue, mutualityClass) : calculateGrossFromTotal(inputValue, mutualityClass);
+      if (inputValue <= 0) { 
+          els.conversionDisplay.classList.add('d-none'); 
+          return; 
+      }
+      
+      const mutualityClass = parseFloat(sanitizeInput(els.mutualityClassSelect.value, 'select')) || 1.0;
+      let convertedValue = appState.currentInputMode === 'gross' 
+                            ? calculateTotalEmployerCost(inputValue, mutualityClass) 
+                            : calculateGrossFromTotal(inputValue, mutualityClass);
+                            
       els.conversionValue.textContent = formatCurrency(convertedValue);
       els.conversionDisplay.classList.remove('d-none');
     }
@@ -1566,6 +1680,14 @@
     // ============================================
     // VALIDATION FUNCTIONS
     // ============================================
+
+    /**
+     * Sets the validation state for a form field.
+     * @param {HTMLInputElement|HTMLSelectElement} inputEl - The input element.
+     * @param {HTMLElement} feedbackEl - The feedback element for error messages.
+     * @param {boolean} isValid - True if the field is valid, false otherwise.
+     * @param {string} [message=''] - The error message if invalid.
+     */
     function setFieldValidationState(inputEl, feedbackEl, isValid, message = '') {
         if (!inputEl || !feedbackEl) return;
         inputEl.classList.toggle('is-invalid', !isValid);
@@ -1574,8 +1696,15 @@
         feedbackEl.textContent = isValid ? '' : message;
     }
 
+    /**
+     * Validates a required select field.
+     * @param {string} inputId - ID of the select element.
+     * @param {string} feedbackId - ID of the feedback element.
+     * @param {string} fieldName - Name of the field for error messages.
+     * @returns {boolean} - True if valid, false otherwise.
+     */
     function validateRequiredSelect(inputId, feedbackId, fieldName) {
-        const inputEl = document.getElementById(inputId);
+        const inputEl = document.getElementById(inputId); // Get fresh reference
         const feedbackEl = document.getElementById(feedbackId);
         if (!inputEl || !feedbackEl) return false;
 
@@ -1588,17 +1717,29 @@
         return true;
     }
 
-    function validateNumericInput(inputId, feedbackId, fieldName, { min = -Infinity, max = Infinity, allowZero = false, integerOnly = false } = {}) {
-        const inputEl = document.getElementById(inputId);
+    /**
+     * Validates a numeric input field.
+     * @param {string} inputId - ID of the input element.
+     * @param {string} feedbackId - ID of the feedback element.
+     * @param {string} fieldName - Name of the field for error messages.
+     * @param {object} [options] - Validation options (min, max, allowZero, integerOnly, required).
+     * @returns {boolean} - True if valid, false otherwise.
+     */
+    function validateNumericInput(inputId, feedbackId, fieldName, 
+        { min = -Infinity, max = Infinity, allowZero = false, integerOnly = false, required = false } = {}) {
+        
+        const inputEl = document.getElementById(inputId); // Get fresh reference
         const feedbackEl = document.getElementById(feedbackId);
         if (!inputEl || !feedbackEl) return false;
 
         const rawValue = inputEl.value.trim();
-        if (rawValue === '' && !inputEl.hasAttribute('required')) {
+        required = required || inputEl.hasAttribute('required'); // Check HTML attribute too
+
+        if (rawValue === '' && !required) {
              setFieldValidationState(inputEl, feedbackEl, true); 
              return true;
         }
-        if (rawValue === '' && inputEl.hasAttribute('required')) {
+        if (rawValue === '' && required) {
             setFieldValidationState(inputEl, feedbackEl, false, `${fieldName} is required.`);
             return false;
         }
@@ -1609,7 +1750,7 @@
             setFieldValidationState(inputEl, feedbackEl, false, `Please enter a valid number for ${fieldName.toLowerCase()}.`);
             return false;
         }
-        if (!allowZero && value <= 0 && inputEl.hasAttribute('required')) { 
+        if (!allowZero && value <= 0 && required) { 
              setFieldValidationState(inputEl, feedbackEl, false, `${fieldName} must be greater than 0.`);
              return false;
         }
@@ -1621,7 +1762,7 @@
             setFieldValidationState(inputEl, feedbackEl, false, `${fieldName} cannot exceed ${max}.`);
             return false;
         }
-        if (integerOnly && !Number.isInteger(parseFloat(rawValue))) { 
+        if (integerOnly && !Number.isInteger(parseFloat(rawValue))) { // Check original string for decimal if integerOnly
              setFieldValidationState(inputEl, feedbackEl, false, `${fieldName} must be a whole number.`);
              return false;
         }
@@ -1630,24 +1771,24 @@
         return true;
     }
     
-    // Non-blocking warning rule
+    /** Validates non-blocking rule for Tax Class 1 with children/childcare expenses. */
     function validateTaxClassAndChildrenRule() { 
-        const taxClassEl = document.getElementById('taxClass');
-        const numChildrenEl = document.getElementById('numChildren');
-        const childcareExpensesEl = document.getElementById('childcareExpenses');
-        const taxClassWarningDiv = document.getElementById('taxClassWarning');
+        const taxClassEl = DOMElements.taxClass;
+        const numChildrenEl = DOMElements.numChildren;
+        const childcareExpensesEl = DOMElements.childcareExpenses;
+        const taxClassWarningDiv = DOMElements.taxClassWarning;
 
         if (!taxClassEl || !numChildrenEl || !childcareExpensesEl || !taxClassWarningDiv) return;
 
         const taxClass = taxClassEl.value;
-        const numChildren = parseInt(numChildrenEl.value, 10);
-        const childcareExpenses = parseFloat(childcareExpensesEl.value);
+        const numChildren = parseInt(numChildrenEl.value, 10); // Will be NaN if empty
+        const childcareExpenses = parseFloat(childcareExpensesEl.value); // Will be NaN if empty
 
         const hasChildren = !isNaN(numChildren) && numChildren > 0;
         const hasChildcareExpenses = !isNaN(childcareExpenses) && childcareExpenses > 0;
 
         if (taxClass === '1' && (hasChildren || hasChildcareExpenses)) {
-            taxClassWarningDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Note: Tax Class 1a is typically more beneficial for single taxpayers with children or significant childcare expenses. Please verify your selection.`;
+            taxClassWarningDiv.innerHTML = `<i class="fas fa-exclamation-triangle" aria-hidden="true"></i> Note: Tax Class 1a is typically more beneficial for single taxpayers with children or significant childcare expenses. Please verify your selection.`;
             taxClassWarningDiv.classList.remove('d-none');
         } else {
             taxClassWarningDiv.innerHTML = '';
@@ -1655,74 +1796,59 @@
         }
     }
 
-    // Blocking cross-field validation rule
+    /** Validates blocking rule: Childcare expenses require number of children > 0. */
     function validateChildcareRequiresChildrenRule() {
-        const numChildrenEl = document.getElementById('numChildren');
-        const childcareExpensesEl = document.getElementById('childcareExpenses');
-        const numChildrenFeedbackEl = document.getElementById('numChildrenFeedback');
+        const numChildrenEl = DOMElements.numChildren;
+        const childcareExpensesEl = DOMElements.childcareExpenses;
+        const numChildrenFeedbackEl = DOMElements.numChildrenFeedback;
 
-        if (!numChildrenEl || !childcareExpensesEl || !numChildrenFeedbackEl) return true; // Should not happen
+        if (!numChildrenEl || !childcareExpensesEl || !numChildrenFeedbackEl) return true;
 
         const numChildrenRaw = numChildrenEl.value.trim();
         const childcareExpensesRaw = childcareExpensesEl.value.trim();
 
-        // If childcare expenses are not entered or are zero, this specific rule does not apply,
-        // or rather, it's satisfied. We need to ensure any previous error from *this rule* is cleared.
         if (childcareExpensesRaw === '' || parseFloat(childcareExpensesRaw) <= 0) {
+            // If this rule was the *only* reason numChildren was invalid, re-validate numChildren.
             if (numChildrenFeedbackEl.textContent === "Number of children must be > 0 if childcare expenses are entered.") {
-                // The field was invalid ONLY because of this rule. Re-validate it on its own merits.
                 return validateNumericInput('numChildren', 'numChildrenFeedback', 'Number of Children', { min: 0, max: 20, integerOnly: true, allowZero: true });
             }
-            return true; // Rule is satisfied or not applicable
+            return true; // Rule satisfied or not applicable.
         }
 
-        const childcareExpensesVal = parseFloat(childcareExpensesRaw); // Already know it's > 0
-        const numChildrenVal = (numChildrenRaw !== '') ? parseInt(numChildrenRaw, 10) : 0; // Default to 0 if empty for logic
+        // At this point, childcareExpenses > 0.
+        const numChildrenVal = (numChildrenRaw !== '') ? parseInt(numChildrenRaw, 10) : 0;
 
-        if (numChildrenVal <= 0) { // childcareExpensesVal > 0 is established
+        if (numChildrenVal <= 0) {
             setFieldValidationState(numChildrenEl, numChildrenFeedbackEl, false, "Number of children must be > 0 if childcare expenses are entered.");
-            return false; // Rule violated
+            return false; // Rule violated.
         }
 
-        // If the rule was previously violated (specific message was shown) but now numChildren > 0,
-        // we need to clear that specific message and let numChildren be validated on its own.
+        // If the rule was previously violated but now numChildren > 0, clear the specific message
+        // and let numChildren be validated on its own merits.
         if (numChildrenFeedbackEl.textContent === "Number of children must be > 0 if childcare expenses are entered.") {
              return validateNumericInput('numChildren', 'numChildrenFeedback', 'Number of Children', { min: 0, max: 20, integerOnly: true, allowZero: true });
         }
         
-        return true; // Rule satisfied
+        return true; // Rule satisfied.
     }
 
-
+    /** Validates all form inputs before calculation. */
     function validateFormInputs() {
         clearGeneralError(); 
         let isFormValid = true;
 
         // Individual field validations
-        if (!validateNumericInput('salaryInput', 'salaryInputFeedback', 'Salary', { min: 0.01, allowZero: false })) {
-            isFormValid = false;
-        }
-        if (!validateRequiredSelect('taxClass', 'taxClassFeedback', 'Tax Class')) {
-            isFormValid = false;
-        }
-        if (!validateRequiredSelect('mutualityClass', 'mutualityClassFeedback', 'Mutuality Class')) {
-            isFormValid = false;
-        }
+        if (!validateNumericInput('salaryInput', 'salaryInputFeedback', 'Salary', { min: 0.01, allowZero: false, required: true })) isFormValid = false;
+        if (!validateRequiredSelect('taxClass', 'taxClassFeedback', 'Tax Class')) isFormValid = false;
+        if (!validateRequiredSelect('mutualityClass', 'mutualityClassFeedback', 'Mutuality Class')) isFormValid = false;
         
-        // Validate numChildren on its own first
-        if (!validateNumericInput('numChildren', 'numChildrenFeedback', 'Number of Children', { min: 0, max: 20, integerOnly: true, allowZero: true })) {
-           isFormValid = false;
-        }
-        // Validate childcareExpenses on its own first
-        if (!validateNumericInput('childcareExpenses', 'childcareExpensesFeedback', 'Childcare Expenses', { min: 0, allowZero: true })) {
-            isFormValid = false;
-        }
+        // Validate numChildren and childcareExpenses individually first
+        if (!validateNumericInput('numChildren', 'numChildrenFeedback', 'Number of Children', { min: 0, max: 20, integerOnly: true, allowZero: true })) isFormValid = false;
+        if (!validateNumericInput('childcareExpenses', 'childcareExpensesFeedback', 'Childcare Expenses', { min: 0, allowZero: true })) isFormValid = false;
 
-        // Then, apply the cross-field validation rule
-        // This rule might override the validation state of numChildren if it fails
-        if (!validateChildcareRequiresChildrenRule()) {
-            isFormValid = false;
-        }
+        // Then, apply the cross-field validation rule for childcare and children.
+        // This rule might override the validation state of numChildren if it fails.
+        if (!validateChildcareRequiresChildrenRule()) isFormValid = false;
         
         // Non-blocking warning (run regardless of isFormValid state for UX)
         validateTaxClassAndChildrenRule(); 
@@ -1730,20 +1856,39 @@
         return isFormValid;
     }
 
-
     // ============================================
     // CALCULATION LOGIC
     // ============================================
+
+    /**
+     * Applies monthly ceiling to salary before calculating contribution.
+     * @param {number} grossMonthlySalary - Gross monthly salary.
+     * @param {number} monthlyIncomeCeiling - The ceiling amount.
+     * @param {number} rate - The contribution rate.
+     * @returns {number} - Calculated contribution.
+     */
     function applyMonthlyCeilingAndCalculate(grossMonthlySalary, monthlyIncomeCeiling, rate) {
         const cappedSalary = Math.min(grossMonthlySalary, monthlyIncomeCeiling);
         return cappedSalary * rate;
     }
 
+    /**
+     * Calculates total employer cost from gross salary.
+     * @param {number} grossSalary - Monthly gross salary.
+     * @param {number} mutualityClass - Mutuality class factor.
+     * @returns {number} - Total monthly employer cost.
+     */
     function calculateTotalEmployerCost(grossSalary, mutualityClass) {
       const contributions = calculateEmployerContributions(grossSalary, mutualityClass);
-      return grossSalary + Object.values(contributions).reduce((s, v) => s + v, 0);
+      return grossSalary + Object.values(contributions).reduce((sum, value) => sum + value, 0);
     }
 
+    /**
+     * Calculates gross salary from total employer cost.
+     * @param {number} totalCost - Total monthly employer cost.
+     * @param {number} mutualityClass - Mutuality class factor.
+     * @returns {number} - Monthly gross salary.
+     */
     function calculateGrossFromTotal(totalCost, mutualityClass) {
       let totalRate = CONFIG.EMPLOYER_RATES.healthInsurance + CONFIG.EMPLOYER_RATES.pensionInsurance +
                       CONFIG.EMPLOYER_RATES.occupationalHealth + CONFIG.EMPLOYER_RATES.accident +
@@ -1751,6 +1896,12 @@
       return totalCost / (1 + totalRate);
     }
 
+    /**
+     * Calculates employer's social security contributions.
+     * @param {number} grossSalary - Monthly gross salary.
+     * @param {number} mutualityFactor - Mutuality class factor.
+     * @returns {object} - Object with individual employer contributions.
+     */
     function calculateEmployerContributions(grossSalary, mutualityFactor) {
       const ceil = CONFIG.SOCIAL_SECURITY_PARAMETERS.monthlyIncomeCeiling;
       return {
@@ -1762,31 +1913,54 @@
       };
     }
 
+    /**
+     * Calculates employee's social security contributions.
+     * @param {number} grossSalary - Monthly gross salary.
+     * @returns {object} - Object with individual employee contributions.
+     */
     function calculateEmployeeContributions(grossSalary) {
       const ceil = CONFIG.SOCIAL_SECURITY_PARAMETERS.monthlyIncomeCeiling;
-      const depBase = Math.max(0, grossSalary - CONFIG.SOCIAL_SECURITY_PARAMETERS.dependencyBaseReduction);
+      // Dependency insurance base: gross salary minus 1/4 of SSM, cannot be negative.
+      const dependencyBase = Math.max(0, grossSalary - CONFIG.SOCIAL_SECURITY_PARAMETERS.dependencyBaseReduction);
       return {
         health: applyMonthlyCeilingAndCalculate(grossSalary, ceil, CONFIG.EMPLOYER_RATES.healthInsurance), 
         pension: applyMonthlyCeilingAndCalculate(grossSalary, ceil, CONFIG.EMPLOYER_RATES.pensionInsurance), 
-        dependency: depBase * CONFIG.SOCIAL_SECURITY_PARAMETERS.dependencyRate
+        dependency: dependencyBase * CONFIG.SOCIAL_SECURITY_PARAMETERS.dependencyRate
       };
     }
 
+    /**
+     * Calculates income tax and solidarity surcharge.
+     * @param {number} annualTaxableIncome - Annual taxable income.
+     * @param {string} taxClass - Tax class ('1', '1a', '2').
+     * @returns {object} - Object with incomeTax, solidaritySurcharge, and totalTax.
+     */
     function calculateIncomeTax(annualTaxableIncome, taxClass) {
-      let tax = 0; let prevLimit = 0;
-      const income = Math.max(0, annualTaxableIncome);
-      for (const br of CONFIG.TAX_BRACKETS) {
-        if (income <= prevLimit) break;
-        tax += (Math.min(income, br.limit) - prevLimit) * br.rate;
-        prevLimit = br.limit;
+      let tax = 0; 
+      let previousLimit = 0;
+      const income = Math.max(0, annualTaxableIncome); // Ensure income is not negative.
+
+      for (const bracket of CONFIG.TAX_BRACKETS) {
+        if (income <= previousLimit) break;
+        tax += (Math.min(income, bracket.limit) - previousLimit) * bracket.rate;
+        previousLimit = bracket.limit;
       }
-      tax *= ({ '1': 1.0, '1a': 0.9, '2': 0.65 }[taxClass] || 1.0);
-      let solRate = 0.07;
-      if (((taxClass === '1' || taxClass === '1a') && income > 150000) || (taxClass === '2' && income > 300000)) solRate = 0.09;
-      const surcharge = tax * solRate;
+      
+      // Apply tax class coefficient.
+      const taxClassMultiplier = { '1': 1.0, '1a': 0.9, '2': 0.65 }[taxClass] || 1.0;
+      tax *= taxClassMultiplier;
+
+      // Calculate solidarity surcharge (7% or 9% based on income and tax class).
+      let solidarityRate = 0.07;
+      if (((taxClass === '1' || taxClass === '1a') && income > 150000) || (taxClass === '2' && income > 300000)) {
+        solidarityRate = 0.09;
+      }
+      const surcharge = tax * solidarityRate;
+      
       return { incomeTax: tax, solidaritySurcharge: surcharge, totalTax: tax + surcharge };
     }
 
+    /** Calculates Employee Tax Credit (CIS). */
     function calculateCIS(annualGrossSalary) {
         const CIS_CONFIG = CONFIG.TAX_CREDITS.CIS;
         if (annualGrossSalary < CIS_CONFIG.minAnnualGross || annualGrossSalary > CIS_CONFIG.maxAnnualGross) return 0;
@@ -1799,6 +1973,7 @@
         }
     }
 
+    /** Calculates CO2 Tax Credit (CI-CO2). */
     function calculateCICO2(annualGrossSalary) {
         const CICO2_CONFIG = CONFIG.TAX_CREDITS.CICO2;
         if (annualGrossSalary < CICO2_CONFIG.minAnnualGross || annualGrossSalary > CICO2_CONFIG.maxAnnualGross) return 0;
@@ -1809,6 +1984,7 @@
         }
     }
 
+    /** Calculates Minimum Social Wage Tax Credit (CISSM). */
     function calculateCISSM(monthlyGrossSalary) {
         const CISSM_CONFIG = CONFIG.TAX_CREDITS.CISSM;
         if (monthlyGrossSalary < CISSM_CONFIG.minMonthlyGross) return 0;
@@ -1820,90 +1996,107 @@
         return 0; 
     }
 
+    /** Performs the main payroll calculation. */
     function performCalculation() {
       if (appState.isCalculating) return; 
       
       if (!validateFormInputs()) {
           showGeneralError('Please correct the highlighted errors before calculating.');
-          const calculateBtn = document.getElementById('calculateBtn');
-          if (calculateBtn && calculateBtn.classList.contains('loading')) {
+          // Ensure loading state is reset if validation fails early
+          if (DOMElements.calculateBtn?.classList.contains('loading')) {
               showLoading(false);
           }
           return;
       }
       
       showLoading(true); 
-      appState.salaryExceedsCeiling = false;
+      appState.salaryExceedsCeiling = false; // Reset flag
       
       try {
-        const salaryIn = parseFloat(document.getElementById('salaryInput')?.value); 
-        const taxCl = document.getElementById('taxClass')?.value; 
-        const mutVal = document.getElementById('mutualityClass')?.value; 
-        const mutCl = parseFloat(mutVal);
+        // Get and sanitize inputs
+        const salaryInputValue = parseFloat(DOMElements.salaryInput?.value); 
+        const taxClassValue = DOMElements.taxClass?.value; 
+        const mutualityClassValue = parseFloat(DOMElements.mutualityClass?.value);
         
-        const numChildRaw = document.getElementById('numChildren')?.value;
-        const numChild = (numChildRaw && numChildRaw.trim() !== '') ? parseInt(numChildRaw, 10) : 0;
+        const numChildrenRaw = DOMElements.numChildren?.value;
+        const numChildrenValue = (numChildrenRaw && numChildrenRaw.trim() !== '') ? parseInt(numChildrenRaw, 10) : 0;
 
-        const childcareExpensesRaw = document.getElementById('childcareExpenses')?.value;
-        const childcareExpensesVal = (childcareExpensesRaw && childcareExpensesRaw.trim() !== '') ? parseFloat(childcareExpensesRaw) : 0;
+        const childcareExpensesRaw = DOMElements.childcareExpenses?.value;
+        const childcareExpensesValue = (childcareExpensesRaw && childcareExpensesRaw.trim() !== '') ? parseFloat(childcareExpensesRaw) : 0;
 
-
-        let grossSal = (appState.currentInputMode === 'gross') ? salaryIn : calculateGrossFromTotal(salaryIn, mutCl); 
-        if (grossSal > CONFIG.SOCIAL_SECURITY_PARAMETERS.monthlyIncomeCeiling) appState.salaryExceedsCeiling = true;
+        // Determine gross salary based on input mode
+        let grossMonthlySalary = (appState.currentInputMode === 'gross') 
+                                ? salaryInputValue 
+                                : calculateGrossFromTotal(salaryInputValue, mutualityClassValue); 
         
-        const annualGrossSal = grossSal * 12;
-        const employerContrib = calculateEmployerContributions(grossSal, mutCl);
-        const employeeContrib = calculateEmployeeContributions(grossSal);
-        const totalMonthlyEmpSSC = Object.values(employeeContrib).reduce((s, v) => s + v, 0);
-        const annualEmpSSC = totalMonthlyEmpSSC * 12;
-
-        const profExp = Math.max(CONFIG.PROFESSIONAL_EXPENSES_MIN_ANNUAL, sanitizeInput(document.getElementById('professionalExpenses')?.value,'number'));
-        const transDed = Math.min(sanitizeInput(document.getElementById('transportDeduction')?.value,'number'), CONFIG.TRANSPORT_DEDUCTION_MAX_ANNUAL);
-        // Use childcareExpensesVal which defaults to 0 if empty
-        const childExp = Math.min(childcareExpensesVal, numChild * CONFIG.DEDUCTION_LIMITS.childcarePerChild);
-        const pensContr = Math.min(sanitizeInput(document.getElementById('pensionContributions')?.value,'number'), CONFIG.DEDUCTION_LIMITS.privatePension);
-        const mortInt = sanitizeInput(document.getElementById('mortgageInterest')?.value,'number');
-        const insPrem = Math.min(sanitizeInput(document.getElementById('insurancePremiums')?.value,'number'), CONFIG.DEDUCTION_LIMITS.insurancePremiums);
-        const medExpThresh = annualGrossSal * CONFIG.DEDUCTION_LIMITS.medicalExpensesThreshold;
-        const medExp = Math.max(0, sanitizeInput(document.getElementById('medicalExpenses')?.value,'number') - medExpThresh);
-        const charDonVal = sanitizeInput(document.getElementById('charitableDonations')?.value,'number');
-        const charDonMaxInc = annualGrossSal * CONFIG.CHARITABLE_DONATION.maxPercentIncome;
-        const charDon = charDonVal < CONFIG.CHARITABLE_DONATION.minAnnual ? 0 : Math.min(charDonVal, charDonMaxInc, CONFIG.CHARITABLE_DONATION.maxAbsoluteAnnual);
+        if (grossMonthlySalary > CONFIG.SOCIAL_SECURITY_PARAMETERS.monthlyIncomeCeiling) {
+            appState.salaryExceedsCeiling = true;
+        }
         
-        const totalAnnualDed = profExp + transDed + childExp + pensContr + mortInt + insPrem + medExp + charDon;
-        const annualTaxInc = Math.max(0, annualGrossSal - annualEmpSSC - totalAnnualDed);
-        const taxCalc = calculateIncomeTax(annualTaxInc, taxCl);
-        
-        const annualCIS = calculateCIS(annualGrossSal);
-        const annualCICO2 = calculateCICO2(annualGrossSal);
-        const monthlyCISSM = calculateCISSM(grossSal); 
-        const annualCISSM = monthlyCISSM * 12; 
+        const annualGrossSalary = grossMonthlySalary * 12;
+        const employerContributions = calculateEmployerContributions(grossMonthlySalary, mutualityClassValue);
+        const employeeContributions = calculateEmployeeContributions(grossMonthlySalary);
+        const totalMonthlyEmployeeSSC = Object.values(employeeContributions).reduce((s, v) => s + v, 0);
+        const annualEmployeeSSC = totalMonthlyEmployeeSSC * 12;
 
-        const annualChildTaxCred = numChild * CONFIG.FAMILY_BENEFITS.childTaxCreditAnnual;
-        const totalTaxCredits = annualChildTaxCred + annualCIS + annualCICO2 + annualCISSM;
-        const effAnnualTax = Math.max(0, taxCalc.totalTax - totalTaxCredits);
+        // Calculate annual deductions
+        const professionalExpenses = Math.max(CONFIG.PROFESSIONAL_EXPENSES_MIN_ANNUAL, sanitizeInput(DOMElements.professionalExpenses?.value,'number'));
+        const transportDeduction = Math.min(sanitizeInput(DOMElements.transportDeduction?.value,'number'), CONFIG.TRANSPORT_DEDUCTION_MAX_ANNUAL);
+        const childcareDeduction = Math.min(childcareExpensesValue, numChildrenValue * CONFIG.DEDUCTION_LIMITS.childcarePerChild);
+        const pensionContributionsDed = Math.min(sanitizeInput(DOMElements.pensionContributions?.value,'number'), CONFIG.DEDUCTION_LIMITS.privatePension);
+        const mortgageInterestDed = sanitizeInput(DOMElements.mortgageInterest?.value,'number');
+        const insurancePremiumsDed = Math.min(sanitizeInput(DOMElements.insurancePremiums?.value,'number'), CONFIG.DEDUCTION_LIMITS.insurancePremiums);
+        const medicalExpensesThreshold = annualGrossSalary * CONFIG.DEDUCTION_LIMITS.medicalExpensesThreshold;
+        const medicalExpensesDed = Math.max(0, sanitizeInput(DOMElements.medicalExpenses?.value,'number') - medicalExpensesThreshold);
+        const charitableDonationsValue = sanitizeInput(DOMElements.charitableDonations?.value,'number');
+        const charitableDonationsMaxIncome = annualGrossSalary * CONFIG.CHARITABLE_DONATION.maxPercentIncome;
+        const charitableDonationsDed = charitableDonationsValue < CONFIG.CHARITABLE_DONATION.minAnnual 
+                                        ? 0 
+                                        : Math.min(charitableDonationsValue, charitableDonationsMaxIncome, CONFIG.CHARITABLE_DONATION.maxAbsoluteAnnual);
         
-        const monthlyTax = effAnnualTax / 12;
-        const netSal = grossSal - totalMonthlyEmpSSC - monthlyTax;
-        const annualChildAllow = numChild * CONFIG.FAMILY_BENEFITS.childAllowanceMonthly * 12;
-        const totalEmployerMonthContrib = Object.values(employerContrib).reduce((s, v) => s + v, 0);
-        const totalEmployerC = grossSal + totalEmployerMonthContrib;
+        const totalAnnualDeductions = professionalExpenses + transportDeduction + childcareDeduction + pensionContributionsDed + 
+                                    mortgageInterestDed + insurancePremiumsDed + medicalExpensesDed + charitableDonationsDed;
+        
+        const annualTaxableIncome = Math.max(0, annualGrossSalary - annualEmployeeSSC - totalAnnualDeductions);
+        const taxCalculationResult = calculateIncomeTax(annualTaxableIncome, taxClassValue);
+        
+        // Calculate tax credits
+        const annualCISCredit = calculateCIS(annualGrossSalary);
+        const annualCICO2Credit = calculateCICO2(annualGrossSalary);
+        const monthlyCISSMCredit = calculateCISSM(grossMonthlySalary); 
+        const annualCISSMCredit = monthlyCISSMCredit * 12; 
+        const annualChildTaxCreditValue = numChildrenValue * CONFIG.FAMILY_BENEFITS.childTaxCreditAnnual;
+        
+        const totalAnnualTaxCredits = annualChildTaxCreditValue + annualCISCredit + annualCICO2Credit + annualCISSMCredit;
+        const effectiveAnnualTax = Math.max(0, taxCalculationResult.totalTax - totalAnnualTaxCredits);
+        
+        const monthlyTax = effectiveAnnualTax / 12;
+        const netMonthlySalary = grossMonthlySalary - totalMonthlyEmployeeSSC - monthlyTax;
+        const annualChildAllowanceValue = numChildrenValue * CONFIG.FAMILY_BENEFITS.childAllowanceMonthly * 12;
+        const totalEmployerMonthlyContributions = Object.values(employerContributions).reduce((s, v) => s + v, 0);
+        const totalMonthlyEmployerCost = grossMonthlySalary + totalEmployerMonthlyContributions;
 
+        // Store results in appState
         appState.currentCalculationData = {
-          grossSalary: grossSal, netSalary: netSal, totalEmployerCost: totalEmployerC, 
-          employerContributions: employerContrib, employeeContributions: employeeContrib, 
-          totalMonthlyEmployeeSSC: totalMonthlyEmpSSC, totalEmployerMonthlyContributions: totalEmployerMonthContrib,
-          taxCalculation: taxCalc, 
-          taxCredits: { annualCIS, annualCICO2, annualCISSM, annualChildTaxCredit, monthlyCISSM }, 
-          effectiveAnnualTax: effAnnualTax, monthlyTaxes: monthlyTax, 
-          deductions: { totalAnnualDeductions: totalAnnualDed },
-          familyBenefits: { childAllowance: annualChildAllow, childTaxCredit: annualChildTaxCred }, 
-          numChildren: numChild, taxClass: taxCl 
+          grossSalary: grossMonthlySalary, netSalary: netMonthlySalary, totalEmployerCost: totalMonthlyEmployerCost, 
+          employerContributions: employerContributions, employeeContributions: employeeContributions, 
+          totalMonthlyEmployeeSSC: totalMonthlyEmployeeSSC, totalEmployerMonthlyContributions: totalEmployerMonthlyContributions,
+          taxCalculation: taxCalculationResult, 
+          taxCredits: { 
+              annualCIS: annualCISCredit, annualCICO2: annualCICO2Credit, annualCISSM: annualCISSMCredit, 
+              annualChildTaxCredit: annualChildTaxCreditValue, monthlyCISSM: monthlyCISSMCredit 
+          }, 
+          effectiveAnnualTax: effectiveAnnualTax, monthlyTaxes: monthlyTax, 
+          deductions: { totalAnnualDeductions: totalAnnualDeductions },
+          familyBenefits: { childAllowance: annualChildAllowanceValue, childTaxCredit: annualChildTaxCreditValue }, 
+          numChildren: numChildrenValue, taxClass: taxClassValue 
         };
+
         displayResults(appState.currentCalculationData);
         showNotification('Calculation complete!', 'success');
-      } catch (e) { 
-          console.error('Calculation error:', e); 
+
+      } catch (error) { 
+          console.error('Calculation error:', error); 
           showGeneralError('An unexpected error occurred during calculation. Please check your inputs or try again later.');
       } finally { 
           showLoading(false); 
@@ -1913,33 +2106,48 @@
     // ============================================
     // DISPLAY & UI UPDATE FUNCTIONS
     // ============================================
+
+    /**
+     * Displays the calculation results in the UI.
+     * @param {object} results - The calculation results data.
+     */
     function displayResults(results) {
+      // Update monthly summary
       updateElementText('monthlyGrossSalary', formatCurrency(results.grossSalary));
       updateElementText('monthlyNetSalary', formatCurrency(results.netSalary));
       updateElementText('monthlyTotalCost', formatCurrency(results.totalEmployerCost));
+      
+      // Update employer contributions
       updateElementText('employerHealth', formatCurrency(results.employerContributions.health));
       updateElementText('employerPension', formatCurrency(results.employerContributions.pension));
       updateElementText('employerAccident', formatCurrency(results.employerContributions.accident));
       updateElementText('employerMutuality', formatCurrency(results.employerContributions.employersMutuality));
       updateElementText('employerOccupational', formatCurrency(results.employerContributions.occupationalHealth));
+      
+      // Update employee contributions
       updateElementText('employeeHealth', formatCurrency(results.employeeContributions.health));
       updateElementText('employeePension', formatCurrency(results.employeeContributions.pension));
       updateElementText('employeeDependency', formatCurrency(results.employeeContributions.dependency));
+      
+      // Update taxes
       updateElementText('monthlyIncomeTax', formatCurrency(results.taxCalculation.incomeTax / 12)); 
       updateElementText('monthlySolidaritySurcharge', formatCurrency(results.taxCalculation.solidaritySurcharge / 12));
       
+      // Update monthly deductions and benefits
       updateElementText('monthlyTotalDeductionsApplied', formatCurrency(results.deductions.totalAnnualDeductions / 12));
       updateElementText('monthlyChildAllowance', formatCurrency(CONFIG.FAMILY_BENEFITS.childAllowanceMonthly * results.numChildren));
       updateElementText('monthlyChildTaxCredit', formatCurrency(results.taxCredits.annualChildTaxCredit / 12));
 
+      // Update monthly tax credits
       updateElementText('monthlyCIS', formatCurrency(results.taxCredits.annualCIS / 12));
       updateElementText('monthlyCICO2', formatCurrency(results.taxCredits.annualCICO2 / 12));
       updateElementText('monthlyCISSM', formatCurrency(results.taxCredits.monthlyCISSM));
 
-      const cimNoteMonthlyDiv = document.getElementById('cimNoteMonthly');
+      // Display CIM note for Tax Class 1a (monthly)
+      const cimNoteMonthlyDiv = DOMElements.cimNoteMonthly;
       if(cimNoteMonthlyDiv) {
           if (results.taxClass === '1a') {
-              cimNoteMonthlyDiv.innerHTML = `<p><i class="fas fa-info-circle"></i> <strong>Single Parent Tax Credit (CIM):</strong> You may be eligible for CIM. Please consult official sources for precise calculation.</p>`;
+              cimNoteMonthlyDiv.innerHTML = `<p><i class="fas fa-info-circle" aria-hidden="true"></i> <strong>Single Parent Tax Credit (CIM):</strong> You may be eligible for CIM. Please consult official sources for precise calculation.</p>`;
               cimNoteMonthlyDiv.classList.remove('d-none');
           } else {
               cimNoteMonthlyDiv.classList.add('d-none');
@@ -1947,13 +2155,14 @@
           }
       }
 
-      const ceilingNoteDiv = document.getElementById('ceilingNote');
+      // Display ceiling note if salary exceeds ceiling
+      const ceilingNoteDiv = DOMElements.ceilingNote;
       if (ceilingNoteDiv) {
           if (appState.salaryExceedsCeiling) {
               const ceilingAmountFormatted = formatCurrency(CONFIG.SOCIAL_SECURITY_PARAMETERS.monthlyIncomeCeiling);
               const ssmReductionFormatted = formatCurrency(CONFIG.SOCIAL_SECURITY_PARAMETERS.dependencyBaseReduction);
               ceilingNoteDiv.innerHTML = `
-                  <p><i class="fas fa-info-circle"></i> <strong>Note on Social Security Ceilings:</strong></p>
+                  <p><i class="fas fa-info-circle" aria-hidden="true"></i> <strong>Note on Social Security Ceilings:</strong></p>
                   <p>Your gross salary exceeds the monthly social security income ceiling of ${ceilingAmountFormatted}.</p>
                   <p>Therefore, contributions for Health, Pension, Accident, and Employer's Mutuality are calculated based on this ceiling amount.</p>
                   <p>Dependency Insurance is calculated on the gross salary minus a reduction of ${ssmReductionFormatted} and has no upper ceiling.</p>
@@ -1965,25 +2174,52 @@
           }
       }
 
-      const resultsSection = document.getElementById('resultsSection');
-      if (resultsSection) {
-        resultsSection.classList.remove('d-none');
-        const rect = resultsSection.getBoundingClientRect();
-        if (rect.top < 0 || rect.bottom > window.innerHeight) resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // Show results section and scroll into view if necessary
+      const resultsSectionEl = DOMElements.resultsSection;
+      if (resultsSectionEl) {
+        resultsSectionEl.classList.remove('d-none');
+        // Scroll to results if not fully visible
+        const rect = resultsSectionEl.getBoundingClientRect();
+        if (rect.top < 0 || rect.bottom > window.innerHeight) {
+            resultsSectionEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
       }
-      loadAnnualSummary(results); 
-      updateCharts(results);
+      
+      loadAnnualSummary(results); // Also load annual summary data
+      updateCharts(results); // Update the chart
     }
 
+    /**
+     * Updates the text content of a DOM element.
+     * @param {string} id - The ID of the element.
+     * @param {string} content - The text content to set.
+     */
     function updateElementText(id, content) {
-      const el = document.getElementById(id); if (el) el.textContent = content;
+      const el = document.getElementById(id); 
+      if (el) el.textContent = content;
+      else console.warn(`Element with ID '${id}' not found for text update.`);
     }
 
+    /**
+     * Formats a number as currency (EUR).
+     * @param {number} value - The number to format.
+     * @returns {string} - The formatted currency string.
+     */
     function formatCurrency(value) {
       if (typeof value !== 'number' || isNaN(value)) return '€0.00'; 
-      return new Intl.NumberFormat('fr-LU', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
+      return new Intl.NumberFormat('fr-LU', { 
+          style: 'currency', 
+          currency: 'EUR', 
+          minimumFractionDigits: 2, 
+          maximumFractionDigits: 2 
+      }).format(value);
     }
     
+    /**
+     * Formats a number as a percentage string.
+     * @param {number} value - The number to format (e.g., 75.5 for 75.5%).
+     * @returns {string} - The formatted percentage string.
+     */
     function formatPercentage(value) {
         if (typeof value !== 'number' || isNaN(value)) return '0.00%';
         return value.toFixed(2) + '%';
@@ -1992,38 +2228,78 @@
     // ============================================
     // EVENT LISTENERS & INITIALIZATION
     // ============================================
-    document.addEventListener('DOMContentLoaded', function () {
-      toggleInputMode('gross'); 
-      document.getElementById('salaryInput')?.addEventListener('input', handleSalaryInput);
-      document.getElementById('payrollForm')?.addEventListener('submit', (e) => { e.preventDefault(); performCalculation(); });
-      document.getElementById('grossBtn')?.addEventListener('click', () => toggleInputMode('gross'));
-      document.getElementById('totalBtn')?.addEventListener('click', () => toggleInputMode('total'));
-      document.getElementById('mutualityClass')?.addEventListener('change', handleSalaryInput);
-      
-      // Event listeners for real-time non-blocking tax class warning
-      document.getElementById('taxClass')?.addEventListener('change', validateTaxClassAndChildrenRule);
-      document.getElementById('numChildren')?.addEventListener('input', validateTaxClassAndChildrenRule);
-      document.getElementById('childcareExpenses')?.addEventListener('input', validateTaxClassAndChildrenRule);
 
-
-      document.querySelectorAll('.tab').forEach(tab => tab.addEventListener('click', function() { switchTab(this.id.replace('Tab', '')); }));
-      document.getElementById('exportBtn')?.addEventListener('click', exportResults);
-      document.getElementById('shareBtn')?.addEventListener('click', shareResults);
-      document.getElementById('clearBtn')?.addEventListener('click', () => { 
-          if (window.confirm('Are you sure you want to clear the form and results? This action cannot be undone.')) {
-            clearForm();
-          }
+    /** Initializes DOM element references. */
+    function initializeDOMElements() {
+        for (const key in DOMElements) {
+            if (Object.hasOwnProperty.call(DOMElements, key)) {
+                DOMElements[key] = document.getElementById(key);
+            }
+        }
+    }
+    
+    /** Sets up all event listeners for the application. */
+    function setupEventListeners() {
+      DOMElements.payrollForm?.addEventListener('submit', (e) => { 
+          e.preventDefault(); 
+          performCalculation(); 
       });
-      setupInputBlurSanitizationAndValidation(); 
-      console.log('Luxembourg Payroll Calculator initialized (v3.4.2)'); 
-    });
+      DOMElements.grossBtn?.addEventListener('click', () => toggleInputMode('gross'));
+      DOMElements.totalBtn?.addEventListener('click', () => toggleInputMode('total'));
+      DOMElements.salaryInput?.addEventListener('input', handleSalaryInput);
+      DOMElements.mutualityClass?.addEventListener('change', handleSalaryInput);
+      
+      // Listeners for real-time non-blocking tax class warning
+      DOMElements.taxClass?.addEventListener('change', validateTaxClassAndChildrenRule);
+      DOMElements.numChildren?.addEventListener('input', validateTaxClassAndChildrenRule);
+      DOMElements.childcareExpenses?.addEventListener('input', validateTaxClassAndChildrenRule);
 
+      // Tab switching
+      document.querySelectorAll('.tab').forEach(tab => {
+          tab.addEventListener('click', function() { 
+              switchTab(this.id.replace('Tab', '')); 
+          });
+      });
+      
+      DOMElements.exportBtn?.addEventListener('click', exportResults);
+      DOMElements.shareBtn?.addEventListener('click', shareResults);
+      DOMElements.printBtn?.addEventListener('click', () => window.print());
+      DOMElements.clearBtn?.addEventListener('click', () => { 
+          showConfirmationModal(
+              'Clear Form',
+              'Are you sure you want to clear the form and all results? This action cannot be undone.',
+              clearForm // Pass the clearForm function as callback
+          );
+      });
+
+      // Modal action listeners
+      DOMElements.modalConfirmBtn?.addEventListener('click', () => {
+          if (typeof appState.confirmationCallback === 'function') {
+              appState.confirmationCallback();
+          }
+          hideConfirmationModal();
+      });
+      DOMElements.modalCancelBtn?.addEventListener('click', hideConfirmationModal);
+      // Close modal with Escape key
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && DOMElements.confirmationModal?.classList.contains('show')) {
+            hideConfirmationModal();
+        }
+      });
+
+
+      setupInputBlurSanitizationAndValidation(); 
+    }
+
+    /** Sets up blur event listeners for input sanitization and validation. */
     function setupInputBlurSanitizationAndValidation() { 
       const inputConfigs = [
+        // Required fields needing specific validation messages on blur
         { id: 'salaryInput', feedbackId: 'salaryInputFeedback', fieldName: 'Salary', options: { min: 0.01, allowZero: false, required: true } },
         { id: 'numChildren', feedbackId: 'numChildrenFeedback', fieldName: 'Number of Children', options: { min: 0, max: 20, integerOnly: true, allowZero: true } },
         { id: 'childcareExpenses', feedbackId: 'childcareExpensesFeedback', fieldName: 'Childcare Expenses', options: { min: 0, allowZero: true } },
-        // Add other numeric inputs here if they need specific blur validation beyond sanitization
+        
+        // Optional fields that just need sanitization and min/max enforcement on blur
         { id: 'professionalExpenses', options: { min:0 } },
         { id: 'transportDeduction', options: { min:0, max:4620 } },
         { id: 'pensionContributions', options: { min:0, max:3200 } },
@@ -2034,32 +2310,41 @@
       ];
 
       inputConfigs.forEach(config => {
-        const input = document.getElementById(config.id);
+        const input = document.getElementById(config.id); // Get fresh reference
         if (input) {
           input.addEventListener('blur', function() {
             const isIntegerField = config.options?.integerOnly;
             const type = isIntegerField ? 'integer' : 'number';
-            let val = sanitizeInput(this.value, type);
+            let sanitizedValue = sanitizeInput(this.value, type);
 
-            const minAttr = parseFloat(this.min); // Use HTML min/max if defined
+            // Enforce min/max from HTML attributes or config options
+            const minAttr = parseFloat(this.min);
             const maxAttr = parseFloat(this.max);
-            if (!isNaN(minAttr) && val < minAttr) val = minAttr;
-            if (!isNaN(maxAttr) && val > maxAttr) val = maxAttr;
+            const effectiveMin = !isNaN(minAttr) ? minAttr : (config.options?.min ?? -Infinity);
+            const effectiveMax = !isNaN(maxAttr) ? maxAttr : (config.options?.max ?? Infinity);
+
+            if (sanitizedValue < effectiveMin) sanitizedValue = effectiveMin;
+            if (sanitizedValue > effectiveMax) sanitizedValue = effectiveMax;
             
-            if (this.value.trim() === '' && !this.hasAttribute('required')) {
-                this.value = ''; 
-            } else if (type === 'number' && !isNaN(parseFloat(val))) {
-                 this.value = parseFloat(val).toFixed(this.step === "0.01" ? 2 : 0);
-            } else if (type === 'integer' && !isNaN(parseInt(val))) {
-                 this.value = parseInt(val);
+            // Update input value with sanitized and constrained value
+            if (this.value.trim() === '' && !this.hasAttribute('required') && !config.options?.required) {
+                this.value = ''; // Keep empty if allowed and was empty
+            } else if (type === 'number' && !isNaN(parseFloat(sanitizedValue))) {
+                 // Format to 2 decimal places if step is 0.01, otherwise to 0
+                 this.value = parseFloat(sanitizedValue).toFixed(this.step === "0.01" ? 2 : 0);
+            } else if (type === 'integer' && !isNaN(parseInt(sanitizedValue))) {
+                 this.value = parseInt(sanitizedValue);
+            } else if (this.hasAttribute('required') || config.options?.required) {
+                 // If required and still not a valid number after sanitization (e.g. just "-"), set to min or 0
+                 this.value = parseFloat(effectiveMin > 0 ? effectiveMin : 0).toFixed(this.step === "0.01" ? 2 : 0);
             }
             
             // Trigger specific field validation if feedbackId and fieldName are provided
             if (config.feedbackId && config.fieldName) {
-                validateNumericInput(config.id, config.feedbackId, config.fieldName, config.options);
+                validateNumericInput(config.id, config.feedbackId, config.fieldName, { ...config.options, required: this.hasAttribute('required') || config.options?.required });
             }
             
-            // Always re-check cross-field rules on blur of relevant fields
+            // Re-check cross-field rules on blur of relevant fields
             if (config.id === 'numChildren' || config.id === 'childcareExpenses') {
                 validateChildcareRequiresChildrenRule();
             }
@@ -2068,52 +2353,66 @@
         }
       });
 
-      // Add blur listeners for select elements if needed for immediate validation
-      document.getElementById('taxClass')?.addEventListener('blur', () => validateRequiredSelect('taxClass', 'taxClassFeedback', 'Tax Class'));
-      document.getElementById('mutualityClass')?.addEventListener('blur', () => validateRequiredSelect('mutualityClass', 'mutualityClassFeedback', 'Mutuality Class'));
+      // Add blur listeners for select elements for immediate validation feedback
+      DOMElements.taxClass?.addEventListener('blur', () => validateRequiredSelect('taxClass', 'taxClassFeedback', 'Tax Class'));
+      DOMElements.mutualityClass?.addEventListener('blur', () => validateRequiredSelect('mutualityClass', 'mutualityClassFeedback', 'Mutuality Class'));
     }
 
+    /** Clears the form, results, and resets validation states. */
     function clearForm() {
-      document.getElementById('payrollForm')?.reset();
-      toggleInputMode('gross'); 
-      document.getElementById('conversionDisplay')?.classList.add('d-none');
-      document.getElementById('resultsSection')?.classList.add('d-none');
+      DOMElements.payrollForm?.reset();
+      toggleInputMode('gross'); // Reset to default input mode
+      DOMElements.conversionDisplay?.classList.add('d-none');
+      DOMElements.resultsSection?.classList.add('d-none');
       clearGeneralError();
       
-      const fieldsToClear = [
+      // Reset validation states for all relevant fields
+      const fieldsToResetValidation = [
           { inputId: 'salaryInput', feedbackId: 'salaryInputFeedback' },
           { inputId: 'taxClass', feedbackId: 'taxClassFeedback' },
           { inputId: 'mutualityClass', feedbackId: 'mutualityClassFeedback' },
           { inputId: 'numChildren', feedbackId: 'numChildrenFeedback' },
           { inputId: 'childcareExpenses', feedbackId: 'childcareExpensesFeedback'}
       ];
-      fieldsToClear.forEach(field => {
-          const inputEl = document.getElementById(field.inputId);
+      fieldsToResetValidation.forEach(field => {
+          const inputEl = document.getElementById(field.inputId); // Get fresh reference
           const feedbackEl = document.getElementById(field.feedbackId);
           if (inputEl && feedbackEl) {
               setFieldValidationState(inputEl, feedbackEl, true); // Resets to valid state (clears error message)
           }
       });
 
-      document.getElementById('taxClassWarning')?.classList.add('d-none'); 
-      document.getElementById('taxClassWarning').innerHTML = '';
+      // Clear warnings and notes
+      DOMElements.taxClassWarning?.classList.add('d-none'); 
+      if(DOMElements.taxClassWarning) DOMElements.taxClassWarning.innerHTML = '';
+      DOMElements.ceilingNote?.classList.add('d-none'); 
+      if(DOMElements.ceilingNote) DOMElements.ceilingNote.innerHTML = ''; 
+      DOMElements.cimNoteMonthly?.classList.add('d-none');
+      if(DOMElements.cimNoteMonthly) DOMElements.cimNoteMonthly.innerHTML = '';
+      DOMElements.cimNoteAnnual?.classList.add('d-none');
+      if(DOMElements.cimNoteAnnual) DOMElements.cimNoteAnnual.innerHTML = '';
 
-      const canvas = document.getElementById('salaryChart');
-      if (canvas?.getContext) canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+      // Clear chart
+      const canvas = document.getElementById('salaryChart'); // Get fresh reference
+      if (canvas?.getContext) {
+          const ctx = canvas.getContext('2d');
+          if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+      
       appState.currentCalculationData = null;
       appState.salaryExceedsCeiling = false; 
-      document.getElementById('ceilingNote')?.classList.add('d-none'); 
-      document.getElementById('ceilingNote').innerHTML = ''; 
-      document.getElementById('cimNoteMonthly')?.classList.add('d-none');
-      document.getElementById('cimNoteMonthly').innerHTML = '';
-      document.getElementById('cimNoteAnnual')?.classList.add('d-none');
-      document.getElementById('cimNoteAnnual').innerHTML = '';
       showNotification('Form and results cleared.', 'info');
+      DOMElements.salaryInput?.focus(); // Focus on the first input field
     }
 
     // ============================================
     // ANNUAL SUMMARY, CHART, EXPORT, SHARE
     // ============================================
+
+    /**
+     * Loads and displays the annual summary based on calculation data.
+     * @param {object} data - The calculation data.
+     */
     function loadAnnualSummary(data) {
       if (!data) return;
       const annualGross = data.grossSalary * 12;
@@ -2133,10 +2432,11 @@
       updateElementText('annualCICO2', formatCurrency(data.taxCredits.annualCICO2));
       updateElementText('annualCISSM', formatCurrency(data.taxCredits.annualCISSM));
 
-      const cimNoteAnnualDiv = document.getElementById('cimNoteAnnual');
+      // Display CIM note for Tax Class 1a (annual)
+      const cimNoteAnnualDiv = DOMElements.cimNoteAnnual;
        if(cimNoteAnnualDiv) {
           if (data.taxClass === '1a') {
-              cimNoteAnnualDiv.innerHTML = `<p><i class="fas fa-info-circle"></i> <strong>Single Parent Tax Credit (CIM):</strong> You may be eligible for CIM (up to €3,504/year, depending on income and other conditions). This calculator does not include CIM. Please consult official sources.</p>`;
+              cimNoteAnnualDiv.innerHTML = `<p><i class="fas fa-info-circle" aria-hidden="true"></i> <strong>Single Parent Tax Credit (CIM):</strong> You may be eligible for CIM (up to €3,504/year, depending on income and other conditions). This calculator does not include CIM. Please consult official sources.</p>`;
               cimNoteAnnualDiv.classList.remove('d-none');
           } else {
               cimNoteAnnualDiv.classList.add('d-none');
@@ -2145,10 +2445,16 @@
       }
     }
 
+    /**
+     * Updates the salary breakdown chart.
+     * @param {object} data - The calculation data.
+     */
     function updateCharts(data) {
-      const canvas = document.getElementById('salaryChart');
+      const canvas = document.getElementById('salaryChart'); // Get fresh reference
       if (canvas?.getContext) {
         const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+        // Ensure canvas internal size matches display size for crisp rendering
         if (canvas.width !== canvas.offsetWidth || canvas.height !== canvas.offsetHeight) {
              canvas.width = canvas.offsetWidth; 
              canvas.height = canvas.offsetHeight;
@@ -2157,25 +2463,33 @@
       }
     }
 
+    /**
+     * Draws the salary breakdown pie chart and legend manually on the canvas.
+     * @param {CanvasRenderingContext2D} ctx - The 2D rendering context for the canvas.
+     * @param {object} data - The calculation data.
+     */
     function updateSalaryBreakdownChart(ctx, data) {
         const canvas = ctx.canvas;
         const width = canvas.width;
         const height = canvas.height;
-        ctx.clearRect(0, 0, width, height);
+        ctx.clearRect(0, 0, width, height); // Clear previous drawing
 
-        const pieAreaWidthRatio = 0.45; 
+        const pieAreaWidthRatio = 0.45; // Proportion of canvas width for the pie chart
         const legendAreaWidthRatio = 1 - pieAreaWidthRatio;
         const pieAreaWidth = width * pieAreaWidthRatio;
-        const legendAreaWidth = width * legendAreaWidthRatio;
+        // const legendAreaWidth = width * legendAreaWidthRatio; // Not directly used for legend item width constraint here
         const chartPadding = 10; 
-        const chartMaxRadius = Math.min(pieAreaWidth / 2 - chartPadding, height / 2 - chartPadding);
+        const chartMaxRadius = Math.max(10, Math.min(pieAreaWidth / 2 - chartPadding, height / 2 - chartPadding)); // Ensure radius is positive
         const centerX = pieAreaWidth / 2;
         const centerY = height / 2;
 
         const totalEmployerCost = data.totalEmployerCost;
-        if (totalEmployerCost <= 0) {
-            ctx.font = '13px Inter, Arial, sans-serif'; ctx.fillStyle = '#666'; ctx.textAlign = 'center';
-            ctx.fillText('No data for chart.', width / 2, height / 2); return;
+        if (totalEmployerCost <= 0) { // Handle no data case
+            ctx.font = '13px Inter, Arial, sans-serif'; 
+            ctx.fillStyle = '#6c757d'; // Muted text color
+            ctx.textAlign = 'center';
+            ctx.fillText('No data available for chart.', width / 2, height / 2); 
+            return;
         }
 
         const totalEmployerSSC = data.totalEmployerMonthlyContributions;
@@ -2183,38 +2497,51 @@
         const taxes = data.monthlyTaxes; 
         const netSalary = data.netSalary;
 
+        // Define pie slices with names, values, and colors
         const pieSlices = [
-            { name: 'Net Salary', value: netSalary, color: '#4CAF50' },
-            { name: 'Employee SS', value: totalEmployeeSSC, color: '#FF9800' },
-            { name: 'Taxes', value: taxes, color: '#F44336' },
-            { name: 'Employer SS', value: totalEmployerSSC, color: '#2196F3' }
-        ].filter(slice => slice.value > 0.001 * totalEmployerCost); 
+            { name: 'Net Salary', value: netSalary, color: '#4CAF50' }, // Green
+            { name: 'Employee SS', value: totalEmployeeSSC, color: '#FF9800' }, // Orange
+            { name: 'Taxes', value: taxes, color: '#F44336' }, // Red
+            { name: 'Employer SS', value: totalEmployerSSC, color: '#2196F3' } // Blue
+        ].filter(slice => slice.value > 0.001 * totalEmployerCost); // Filter out very small slices
 
-        let currentAngle = -Math.PI / 2; 
+        let currentAngle = -Math.PI / 2; // Start at the top
         pieSlices.forEach(slice => {
             const sliceAngle = (slice.value / totalEmployerCost) * 2 * Math.PI;
-            if (sliceAngle < 0.001) return; 
-            ctx.beginPath(); ctx.moveTo(centerX, centerY);
+            if (sliceAngle < 0.001) return; // Skip drawing if angle is too small
+            
+            ctx.beginPath(); 
+            ctx.moveTo(centerX, centerY);
             ctx.arc(centerX, centerY, chartMaxRadius, currentAngle, currentAngle + sliceAngle);
-            ctx.closePath(); ctx.fillStyle = slice.color; ctx.fill();
-            ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 1.5; ctx.stroke();
+            ctx.closePath(); 
+            ctx.fillStyle = slice.color; 
+            ctx.fill();
+            
+            // Add a thin white border between slices for better separation
+            ctx.strokeStyle = '#FFFFFF'; 
+            ctx.lineWidth = 1.5; 
+            ctx.stroke();
+            
             currentAngle += sliceAngle;
         });
 
-        ctx.fillStyle = '#333333'; ctx.textAlign = 'center';
+        // Draw text in the center of the pie chart
+        ctx.fillStyle = '#333333'; // Dark text color
+        ctx.textAlign = 'center';
         const centralTextBaseSize = Math.max(9, chartMaxRadius * 0.12); 
         ctx.font = `bold ${centralTextBaseSize}px Inter, Arial, sans-serif`;
         ctx.fillText('Total Cost', centerX, centerY - centralTextBaseSize * 0.6);
         ctx.font = `bold ${centralTextBaseSize * 1.2}px Inter, Arial, sans-serif`;
         ctx.fillText(formatCurrency(totalEmployerCost), centerX, centerY + centralTextBaseSize * 0.9);
 
+        // Draw legend
         const legendX = pieAreaWidth + 15; 
         let legendY = 15;
         const legendItemMinHeight = 18; 
         const legendColorBoxSize = 10;
-        const legendFontSize = 9.5; 
+        const legendFontSize = Math.max(8, Math.min(10, height * 0.03)); // Responsive legend font size
         const legendLineSpacing = 4; 
-        const maxLegendItemWidth = legendAreaWidth - 25; 
+        const maxLegendItemWidth = width - legendX - 10; // Max width for legend text
 
         ctx.textAlign = 'left';
         ctx.font = `bold ${legendFontSize + 1}px Inter, Arial, sans-serif`;
@@ -2225,28 +2552,31 @@
         ctx.font = `${legendFontSize}px Inter, Arial, sans-serif`;
 
         const legendItems = [
-            { name: 'Total Employer Cost', value: totalEmployerCost, isTotal: true },
+            { name: 'Total Employer Cost', value: totalEmployerCost, isTotal: true, color: '#333333' }, // Color for consistency if box is drawn
             { name: 'Employer Social Security', value: totalEmployerSSC, color: '#2196F3' },
-            { name: 'Gross Salary', value: data.grossSalary, isInformational: true }, 
+            { name: 'Gross Salary', value: data.grossSalary, isInformational: true, color: '#777777' }, 
             { name: 'Employee Social Security', value: totalEmployeeSSC, color: '#FF9800'},
             { name: 'Taxes & Surcharges', value: taxes, color: '#F44336' },
             { name: 'Net Salary', value: netSalary, color: '#4CAF50' }
         ];
         
         legendItems.forEach(item => {
-            if (legendY + legendItemMinHeight > height - 5) return; 
+            if (legendY + legendItemMinHeight > height - 5) return; // Avoid overflow
+            
             const percentage = totalEmployerCost > 0 ? (item.value / totalEmployerCost * 100).toFixed(1) : "0.0";
             let text = `${item.name}: ${formatCurrency(item.value)} (${percentage}%)`;
             if (item.isTotal) text = `${item.name}: ${formatCurrency(item.value)} (100.0%)`;
+            if (item.isInformational) text = `${item.name}: ${formatCurrency(item.value)}`; // No percentage for informational
             
             let textX = legendX;
-            if (item.color) {
+            if (item.color && !item.isInformational && !item.isTotal) { // Draw color box for actual slices
                 ctx.fillStyle = item.color;
                 ctx.fillRect(legendX, legendY + (legendItemMinHeight - legendColorBoxSize) / 2 -1 , legendColorBoxSize, legendColorBoxSize);
                 textX += legendColorBoxSize + 5;
             }
-            ctx.fillStyle = '#333333';
+            ctx.fillStyle = item.isInformational ? item.color : '#333333'; // Use specified color for informational, else default
             
+            // Truncate text if too long
             let textToDraw = text;
             if (ctx.measureText(textToDraw).width > maxLegendItemWidth) {
                 while(ctx.measureText(textToDraw + "...").width > maxLegendItemWidth && textToDraw.length > 15) { 
@@ -2259,43 +2589,161 @@
         });
     }
 
+    /** Exports calculation results as a JSON file. */
     function exportResults() {
-      if (!appState.currentCalculationData) { showGeneralError('No calculation data to export.'); return; }
-      const dataToExport = { ...appState.currentCalculationData, calculationDate: new Date().toISOString() };
-      const dataStr = JSON.stringify(dataToExport, null, 2); 
+      if (!appState.currentCalculationData) { 
+          showGeneralError('No calculation data to export.'); 
+          return; 
+      }
+      const dataToExport = { 
+          ...appState.currentCalculationData, 
+          calculationDate: new Date().toISOString(),
+          appVersion: '3.4.3' // Add app version to export
+      };
+      const dataStr = JSON.stringify(dataToExport, null, 2); // Pretty print JSON
       const dataBlob = new Blob([dataStr], { type: 'application/json;charset=utf-8;' });
       const link = document.createElement('a');
       link.href = URL.createObjectURL(dataBlob);
-      link.download = `lux_payroll_${new Date().toISOString().slice(0,10)}.json`;
-      document.body.appendChild(link); link.click(); document.body.removeChild(link);
+      link.download = `lux_payroll_results_${new Date().toISOString().slice(0,10).replace(/-/g,'')}.json`; // YYYYMMDD format
+      document.body.appendChild(link); 
+      link.click(); 
+      document.body.removeChild(link);
       URL.revokeObjectURL(link.href); 
       showNotification('Results exported!', 'success');
     }
 
+    /** Shares calculation results using Web Share API or copies to clipboard. */
     async function shareResults() {
-      if (!appState.currentCalculationData) { showGeneralError('No calculation data to share.'); return; }
+      if (!appState.currentCalculationData) { 
+          showGeneralError('No calculation data to share.'); 
+          return; 
+      }
       const d = appState.currentCalculationData;
-      const text = `Lux Payroll Estimate:\nGross: ${formatCurrency(d.grossSalary)}\nNet: ${formatCurrency(d.netSalary)}\nTotal Cost: ${formatCurrency(d.totalEmployerCost)}`;
-      const shareData = { title: 'Luxembourg Payroll Estimate', text: text, url: window.location.href };
-      if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
-        try { await navigator.share(shareData); showNotification('Results shared!', 'success'); }
-        catch (err) { if (err.name !== 'AbortError') fallbackCopyToClipboard(text); }
-      } else { fallbackCopyToClipboard(text); }
-    }
+      const textSummary = `Luxembourg Payroll Estimate (Monthly):\nGross Salary: ${formatCurrency(d.grossSalary)}\nNet Salary: ${formatCurrency(d.netSalary)}\nTotal Employer Cost: ${formatCurrency(d.totalEmployerCost)}\n\n(Note: This is an estimate. Consult a professional for official figures.)`;
+      
+      const shareData = { 
+          title: 'Luxembourg Payroll Estimate', 
+          text: textSummary, 
+          url: window.location.href // URL of the calculator
+      };
 
-    function fallbackCopyToClipboard(text) {
-      if (navigator.clipboard?.writeText) {
-        navigator.clipboard.writeText(text)
-          .then(() => showNotification('Results copied to clipboard!', 'success'))
-          .catch(() => showGeneralError('Could not copy results to clipboard.'));
+      if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+        try { 
+            await navigator.share(shareData); 
+            showNotification('Results shared successfully!', 'success'); 
+        }
+        catch (err) { 
+            // Handle AbortError silently, otherwise fallback or show error
+            if (err.name !== 'AbortError') {
+                console.warn('Web Share API failed:', err);
+                fallbackCopyToClipboard(textSummary, 'Sharing failed, results copied to clipboard!'); 
+            }
+        }
       } else { 
-        const ta = document.createElement("textarea"); ta.value = text; ta.style.position = "fixed"; 
-        document.body.appendChild(ta); ta.focus(); ta.select();
-        try { document.execCommand('copy'); showNotification('Results copied to clipboard!', 'success'); }
-        catch (err) { showGeneralError('Failed to copy results to clipboard.'); }
-        document.body.removeChild(ta);
+          fallbackCopyToClipboard(textSummary, 'Sharing not supported, results copied to clipboard!'); 
       }
     }
+
+    /**
+     * Fallback to copy text to clipboard.
+     * @param {string} text - The text to copy.
+     * @param {string} [successMessage='Results copied to clipboard!'] - Message on success.
+     */
+    function fallbackCopyToClipboard(text, successMessage = 'Results copied to clipboard!') {
+      // Modern clipboard API with permission handling (preferred)
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text)
+          .then(() => showNotification(successMessage, 'success'))
+          .catch(err => {
+              console.error('Async clipboard write failed:', err);
+              // Try legacy execCommand as a further fallback
+              legacyCopyToClipboard(text, successMessage);
+          });
+      } else {
+          legacyCopyToClipboard(text, successMessage);
+      }
+    }
+
+    /**
+     * Legacy method to copy text to clipboard using execCommand.
+     * @param {string} text - The text to copy.
+     * @param {string} successMessage - Message on success.
+     */
+    function legacyCopyToClipboard(text, successMessage) {
+        const textArea = document.createElement("textarea"); 
+        textArea.value = text; 
+        // Styling to make it invisible and off-screen
+        textArea.style.position = "fixed"; 
+        textArea.style.top = "-9999px";
+        textArea.style.left = "-9999px";
+        document.body.appendChild(textArea); 
+        textArea.focus(); 
+        textArea.select();
+        try { 
+            const successful = document.execCommand('copy'); 
+            if (successful) {
+                showNotification(successMessage, 'success'); 
+            } else {
+                showGeneralError('Failed to copy results. Please copy manually.');
+            }
+        }
+        catch (err) { 
+            console.error('Legacy execCommand copy failed:', err);
+            showGeneralError('Failed to copy results. Please copy manually.'); 
+        }
+        document.body.removeChild(textArea);
+    }
+
+    // PWA Install Button Logic (Basic - full PWA setup is more involved)
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault(); // Prevent the mini-infobar from appearing on mobile
+        deferredPrompt = e; // Stash the event so it can be triggered later.
+        if (DOMElements.installBtn) {
+            DOMElements.installBtn.style.display = 'block'; // Show the install button
+            DOMElements.installBtn.addEventListener('click', () => {
+                DOMElements.installBtn.style.display = 'none'; // Hide the button after click
+                deferredPrompt.prompt(); // Show the install prompt
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('User accepted the A2HS prompt');
+                        showNotification('App installed successfully!', 'success');
+                    } else {
+                        console.log('User dismissed the A2HS prompt');
+                    }
+                    deferredPrompt = null; // We've used the prompt
+                });
+            });
+        }
+    });
+
+    window.addEventListener('appinstalled', () => {
+        console.log('PWA was installed');
+        if (DOMElements.installBtn) DOMElements.installBtn.style.display = 'none';
+        // Optionally hide the install button or show a success message
+    });
+
+
+    // Main DOMContentLoaded listener
+    document.addEventListener('DOMContentLoaded', function () {
+      initializeDOMElements(); // Cache DOM elements
+      setupEventListeners();   // Set up event listeners
+      toggleInputMode('gross'); // Set initial input mode
+      
+      // Add a resize listener for the chart
+      let resizeTimeout;
+      window.addEventListener('resize', () => {
+          clearTimeout(resizeTimeout);
+          resizeTimeout = setTimeout(() => {
+              if (appState.currentCalculationData && DOMElements.resultsSection && !DOMElements.resultsSection.classList.contains('d-none')) {
+                  updateCharts(appState.currentCalculationData);
+              }
+          }, 250); // Debounce resize event
+      });
+
+      console.log('Luxembourg Payroll Calculator initialized (v3.4.3)'); 
+    });
+
   </script>
 </body>
 </html>
