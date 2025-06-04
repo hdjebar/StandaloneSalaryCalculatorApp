@@ -23,6 +23,13 @@ A comprehensive web-based payroll calculator for Luxembourg, providing accurate 
 - **Medical Expenses**: Above 2.5% of income threshold
 - **Charitable Donations**: Minimum €120, maximum 20% of income
 
+### Tax Credits Integration
+- **Employee Tax Credit (CIS)**: Income-based credit with tiers
+- **CO2 Tax Credit (CI-CO2)**: Environmental tax credit
+- **Minimum Social Wage Tax Credit (CISSM)**: Support for lower incomes
+- **Child Tax Credits**: Family support integration
+- **Single Parent Credit (CIM)**: Information and guidance for Class 1a
+
 ### User Experience
 - **Monthly & Annual Views**: Toggle between time periods
 - **Interactive Charts**: Visual salary breakdown with pie charts
@@ -31,6 +38,8 @@ A comprehensive web-based payroll calculator for Luxembourg, providing accurate 
 - **Print-friendly**: Optimized print layouts
 - **Responsive Design**: Mobile and desktop compatible
 - **Accessibility**: ARIA labels and keyboard navigation
+- **Tax Credits Display**: Comprehensive breakdown of all applicable credits
+- **Visual Notifications**: Contextual information for special cases
 
 ## 🚀 Quick Start
 
@@ -78,6 +87,48 @@ Progressive tax system with 23 brackets ranging from 0% to 42%, with class-speci
 - **Standard Rate**: 7% of income tax
 - **Higher Rate**: 9% for high earners (€150k+ for Class 1/1a, €300k+ for Class 2)
 
+### Tax Credits System
+The calculator includes Luxembourg's comprehensive tax credit system:
+
+#### Employee Tax Credit (CIS)
+- **Eligibility**: Annual gross income €936 - €79,999.99
+- **Tiers**: €300 base + income-based calculation up to €600 maximum
+- **Reduction**: Phases out for incomes above €40,000
+
+#### CO2 Tax Credit (CI-CO2)
+- **Amount**: €192 for incomes up to €40,000
+- **Reduction**: Decreases for higher incomes up to €79,999.99
+
+#### Minimum Social Wage Tax Credit (CISSM)
+- **Eligibility**: Monthly gross €1,800 - €3,600
+- **Amount**: €81/month for incomes up to €3,000
+- **Degressive**: Reduces proportionally between €3,000-€3,600
+
+#### Single Parent Tax Credit (CIM)
+- **For Tax Class 1a**: Information and guidance provided
+- **Note**: Complex calculation requiring official consultation
+
+### Tax Credits System
+The calculator includes Luxembourg's comprehensive tax credit system:
+
+#### Employee Tax Credit (CIS)
+- **Eligibility**: Annual gross income €936 - €79,999.99
+- **Tiers**: €300 base + income-based calculation up to €600 maximum
+- **Reduction**: Phases out for incomes above €40,000
+
+#### CO2 Tax Credit (CI-CO2)
+- **Amount**: €192 for incomes up to €40,000
+- **Reduction**: Decreases for higher incomes up to €79,999.99
+
+#### Minimum Social Wage Tax Credit (CISSM)
+- **Eligibility**: Monthly gross €1,800 - €3,600
+- **Amount**: €81/month for incomes up to €3,000
+- **Degressive**: Reduces proportionally between €3,000-€3,600
+
+#### Single Parent Tax Credit (CIM)
+- **For Tax Class 1a**: Information and guidance provided
+- **Note**: Complex calculation requiring official consultation
+
 ## 🏗️ Technical Architecture
 
 ### Technology Stack
@@ -112,7 +163,8 @@ const CONFIG = {
   EMPLOYER_RATES: { /* rates */ },
   SOCIAL_SECURITY_PARAMETERS: { /* parameters */ },
   TAX_BRACKETS: [ /* 23 brackets */ ],
-  FAMILY_BENEFITS: { /* allowances */ }
+  FAMILY_BENEFITS: { /* allowances */ },
+  TAX_CREDITS: { /* CIS, CI-CO2, CISSM parameters */ }
 };
 ```
 
@@ -121,6 +173,9 @@ const CONFIG = {
 - `calculateEmployerContributions()`: Employer social security
 - `calculateEmployeeContributions()`: Employee social security
 - `calculateIncomeTax()`: Progressive tax calculation
+- `calculateCIS()`: Employee tax credit calculation
+- `calculateCICO2()`: CO2 tax credit calculation
+- `calculateCISSM()`: Minimum social wage tax credit calculation
 - `displayResults()`: UI updates and chart rendering
 
 ## 📱 Features Deep Dive
@@ -174,16 +229,21 @@ The application uses CSS custom properties for easy theming:
 ```
 
 ### Tax Law Updates
-Tax brackets and rates are defined in the `CONFIG` object for easy updates when legislation changes:
+Tax brackets, rates, and tax credits are defined in the `CONFIG` object for easy updates when legislation changes:
 ```javascript
 TAX_BRACKETS: [
   { limit: 13230, rate: 0.00 },
   { limit: 15435, rate: 0.08 },
   // ... additional brackets
-]
+],
+TAX_CREDITS: {
+  CIS: { /* Employee tax credit parameters */ },
+  CICO2: { /* CO2 tax credit parameters */ },
+  CISSM: { /* Min. social wage credit parameters */ }
+}
 ```
 
-This modular configuration approach ensures the calculator can be quickly adapted to new tax laws, social security rates, or benefit amounts without requiring extensive code changes.
+This modular configuration approach ensures the calculator can be quickly adapted to new tax laws, social security rates, benefit amounts, or tax credit modifications without requiring extensive code changes.
 
 ## 📋 Supported Deductions
 
@@ -202,15 +262,15 @@ This modular configuration approach ensures the calculator can be quickly adapte
 
 ### For Employees
 - Salary negotiation preparation
-- Understanding take-home pay
-- Tax planning and optimization
-- Comparing job offers
+- Understanding take-home pay including all tax credits
+- Tax planning and optimization with credit awareness
+- Comparing job offers with full cost analysis
 
 ### For Employers
 - Calculating total employment costs
-- Budgeting for new hires
+- Budgeting for new hires with accurate tax projections
 - Understanding social security obligations
-- Payroll verification
+- Payroll verification including tax credit impacts
 
 ### For HR Professionals
 - Quick salary calculations
@@ -234,16 +294,19 @@ This calculator provides estimates based on Luxembourg tax laws and regulations 
 - No support for multiple income sources
 - Limited to standard employment contracts
 - Does not calculate 13th month bonus implications
+- CIM (Single Parent Tax Credit) provides guidance only, not calculation
 
 ## 📈 Version History
 
-### Version 3.3.2 (Current)
-- Enhanced monthly deductions and benefits display
-- Improved chart layouts and legends
-- Added social security ceiling notifications
-- Responsive design improvements
+### Version 3.3.3 (Current)
+- **Tax Credits Integration**: Added CIS, CI-CO2, and CISSM tax credits
+- **Enhanced Annual Summary**: Comprehensive tax credit breakdown
+- **CIM Guidance**: Information notes for Single Parent Tax Credit eligibility
+- **Improved Tax Display**: Separate before/after credits calculations
+- **Enhanced Documentation**: Updated French translations and explanations
 
 ### Previous Versions
+- 3.3.2: Enhanced monthly deductions and benefits display, chart improvements
 - 3.3.x: Chart enhancements and UI improvements
 - 3.2.x: Annual summary additions
 - 3.1.x: Export and sharing functionality
