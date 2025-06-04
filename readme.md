@@ -165,27 +165,6 @@ The calculator includes Luxembourg's comprehensive tax credit system:
 - **For Tax Class 1a**: Information and guidance provided
 - **Note**: Complex calculation requiring official consultation
 
-### Tax Credits System
-The calculator includes Luxembourg's comprehensive tax credit system:
-
-#### Employee Tax Credit (CIS)
-- **Eligibility**: Annual gross income €936 - €79,999.99
-- **Tiers**: €300 base + income-based calculation up to €600 maximum
-- **Reduction**: Phases out for incomes above €40,000
-
-#### CO2 Tax Credit (CI-CO2)
-- **Amount**: €192 for incomes up to €40,000
-- **Reduction**: Decreases for higher incomes up to €79,999.99
-
-#### Minimum Social Wage Tax Credit (CISSM)
-- **Eligibility**: Monthly gross €1,800 - €3,600
-- **Amount**: €81/month for incomes up to €3,000
-- **Degressive**: Reduces proportionally between €3,000-€3,600
-
-#### Single Parent Tax Credit (CIM)
-- **For Tax Class 1a**: Information and guidance provided
-- **Note**: Complex calculation requiring official consultation
-
 ## 🏗️ Technical Architecture
 
 ### Technology Stack
