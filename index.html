@@ -1,0 +1,1981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta
+    name="description"
+    content="Complete Luxembourg payroll calculator for 2025 with tax compliance, social security, and family benefits calculation."
+  />
+  <meta
+    name="keywords"
+    content="Luxembourg, payroll, calculator, tax, salary, social security, 2025"
+  />
+
+  <!-- PWA Configuration -->
+  <!-- <link rel="manifest" href="manifest.json" /> -->
+  <meta name="theme-color" content="#667eea" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Lux Payroll" />
+
+  <!-- Icons -->
+  <link
+    rel="icon"
+    type="image/png"
+    sizes="192x192"
+    href="images/icon-192x192.png"
+    onerror="this.href='https://placehold.co/192x192/667eea/ffffff?text=Icon'"
+  />
+  <link rel="apple-touch-icon" href="images/icon-192x192.png" onerror="this.href='https://placehold.co/192x192/667eea/ffffff?text=Icon'" />
+
+  <!-- FontAwesome -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+
+  <title>🇱🇺 Luxembourg Payroll Calculator 2025</title>
+
+  <!-- Inline CSS (from style.css) -->
+  <style>
+    /* ============================================
+       GLOBAL & ROOT VARIABLES (example placeholders)
+       ============================================ */
+    :root {
+      --spacing-xs: 4px;
+      --spacing-sm: 8px;
+      --spacing-md: 16px;
+      --spacing-lg: 24px;
+      --spacing-xl: 32px;
+      --border-radius: 8px;
+      --border-color: #ccc;
+      --white-bg: #fff;
+      --light-bg: #f9f9f9;
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+      --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.15);
+      --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.2);
+      --info-color: #3b82f6;
+      --success-color: #10b981;
+      --warning-color: #f59e0b;
+      --danger-color: #ef4444;
+      --text-muted: #6c757d;
+      --dark-bg: #333;
+      --text-primary: #212529;
+      --text-secondary: #495057;
+      --font-size-sm: 0.875rem;
+      --primary-gradient: linear-gradient(90deg, #667eea, #764ba2);
+      --transition: all 0.3s ease-in-out; /* Added for card hover */
+    }
+
+    /* Basic Reset & Body Styles */
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+        Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      color: var(--text-primary);
+      background-color: var(--light-bg);
+      margin: 0;
+      padding: var(--spacing-md);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      background-color: var(--white-bg);
+      padding: var(--spacing-lg);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-lg);
+      width: 100%;
+      max-width: 900px; /* Increased max-width for better layout */
+      margin: var(--spacing-md) auto;
+    }
+    
+    /* Header Styles */
+    .header {
+      text-align: center;
+      margin-bottom: var(--spacing-xl);
+      padding-bottom: var(--spacing-lg);
+      border-bottom: 1px solid var(--border-color);
+    }
+    .header h1 {
+      font-size: 1.8rem; /* Adjusted for responsiveness */
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: var(--spacing-sm);
+    }
+    .header h1 .fas {
+      margin-right: var(--spacing-sm);
+      color: var(--info-color);
+    }
+    .header p {
+      font-size: 1rem;
+      color: var(--text-secondary);
+    }
+
+    /* Form Section Styles */
+    .form-section {
+      margin-bottom: var(--spacing-xl);
+    }
+    .form-section h2 {
+      font-size: 1.5rem;
+      margin-bottom: var(--spacing-lg);
+      color: var(--text-primary);
+      border-bottom: 2px solid var(--info-color);
+      padding-bottom: var(--spacing-sm);
+    }
+    .form-section h2 .fas {
+      margin-right: var(--spacing-sm);
+    }
+
+    /* Form Group Styles */
+    .form-group {
+      margin-bottom: var(--spacing-lg);
+    }
+    .form-label,
+    legend {
+      display: block;
+      font-weight: 600;
+      margin-bottom: var(--spacing-sm);
+      color: var(--text-secondary);
+    }
+    .form-control,
+    .form-select {
+      width: 100%;
+      padding: var(--spacing-md);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      box-sizing: border-box; /* Ensures padding doesn't expand element */
+    }
+    .form-control:focus,
+    .form-select:focus {
+      border-color: var(--info-color);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+      outline: none;
+    }
+    .form-text {
+      display: block;
+      margin-top: var(--spacing-xs);
+      font-size: var(--font-size-sm);
+      color: var(--text-muted);
+    }
+    fieldset {
+      border: 1px solid var(--border-color);
+      padding: var(--spacing-lg);
+      border-radius: var(--border-radius);
+      margin-top: var(--spacing-lg);
+    }
+    legend {
+      padding: 0 var(--spacing-sm);
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    /* Input Mode Toggle */
+    .input-mode-toggle {
+      display: flex;
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      border: 1px solid var(--info-color);
+    }
+    .input-mode-toggle .btn {
+      flex-grow: 1;
+      background-color: var(--white-bg);
+      color: var(--info-color);
+      border: none;
+      border-radius: 0; /* Remove individual button radius */
+    }
+    .input-mode-toggle .btn.active {
+      background-color: var(--info-color);
+      color: var(--white-bg);
+    }
+    .input-mode-toggle .btn:not(:last-child) {
+      border-right: 1px solid var(--info-color);
+    }
+
+    /* Conversion Display */
+    .conversion-display {
+      background-color: var(--light-bg);
+      padding: var(--spacing-md);
+      border-radius: var(--border-radius);
+      margin-top: var(--spacing-sm);
+      text-align: center;
+      border: 1px dashed var(--border-color);
+    }
+    .conversion-value {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: var(--success-color);
+    }
+
+    /* Button Styles */
+    .btn {
+      padding: var(--spacing-md) var(--spacing-lg);
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      transition: background-color 0.2s ease, transform 0.1s ease;
+      border: 1px solid transparent;
+      text-align: center;
+    }
+    .btn .fas {
+      margin-right: var(--spacing-sm);
+    }
+    .btn:hover {
+      opacity: 0.9;
+    }
+    .btn:active {
+      transform: translateY(1px);
+    }
+    .btn-primary {
+      background-color: var(--info-color);
+      color: var(--white-bg);
+      border-color: var(--info-color);
+    }
+    .btn-primary:hover {
+      background-color: #2563eb; /* Darker shade of info */
+    }
+    .btn-secondary {
+      background-color: var(--text-muted);
+      color: var(--white-bg);
+      border-color: var(--text-muted);
+    }
+    .btn-secondary:hover {
+      background-color: #5a6268; /* Darker shade of muted */
+    }
+    .btn-success {
+      background-color: var(--success-color);
+      color: var(--white-bg);
+    }
+    .btn-info {
+        background-color: var(--info-color);
+        color: var(--white-bg);
+    }
+
+    /* Results Section */
+    .results {
+      margin-top: var(--spacing-xl);
+      padding: var(--spacing-lg);
+      background-color: var(--white-bg);
+      border-radius: var(--border-radius);
+      /* box-shadow: var(--shadow-md); */ /* Removed to avoid double shadow with container */
+    }
+    .results h3 {
+      font-size: 1.3rem;
+      margin-bottom: var(--spacing-md);
+      color: var(--text-primary);
+    }
+    .results h3 .fas {
+      margin-right: var(--spacing-sm);
+    }
+    .result-card {
+      background-color: var(--white-bg); /* Ensure cards are white */
+      padding: var(--spacing-lg);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border-color); /* Add subtle border */
+      margin-bottom: var(--spacing-lg); /* Add margin for standalone cards */
+    }
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--spacing-lg);
+    }
+    .result-item {
+      display: flex;
+      justify-content: space-between;
+      padding: var(--spacing-sm) 0;
+      border-bottom: 1px solid var(--light-bg);
+    }
+    .result-item:last-child {
+      border-bottom: none;
+    }
+    .result-label {
+      color: var(--text-secondary);
+    }
+    .result-value {
+      font-weight: 600;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      margin-bottom: var(--spacing-lg);
+      border-bottom: 1px solid var(--border-color);
+    }
+    .tab {
+      padding: var(--spacing-md) var(--spacing-lg);
+      cursor: pointer;
+      border: none;
+      background-color: transparent;
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      border-bottom: 3px solid transparent;
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+    .tab:hover {
+      color: var(--info-color);
+    }
+    .tab.active {
+      color: var(--info-color);
+      border-bottom-color: var(--info-color);
+      font-weight: 600;
+    }
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.5s;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Salary Ranges Specific */
+    .salary-range-item {
+      background-color: var(--light-bg);
+      padding: var(--spacing-lg);
+      border-radius: var(--border-radius);
+      margin-bottom: var(--spacing-md);
+      border-left: 5px solid var(--info-color);
+    }
+    .salary-range-item h4 {
+      margin-top: 0;
+      color: var(--info-color);
+    }
+    .range-value {
+      font-size: 1.1rem;
+      font-weight: bold;
+      margin-bottom: var(--spacing-sm);
+    }
+
+    /* Error Message */
+    .error-message {
+      background-color: rgba(239, 68, 68, 0.1); /* danger-color with opacity */
+      color: var(--danger-color);
+      padding: var(--spacing-md);
+      border-radius: var(--border-radius);
+      margin-bottom: var(--spacing-lg);
+      border: 1px solid var(--danger-color);
+      display: none; /* Hidden by default */
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .error-message.show {
+      display: block;
+      opacity: 1;
+    }
+
+    /* Loading Overlay */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      transition: opacity 0.3s ease;
+    }
+    .loading-spinner {
+      border: 5px solid var(--light-bg);
+      border-top: 5px solid var(--info-color);
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .btn.loading {
+      position: relative;
+      color: transparent !important; /* Hide text */
+    }
+    .btn.loading::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 20px;
+      height: 20px;
+      margin-top: -10px;
+      margin-left: -10px;
+      border: 3px solid rgba(255, 255, 255, 0.5);
+      border-top-color: var(--white-bg);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    /* Notification Styles */
+    .notification {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: var(--spacing-md) var(--spacing-lg);
+      border-radius: var(--border-radius);
+      color: var(--white-bg);
+      z-index: 1001;
+      opacity: 0;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      box-shadow: var(--shadow-md);
+    }
+    .notification.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    .notification.info { background-color: var(--info-color); }
+    .notification.success { background-color: var(--success-color); }
+    .notification.warning { background-color: var(--warning-color); color: #333; }
+    .notification.error { background-color: var(--danger-color); }
+
+
+    /* ============================================
+       PRINT STYLES
+       ============================================ */
+    @media print {
+      body {
+        padding: 0;
+        background-color: var(--white-bg);
+      }
+      .container {
+        box-shadow: none;
+        border: 1px solid #000;
+        max-width: 100%;
+        padding: var(--spacing-md);
+      }
+      .header, .form-section, .action-buttons, .footer, .install-btn, .tabs button:not(#monthlyTab):not(#annualTab) {
+        display: none !important;
+      }
+      .results {
+        display: block !important;
+        margin-top: 0;
+        padding: 0;
+      }
+      .tab-content { display: none !important; }
+      .tab-content#monthlyContent, .tab-content#annualContent {
+          display: block !important;
+          animation: none;
+      }
+      .results-grid {
+        grid-template-columns: 1fr; /* Single column for printing */
+      }
+      .result-card {
+        break-inside: avoid;
+        border: 1px solid #000;
+        margin-bottom: 1rem;
+        box-shadow: none;
+        padding: var(--spacing-md);
+      }
+      .chart-container {
+        page-break-inside: avoid;
+        border: 1px solid #000;
+      }
+    }
+
+    /* ============================================
+       CHART STYLES
+       ============================================ */
+    .chart-container {
+      position: relative;
+      height: 320px; /* Increased height for new legend */
+      margin: var(--spacing-lg) 0;
+      background: var(--white-bg);
+      border: 1px solid var(--border-color); /* Subtle border */
+      border-radius: var(--border-radius);
+      padding: var(--spacing-md); 
+      box-shadow: var(--shadow-sm);
+      overflow: hidden; 
+    }
+
+    .chart-canvas {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Ceiling Note Style */
+    .ceiling-note {
+        background-color: #eef2ff; /* Light indigo background */
+        border: 1px solid #c7d2fe; /* Indigo border */
+        color: #4338ca; /* Indigo text */
+        padding: var(--spacing-md);
+        margin-top: var(--spacing-lg);
+        border-radius: var(--border-radius);
+        font-size: var(--font-size-sm);
+    }
+    .ceiling-note p {
+        margin: var(--spacing-xs) 0;
+    }
+    .ceiling-note strong {
+        font-weight: 600;
+    }
+
+
+    /* ============================================
+       UTILITY CLASSES
+       ============================================ */
+    .text-center { text-align: center; }
+    .text-right { text-align: right; }
+    .text-left { text-align: left; }
+    .mt-0 { margin-top: 0; }
+    .mt-1 { margin-top: var(--spacing-xs); }
+    .mt-2 { margin-top: var(--spacing-sm); }
+    .mt-3 { margin-top: var(--spacing-md); }
+    .mt-4 { margin-top: var(--spacing-lg); }
+    .mt-5 { margin-top: var(--spacing-xl); }
+    .mb-0 { margin-bottom: 0; }
+    .mb-1 { margin-bottom: var(--spacing-xs); }
+    .mb-2 { margin-bottom: var(--spacing-sm); }
+    .mb-3 { margin-bottom: var(--spacing-md); }
+    .mb-4 { margin-bottom: var(--spacing-lg); }
+    .mb-5 { margin-bottom: var(--spacing-xl); }
+    .p-0 { padding: 0; }
+    .p-1 { padding: var(--spacing-xs); }
+    .p-2 { padding: var(--spacing-sm); }
+    .p-3 { padding: var(--spacing-md); }
+    .p-4 { padding: var(--spacing-lg); }
+    .p-5 { padding: var(--spacing-xl); }
+    .d-none { display: none !important; } /* Added !important */
+    .d-block { display: block; }
+    .d-flex { display: flex; }
+    .d-grid { display: grid; }
+    .justify-content-between { justify-content: space-between; }
+    .w-100 { width: 100%; }
+    .h-100 { height: 100%; }
+    .text-success { color: var(--success-color); }
+    .text-warning { color: var(--warning-color); }
+    .text-danger { color: var(--danger-color); }
+    .text-info { color: var(--info-color); }
+    .text-muted { color: var(--text-muted); }
+    .bg-light { background-color: var(--light-bg); }
+    .bg-white { background-color: var(--white-bg); }
+    .border { border: 1px solid var(--border-color); }
+    .border-0 { border: none; }
+    .rounded { border-radius: var(--border-radius); }
+    .shadow-sm { box-shadow: var(--shadow-sm); }
+    .shadow { box-shadow: var(--shadow-md); }
+    .shadow-lg { box-shadow: var(--shadow-lg); }
+
+    /* ============================================
+       COMPONENT SPECIFIC STYLES
+       ============================================ */
+
+    /* Install button for PWA */
+    .install-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 999;
+      /* display: none; */ /* Handled by JS */
+      border-radius: 50px;
+      padding: 12px 20px;
+      background: var(--primary-gradient);
+      color: var(--white-bg);
+      border: none;
+      cursor: pointer;
+      box-shadow: var(--shadow-lg);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    /* Footer styles */
+    .footer {
+      text-align: center;
+      padding: var(--spacing-xl);
+      color: var(--text-muted);
+      font-size: var(--font-size-sm);
+      border-top: 1px solid var(--border-color);
+      width: 100%;
+      max-width: 900px; /* Match container */
+      margin: var(--spacing-xl) auto 0 auto;
+    }
+    .footer a {
+      color: var(--info-color);
+      text-decoration: none;
+    }
+    .footer a:hover { text-decoration: underline; }
+
+    /* Action buttons container */
+    .action-buttons {
+      display: flex;
+      gap: var(--spacing-md);
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: var(--spacing-xl);
+    }
+    .action-buttons .btn { min-width: 150px; /* Increased min-width */ }
+
+    /* Form validation styles */
+    .form-control.is-valid, .form-select.is-valid {
+      border-color: var(--success-color);
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%2310b981' d='M2.3 6.73L.63 5.05l.68-.68L2.3 5.38l3.72-3.72.68.68L2.3 6.73z'/%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right calc(0.375em + 0.1875rem) center;
+      background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+      padding-right: calc(1.5em + 0.75rem);
+    }
+    .form-control.is-invalid, .form-select.is-invalid {
+      border-color: var(--danger-color);
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23ef4444'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23ef4444' stroke='none'/%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right calc(0.375em + 0.1875rem) center;
+      background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+      padding-right: calc(1.5em + 0.75rem);
+    }
+
+
+    /* Tooltip styles */
+    .tooltip {
+      position: relative;
+      display: inline-block;
+      cursor: help;
+    }
+    .tooltip .tooltiptext {
+      visibility: hidden;
+      width: 220px; /* Wider tooltip */
+      background-color: var(--dark-bg);
+      color: var(--white-bg);
+      text-align: left; /* Better for more text */
+      border-radius: var(--border-radius);
+      padding: var(--spacing-sm) var(--spacing-md);
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      margin-left: -110px; /* Half of width */
+      opacity: 0;
+      transition: opacity 0.3s;
+      font-size: var(--font-size-sm);
+      box-shadow: var(--shadow-md);
+    }
+    .tooltip:hover .tooltiptext {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    /* Progress bar */
+    .progress {
+      width: 100%;
+      height: 6px; /* Slightly thicker */
+      background-color: var(--light-bg);
+      border-radius: 3px;
+      overflow: hidden;
+      margin: var(--spacing-md) 0;
+    }
+    .progress-bar {
+      height: 100%;
+      background: var(--primary-gradient);
+      width: 0%;
+      transition: width 0.3s ease;
+      border-radius: 3px;
+    }
+
+    /* Badge styles */
+    .badge {
+      display: inline-block;
+      padding: 0.35em 0.65em; /* Adjusted padding */
+      font-size: 0.75em;
+      font-weight: 700;
+      line-height: 1;
+      text-align: center;
+      white-space: nowrap;
+      vertical-align: baseline;
+      border-radius: var(--border-radius); /* Consistent border radius */
+    }
+    .badge-primary { background-color: var(--info-color); color: var(--white-bg); }
+    .badge-success { background-color: var(--success-color); color: var(--white-bg); }
+    .badge-warning { background-color: var(--warning-color); color: var(--dark-bg); } /* Better contrast */
+    .badge-danger { background-color: var(--danger-color); color: var(--white-bg); }
+
+
+    /* Enhanced focus styles for better accessibility */
+    .form-control:focus-visible,
+    .form-select:focus-visible,
+    .btn:focus-visible,
+    .tab:focus-visible { /* Added tab */
+      outline: 3px solid var(--info-color);
+      outline-offset: 2px;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25); /* Consistent with Bootstrap */
+    }
+
+    /* Improved table styles for results (if used elsewhere, good to have) */
+    .results-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: var(--spacing-lg);
+    }
+    .results-table th,
+    .results-table td {
+      padding: var(--spacing-md);
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .results-table th {
+      background-color: var(--light-bg);
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .results-table tr:hover {
+      background-color: rgba(0, 0, 0, 0.02);
+    }
+
+    /* Styles for side-by-side form groups */
+    .form-row {
+      display: flex;
+      flex-wrap: wrap; /* Allow wrapping on smaller screens */
+      gap: var(--spacing-lg); /* Space between items */
+    }
+    .form-row .form-group {
+      flex: 1; /* Each item takes equal space */
+      min-width: 250px; /* Minimum width before wrapping */
+      margin-bottom: 0; /* Remove default bottom margin if items are in a row */
+    }
+    /* Ensure that if only one item remains in a row, it takes full width */
+    .form-row .form-group:only-child {
+        flex-basis: 100%;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .container {
+        padding: var(--spacing-md);
+      }
+      .header h1 {
+        font-size: 1.5rem;
+      }
+      .form-section h2 {
+        font-size: 1.3rem;
+      }
+      .results-grid {
+        grid-template-columns: 1fr; /* Stack cards on smaller screens */
+      }
+      .tabs {
+        flex-direction: column; /* Stack tabs on small screens */
+      }
+      .tab {
+        border-bottom: 1px solid var(--border-color);
+        margin-bottom: var(--spacing-xs);
+      }
+      .tab.active {
+        border-bottom-color: var(--info-color); /* Ensure active state is clear */
+      }
+      .action-buttons .btn {
+        width: 100%; /* Full width buttons */
+        margin-bottom: var(--spacing-sm);
+      }
+      .action-buttons .btn:last-child {
+        margin-bottom: 0;
+      }
+      .chart-container {
+        height: auto; /* Allow chart to define its height more flexibly */
+        min-height: 320px; /* Ensure enough space for chart on mobile, adjusted for new legend */
+      }
+      .form-row {
+        flex-direction: column; /* Stack items in a row on smaller screens */
+        gap: var(--spacing-lg); /* Keep gap when stacked */
+      }
+      .form-row .form-group {
+        margin-bottom: var(--spacing-lg); /* Add back margin when stacked */
+        min-width: 100%; /* Ensure full width when stacked */
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: var(--spacing-sm);
+      }
+      .container {
+        padding: var(--spacing-sm);
+      }
+      .header h1 {
+        font-size: 1.3rem;
+      }
+      .form-control, .form-select, .btn {
+        font-size: 0.9rem; /* Slightly smaller fonts on very small screens */
+        padding: var(--spacing-sm);
+      }
+      .chart-container {
+         min-height: 380px; /* More space for legend if it wraps, adjusted for new legend */
+      }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <h1>
+        <i class="fas fa-calculator" aria-hidden="true"></i>
+        Luxembourg Payroll Calculator 2025
+      </h1>
+      <p>
+        Complete Luxembourg payroll calculations with tax compliance, social
+        security contributions, and family benefits.
+      </p>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+      <!-- Calculator Section -->
+      <section class="form-section">
+        <h2>
+          <i class="fas fa-euro-sign" aria-hidden="true"></i>
+          Salary Calculator
+        </h2>
+
+        <!-- Error Message -->
+        <div class="error-message" id="errorMessage" role="alert"></div>
+
+        <!-- Main Form -->
+        <form id="payrollForm" novalidate>
+          <!-- Input Mode Toggle -->
+          <div class="form-group" role="radiogroup" aria-label="Input Mode">
+            <label class="form-label">Input Mode</label>
+            <div class="btn-group input-mode-toggle">
+              <button
+                type="button"
+                class="btn active"
+                id="grossBtn"
+                role="radio"
+                aria-checked="true"
+                aria-label="Calculate based on Gross Salary"
+              >
+                <i class="fas fa-euro-sign"></i>
+                Gross Salary
+              </button>
+              <button
+                type="button"
+                class="btn"
+                id="totalBtn"
+                role="radio"
+                aria-checked="false"
+                aria-label="Calculate based on Total Employer Cost"
+              >
+                <i class="fas fa-building"></i>
+                Total Employer Cost
+              </button>
+            </div>
+          </div>
+
+          <!-- Salary Input -->
+          <div class="form-group">
+            <label for="salaryInput" id="salaryLabel"
+              >Monthly Gross Salary (€)</label
+            >
+            <input
+              type="number"
+              class="form-control"
+              id="salaryInput"
+              placeholder="e.g., 4055.61"
+              min="0"
+              step="0.01"
+              required
+              aria-describedby="salaryInputFeedback"
+            />
+            <div id="salaryInputFeedback" class="invalid-feedback">Please enter a valid salary.</div>
+          </div>
+
+          <!-- Conversion Display -->
+          <div class="conversion-display d-none" id="conversionDisplay">
+            <div id="conversionLabel">Calculated Total Employer Cost:</div>
+            <div class="conversion-value" id="conversionValue">€0.00</div>
+          </div>
+
+          <!-- Tax Class -->
+          <div class="form-group">
+            <label for="taxClass">Tax Class</label>
+            <select class="form-select" id="taxClass" required aria-describedby="taxClassFeedback">
+              <option value="">Select Tax Class</option>
+              <option value="1">Class 1 - Single Person</option>
+              <option value="1a">Class 1a - Single with Children/65+</option>
+              <option value="2">Class 2 - Married/Civil Partnership</option>
+            </select>
+            <div id="taxClassFeedback" class="invalid-feedback">Please select a tax class.</div>
+          </div>
+
+          <!-- Mutuality Class -->
+          <div class="form-group">
+            <label for="mutualityClass">Mutuality Class</label>
+            <select class="form-select" id="mutualityClass" required aria-describedby="mutualityClassFeedback">
+              <option value="">Select Mutuality Class</option>
+              <option value="0.85">Class A - 0.85 (Excellent record)</option>
+              <option value="1.0" selected>Class B - 1.0 (Standard)</option>
+              <option value="1.1">Class C - 1.1 (Above average)</option>
+              <option value="1.3">Class D - 1.3 (High absenteeism)</option>
+              <option value="1.5">Class E - 1.5 (Very high absenteeism)</option>
+            </select>
+            <div id="mutualityClassFeedback" class="invalid-feedback">Please select a mutuality class.</div>
+          </div>
+
+          <!-- Additional Options -->
+          <fieldset class="form-group">
+            <legend>Additional Deductions & Benefits</legend>
+
+            <div class="form-row"> <!-- New wrapper for side-by-side layout -->
+              <div class="form-group">
+                <label for="numChildren">Number of Children</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="numChildren"
+                  placeholder="0"
+                  min="0"
+                  max="20"
+                  step="1"
+                />
+                <small class="form-text"
+                  >€299.86/month allowance (Allocation Familiale) + €922.56/year
+                  tax credit (Crédit d'Impôt) per child</small
+                >
+              </div>
+
+              <div class="form-group">
+                <label for="childcareExpenses">Childcare Expenses (Annual €)</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="childcareExpenses"
+                  placeholder="0"
+                  min="0"
+                  step="1"
+                />
+                <small class="form-text"
+                  >Maximum €11,400/year per child for daycare, after-school care
+                  (Frais de Garde)</small
+                >
+              </div>
+            </div> <!-- End of form-row -->
+
+            <div class="form-group">
+              <label for="professionalExpenses"
+                >Professional Expenses (Annual €)</label
+              >
+              <input
+                type="number"
+                class="form-control"
+                id="professionalExpenses"
+                placeholder="540"
+                min="0"
+                step="1"
+              />
+              <small class="form-text">Minimum €540/year automatically applied</small>
+            </div>
+
+            <div class="form-group">
+              <label for="transportDeduction"
+                >Transport Deduction (Annual €)</label
+              >
+              <input
+                type="number"
+                class="form-control"
+                id="transportDeduction"
+                placeholder="0"
+                min="0"
+                max="4620"
+                step="1"
+              />
+              <small class="form-text">Maximum €4,620/year for commuting costs</small>
+            </div>
+
+            <div class="form-group">
+              <label for="pensionContributions"
+                >Private Pension Contributions (Annual €)</label
+              >
+              <input
+                type="number"
+                class="form-control"
+                id="pensionContributions"
+                placeholder="0"
+                min="0"
+                max="3200"
+                step="1"
+              />
+              <small class="form-text"
+                >Maximum €3,200/year for private pension plans and life insurance</small
+              >
+            </div>
+
+            <div class="form-group">
+              <label for="mortgageInterest">Mortgage Interest (Annual €)</label>
+              <input
+                type="number"
+                class="form-control"
+                id="mortgageInterest"
+                placeholder="0"
+                min="0"
+                step="1"
+              />
+              <small class="form-text"
+                >Interest on home loans and energy-efficient renovations</small
+              >
+            </div>
+
+            <div class="form-group">
+              <label for="insurancePremiums">Insurance Premiums (Annual €)</label>
+              <input
+                type="number"
+                class="form-control"
+                id="insurancePremiums"
+                placeholder="0"
+                min="0"
+                max="672"
+                step="1"
+              />
+              <small class="form-text"
+                >Maximum €672/year for personal insurance premiums</small
+              >
+            </div>
+
+            <div class="form-group">
+              <label for="medicalExpenses">Medical Expenses (Annual €)</label>
+              <input
+                type="number"
+                class="form-control"
+                id="medicalExpenses"
+                placeholder="0"
+                min="0"
+                step="1"
+              />
+              <small class="form-text"
+                >Healthcare costs exceeding 2.5% of income (Frais Médicaux)</small
+              >
+            </div>
+
+            <div class="form-group">
+              <label for="charitableDonations"
+                >Charitable Donations (Annual €)</label
+              >
+              <input
+                type="number"
+                class="form-control"
+                id="charitableDonations"
+                placeholder="0"
+                min="0"
+                step="1"
+              />
+              <small class="form-text">Minimum €120/year, maximum 20% of income</small>
+            </div>
+          </fieldset>
+
+          <!-- Action Buttons -->
+          <div class="action-buttons">
+            <button
+              type="submit"
+              class="btn btn-primary"
+              id="calculateBtn"
+            >
+              <i class="fas fa-calculator"></i>
+              Calculate Payroll
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              id="clearBtn"
+            >
+              <i class="fas fa-undo"></i>
+              Clear Form
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Results Section -->
+      <section class="results d-none" id="resultsSection"> 
+        <div class="tabs" role="tablist">
+          <button
+            class="tab active"
+            id="monthlyTab"
+            role="tab"
+            aria-selected="true"
+            aria-controls="monthlyContent"
+          >
+            <i class="fas fa-calendar-alt"></i> 
+            Monthly
+          </button>
+          <button
+            class="tab"
+            id="annualTab"
+            role="tab"
+            aria-selected="false"
+            aria-controls="annualContent"
+          >
+            <i class="fas fa-calendar-check"></i> 
+            Annual
+          </button>
+        </div>
+
+        <!-- Monthly Results -->
+        <div
+          class="tab-content active"
+          id="monthlyContent"
+          role="tabpanel"
+          aria-labelledby="monthlyTab"
+          aria-hidden="false"
+        >
+          <div class="results-grid"> 
+            <!-- Monthly Summary -->
+            <div class="result-card"> 
+              <h3>
+                <i class="fas fa-file-invoice-dollar"></i> 
+                Monthly Summary
+                <small
+                  class="text-muted"
+                  style="
+                    font-size: 0.7em;
+                    font-weight: normal;
+                    display: block;
+                    margin-top: 0.25rem;
+                  "
+                  >(Résumé Mensuel)</small
+                >
+              </h3>
+              <div class="result-item">
+                <span class="result-label">Gross Salary</span>
+                <span class="result-value" id="monthlyGrossSalary"
+                  >€0.00</span
+                >
+              </div>
+              <div class="result-item">
+                <span class="result-label">Net Salary</span>
+                <span
+                  class="result-value text-success"
+                  id="monthlyNetSalary"
+                  >€0.00</span
+                >
+              </div>
+              <div class="result-item">
+                <span class="result-label">Total Employer Cost</span>
+                <span
+                  class="result-value text-info"
+                  id="monthlyTotalCost"
+                  >€0.00</span
+                >
+              </div>
+            </div>
+
+            <!-- Employer Social Security Contributions -->
+            <div class="result-card">
+              <h3>
+                <i class="fas fa-landmark"></i> 
+                Employer Social Security
+                <small
+                  class="text-muted"
+                  style="
+                    font-size: 0.7em;
+                    font-weight: normal;
+                    display: block;
+                    margin-top: 0.25rem;
+                  "
+                  >(Cotisations Sociales Employeur)</small
+                >
+              </h3>
+              <div class="result-item">
+                <span class="result-label">Health Insurance</span>
+                <span class="result-value" id="employerHealth"
+                  >€0.00</span
+                >
+              </div>
+              <div class="result-item">
+                <span class="result-label">Pension Insurance</span>
+                <span class="result-value" id="employerPension"
+                  >€0.00</span
+                >
+              </div>
+              <div class="result-item">
+                <span class="result-label">Accident Insurance</span>
+                <span class="result-value" id="employerAccident"
+                  >€0.00</span
+                >
+              </div>
+              <div class="result-item">
+                <span class="result-label">Employers' Mutuality</span>
+                <span class="result-value" id="employerMutuality"
+                  >€0.00</span
+                >
+              </div>
+              <div class="result-item">
+                <span class="result-label">Occupational Health</span>
+                <span class="result-value" id="employerOccupational"
+                  >€0.00</span
+                >
+              </div>
+            </div>
+
+            <!-- Employee Social Security Contributions -->
+            <div class="result-card">
+              <h3>
+                <i class="fas fa-user-shield"></i> 
+                Employee Social Security
+                <small
+                  class="text-muted"
+                  style="
+                    font-size: 0.7em;
+                    font-weight: normal;
+                    display: block;
+                    margin-top: 0.25rem;
+                  "
+                  >(Cotisations Sociales Employé)</small
+                >
+              </h3>
+              <div class="result-item">
+                <span class="result-label">Health Insurance</span>
+                <span class="result-value" id="employeeHealth"
+                  >€0.00</span
+                >
+              </div>
+              <div class="result-item">
+                <span class="result-label">Pension Insurance</span>
+                <span class="result-value" id="employeePension"
+                  >€0.00</span
+                >
+              </div>
+              <div class="result-item">
+                <span class="result-label">Dependency Insurance</span>
+                <span class="result-value" id="employeeDependency"
+                  >€0.00</span
+                >
+              </div>
+            </div>
+
+            <!-- Taxes & Surcharges -->
+            <div class="result-card">
+              <h3>
+                <i class="fas fa-percentage"></i> 
+                Taxes & Surcharges
+                <small
+                  class="text-muted"
+                  style="
+                    font-size: 0.7em;
+                    font-weight: normal;
+                    display: block;
+                    margin-top: 0.25rem;
+                  "
+                  >(Impôts et Taxes)</small
+                >
+              </h3>
+              <div class="result-item">
+                <span class="result-label">Income Tax</span>
+                <span class="result-value" id="monthlyIncomeTax"
+                  >€0.00</span
+                >
+              </div>
+              <div class="result-item">
+                <span class="result-label">Solidarity Surcharge</span>
+                <span class="result-value" id="monthlySolidaritySurcharge"
+                  >€0.00</span
+                >
+              </div>
+            </div>
+
+            <!-- Monthly Deductions & Benefits Card -->
+            <div class="result-card">
+              <h3>
+                <i class="fas fa-gifts"></i> 
+                Monthly Deductions & Benefits
+                <small class="text-muted" style="font-size: 0.7em; font-weight: normal; display: block; margin-top: 0.25rem;">
+                    (Déductions et Avantages Mensuels)
+                </small>
+              </h3>
+              <div class="result-item">
+                <span class="result-label">Total Monthly Deductions Applied</span>
+                <span class="result-value" id="monthlyTotalDeductionsApplied">€0.00</span>
+              </div>
+              <div class="result-item">
+                <span class="result-label">Child Allowance (Monthly)</span>
+                <span class="result-value text-success" id="monthlyChildAllowance">€0.00</span>
+              </div>
+              <div class="result-item">
+                <span class="result-label">Child Tax Credit (Monthly)</span>
+                <span class="result-value text-success" id="monthlyChildTaxCredit">€0.00</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Ceiling Calculation Note -->
+          <div id="ceilingNote" class="ceiling-note d-none"></div>
+
+          <!-- Chart Container -->
+          <div class="chart-container mt-4">
+            <canvas id="salaryChart" class="chart-canvas" aria-label="Salary breakdown pie chart"></canvas>
+          </div>
+
+          <!-- Export Actions -->
+          <div class="action-buttons">
+            <button class="btn btn-success" id="exportBtn" aria-label="Export results as JSON">
+              <i class="fas fa-download"></i>
+              Export Results
+            </button>
+            <button class="btn btn-info" id="shareBtn" aria-label="Share calculation results">
+              <i class="fas fa-share-alt"></i> 
+              Share Results
+            </button>
+          </div>
+        </div>
+
+        <!-- Annual Results -->
+        <div
+          class="tab-content"
+          id="annualContent"
+          role="tabpanel"
+          aria-labelledby="annualTab"
+          aria-hidden="true"
+        >
+          <div class="results-grid">
+            <div class="result-card">
+              <h3>
+                <i class="fas fa-calendar-check"></i> 
+                Annual Summary
+                <small
+                  class="text-muted"
+                  style="
+                    font-size: 0.7em;
+                    font-weight: normal;
+                    display: block;
+                    margin-top: 0.25rem;
+                  "
+                  >(Résumé Annuel)</small
+                >
+              </h3>
+              <div class="result-item">
+                <span class="result-label">Annual Gross Salary</span>
+                <span class="result-value" id="annualGrossSalary">€0.00</span>
+              </div>
+              <div class="result-item">
+                <span class="result-label">Annual Net Salary</span>
+                <span class="result-value text-success" id="annualNetSalary">€0.00</span>
+              </div>
+               <div class="result-item">
+                <span class="result-label">Net Salary (% of Gross)</span>
+                <span class="result-value text-success" id="annualNetSalaryPercent">0.00%</span>
+              </div>
+              <div class="result-item">
+                <span class="result-label">Total Annual Tax</span>
+                <span class="result-value" id="annualTotalTax">€0.00</span>
+              </div>
+              <div class="result-item">
+                <span class="result-label">Effective Annual Tax Rate (%)</span>
+                <span class="result-value" id="annualEffectiveTaxRate">0.00%</span>
+              </div>
+              <div class="result-item">
+                <span class="result-label">Annual Employer Cost</span>
+                <span class="result-value text-info" id="annualTotalCost">€0.00</span>
+              </div>
+              <hr style="margin: var(--spacing-sm) 0;">
+              <div class="result-item">
+                <span class="result-label">Total Annual Deductions Applied</span>
+                <span class="result-value" id="annualTotalDeductionsApplied">€0.00</span>
+              </div>
+              <div class="result-item">
+                <span class="result-label">Child Allowance (Annually)</span>
+                <span class="result-value text-success" id="annualChildAllowance">€0.00</span>
+              </div>
+              <div class="result-item">
+                <span class="result-label">Child Tax Credit (Annually)</span>
+                <span class="result-value text-success" id="annualChildTaxCredit">€0.00</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>
+        <strong>Disclaimer:</strong> This calculator provides estimates based on
+        2025 Luxembourg tax laws. For official calculations, consult a tax
+        professional.
+      </p>
+      <p>
+        <i class="fas fa-heart text-danger"></i>
+        Made for Luxembourg's workforce | Version 3.3.2 (Summary Enhancements)
+      </p>
+    </footer>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+    <div class="loading-spinner"></div>
+  </div>
+
+  <!-- PWA Install Button -->
+  <button class="install-btn" id="installBtn" style="display: none;">
+    <i class="fas fa-download"></i>
+    Install App
+  </button>
+
+  <!-- Inline JavaScript (from script.js) -->
+  <script>
+    /**
+     * Luxembourg Payroll Calculator 2025 - Full 2025 Updates
+     * Version: 3.3.2 (Summary Enhancements)
+     */
+    'use strict';
+
+    // ============================================
+    // CONFIGURATION & CONSTANTS
+    // ============================================
+    const SSM_MONTHLY_UNQUALIFIED = 2703.74; 
+
+    const CONFIG = Object.freeze({
+      EMPLOYER_RATES: { 
+        healthInsurance: 0.0305, 
+        pensionInsurance: 0.08,  
+        occupationalHealth: 0.0014, 
+        accident: 0.0070, 
+        mutualityBase: 0.0072 
+      },
+      SOCIAL_SECURITY_PARAMETERS: {
+        ssmMonthlyUnqualified: SSM_MONTHLY_UNQUALIFIED,
+        monthlyIncomeCeiling: SSM_MONTHLY_UNQUALIFIED * 5, 
+        dependencyBaseReduction: SSM_MONTHLY_UNQUALIFIED / 4, 
+        dependencyRate: 0.014 
+      },
+      PROFESSIONAL_EXPENSES_MIN_ANNUAL: 540,
+      FAMILY_BENEFITS: {
+        childAllowanceMonthly: 299.86,
+        childTaxCreditAnnual: 922.56
+      },
+      TRANSPORT_DEDUCTION_MAX_ANNUAL: 4620,
+      CHARITABLE_DONATION: {
+        minAnnual: 120,
+        maxPercentIncome: 0.20,
+        maxAbsoluteAnnual: 1000000
+      },
+      DEDUCTION_LIMITS: {
+        childcarePerChild: 11400,
+        privatePension: 3200,
+        insurancePremiums: 672,
+        medicalExpensesThreshold: 0.025 
+      },
+      TAX_BRACKETS: [ 
+        { limit: 13230, rate: 0.00 }, { limit: 15435, rate: 0.08 }, { limit: 17640, rate: 0.09 },
+        { limit: 19845, rate: 0.10 }, { limit: 22050, rate: 0.11 }, { limit: 24255, rate: 0.12 },
+        { limit: 26550, rate: 0.14 }, { limit: 28845, rate: 0.16 }, { limit: 31140, rate: 0.18 },
+        { limit: 33435, rate: 0.20 }, { limit: 35730, rate: 0.22 }, { limit: 38025, rate: 0.24 },
+        { limit: 40320, rate: 0.26 }, { limit: 42615, rate: 0.28 }, { limit: 44910, rate: 0.30 },
+        { limit: 47205, rate: 0.32 }, { limit: 49500, rate: 0.34 }, { limit: 51795, rate: 0.36 },
+        { limit: 54090, rate: 0.38 }, { limit: 117450, rate: 0.39 }, { limit: 176160, rate: 0.40 },
+        { limit: 234870, rate: 0.41 }, { limit: Infinity, rate: 0.42 }
+      ]
+    });
+
+    const appState = {
+      currentInputMode: 'gross',
+      isCalculating: false,
+      currentCalculationData: null,
+      salaryChartInstance: null,
+      salaryExceedsCeiling: false // Added for ceiling note
+    };
+
+    function sanitizeInput(value, type = 'number') {
+      if (value === null || typeof value === 'undefined') return type === 'number' ? 0 : '';
+      const stringValue = String(value).trim();
+      switch (type) {
+        case 'number':
+          const cleaned = stringValue.replace(/[^\d.-]/g, '');
+          const number = parseFloat(cleaned);
+          return isNaN(number) ? 0 : Math.max(0, number); 
+        case 'integer':
+          const integer = parseInt(stringValue.replace(/[^\d]/g, ''), 10);
+          return isNaN(integer) ? 0 : Math.max(0, integer); 
+        case 'select': return stringValue;
+        default: return stringValue.replace(/[&<>"']/g, (match) => ({'&': '&amp;','<': '&lt;','>': '&gt;','"': '&quot;',"'": '&#39;'}[match]));
+      }
+    }
+
+    function showNotification(message, type = 'info', duration = 3000) {
+      const el = document.createElement('div'); el.className = `notification ${type}`; el.textContent = message;
+      document.body.appendChild(el); el.offsetHeight; el.classList.add('show');
+      setTimeout(() => {
+        el.classList.remove('show');
+        el.addEventListener('transitionend', () => el.parentNode?.removeChild(el), { once: true });
+      }, duration);
+    }
+
+    function showError(message, duration = 6000) {
+      const el = document.getElementById('errorMessage'); if (!el) return;
+      el.textContent = message; el.classList.add('show'); 
+      if (el.timeoutId) clearTimeout(el.timeoutId);
+      el.timeoutId = setTimeout(() => el.classList.remove('show'), duration);
+    }
+
+    function showLoading(show = true) {
+      const btn = document.getElementById('calculateBtn');
+      const overlay = document.getElementById('loadingOverlay');
+      if (show) {
+        if (btn) { btn.classList.add('loading'); btn.disabled = true; btn.setAttribute('aria-busy', 'true'); }
+        if (overlay) { overlay.style.display = 'flex'; overlay.offsetHeight; overlay.style.opacity = '1';}
+        appState.isCalculating = true;
+      } else {
+        if (btn) { btn.classList.remove('loading'); btn.disabled = false; btn.removeAttribute('aria-busy');}
+        if (overlay) {
+          overlay.style.opacity = '0';
+          overlay.addEventListener('transitionend', () => { if (overlay.style.opacity === '0') overlay.style.display = 'none'; }, { once: true });
+        }
+        appState.isCalculating = false;
+      }
+    }
+
+    function switchTab(tabIdToActivate) {
+      document.querySelectorAll('.tab-content').forEach(el => { el.classList.remove('active'); el.setAttribute('aria-hidden', 'true'); });
+      document.querySelectorAll('.tab').forEach(el => { el.classList.remove('active'); el.setAttribute('aria-selected', 'false'); });
+      const activeContent = document.getElementById(tabIdToActivate + 'Content');
+      const activeTab = document.getElementById(tabIdToActivate + 'Tab');
+      if (activeContent) { activeContent.classList.add('active'); activeContent.setAttribute('aria-hidden', 'false'); }
+      if (activeTab) { activeTab.classList.add('active'); activeTab.setAttribute('aria-selected', 'true'); }
+      if (tabIdToActivate === 'annual' && appState.currentCalculationData) loadAnnualSummary(appState.currentCalculationData);
+    }
+
+    function toggleInputMode(mode) {
+      appState.currentInputMode = mode;
+      const els = {
+        grossBtn: document.getElementById('grossBtn'), totalBtn: document.getElementById('totalBtn'),
+        salaryLabel: document.getElementById('salaryLabel'), salaryInput: document.getElementById('salaryInput'),
+        conversionLabel: document.getElementById('conversionLabel'), conversionDisplay: document.getElementById('conversionDisplay')
+      };
+      els.grossBtn?.classList.toggle('active', mode === 'gross'); els.grossBtn?.setAttribute('aria-checked', mode === 'gross');
+      els.totalBtn?.classList.toggle('active', mode === 'total'); els.totalBtn?.setAttribute('aria-checked', mode === 'total');
+      if (mode === 'gross') {
+        if (els.salaryLabel) els.salaryLabel.textContent = 'Monthly Gross Salary (€)';
+        if (els.salaryInput) els.salaryInput.placeholder = 'e.g., 4055.61';
+        if (els.conversionLabel) els.conversionLabel.textContent = 'Calculated Total Employer Cost:';
+      } else {
+        if (els.salaryLabel) els.salaryLabel.textContent = 'Monthly Total Employer Cost (€)';
+        if (els.salaryInput) els.salaryInput.placeholder = 'e.g., 4566.21';
+        if (els.conversionLabel) els.conversionLabel.textContent = 'Calculated Gross Salary:';
+      }
+      if (els.salaryInput?.value) handleSalaryInput(); else els.conversionDisplay?.classList.add('d-none');
+    }
+
+    function handleSalaryInput() {
+      const els = {
+        salaryInput: document.getElementById('salaryInput'),
+        conversionDisplay: document.getElementById('conversionDisplay'),
+        conversionValue: document.getElementById('conversionValue')
+      };
+      if (!els.salaryInput || !els.conversionDisplay || !els.conversionValue) return;
+      const inputValue = sanitizeInput(els.salaryInput.value, 'number');
+      if (inputValue <= 0) { els.conversionDisplay.classList.add('d-none'); return; }
+      const mutualityClass = parseFloat(sanitizeInput(document.getElementById('mutualityClass')?.value, 'select')) || 1.0;
+      let convertedValue = appState.currentInputMode === 'gross' ? calculateTotalEmployerCost(inputValue, mutualityClass) : calculateGrossFromTotal(inputValue, mutualityClass);
+      els.conversionValue.textContent = formatCurrency(convertedValue);
+      els.conversionDisplay.classList.remove('d-none');
+    }
+
+    function applyMonthlyCeilingAndCalculate(grossMonthlySalary, monthlyIncomeCeiling, rate) {
+        const cappedSalary = Math.min(grossMonthlySalary, monthlyIncomeCeiling);
+        return cappedSalary * rate;
+    }
+
+    function calculateTotalEmployerCost(grossSalary, mutualityClass) {
+      const contributions = calculateEmployerContributions(grossSalary, mutualityClass);
+      return grossSalary + Object.values(contributions).reduce((s, v) => s + v, 0);
+    }
+
+    function calculateGrossFromTotal(totalCost, mutualityClass) {
+      let totalRate = CONFIG.EMPLOYER_RATES.healthInsurance + CONFIG.EMPLOYER_RATES.pensionInsurance +
+                      CONFIG.EMPLOYER_RATES.occupationalHealth + CONFIG.EMPLOYER_RATES.accident +
+                      (CONFIG.EMPLOYER_RATES.mutualityBase * mutualityClass);
+      return totalCost / (1 + totalRate);
+    }
+
+    function calculateEmployerContributions(grossSalary, mutualityFactor) {
+      const ceil = CONFIG.SOCIAL_SECURITY_PARAMETERS.monthlyIncomeCeiling;
+      return {
+        health: applyMonthlyCeilingAndCalculate(grossSalary, ceil, CONFIG.EMPLOYER_RATES.healthInsurance),
+        pension: applyMonthlyCeilingAndCalculate(grossSalary, ceil, CONFIG.EMPLOYER_RATES.pensionInsurance),
+        occupationalHealth: applyMonthlyCeilingAndCalculate(grossSalary, ceil, CONFIG.EMPLOYER_RATES.occupationalHealth),
+        accident: applyMonthlyCeilingAndCalculate(grossSalary, ceil, CONFIG.EMPLOYER_RATES.accident),
+        employersMutuality: applyMonthlyCeilingAndCalculate(grossSalary, ceil, CONFIG.EMPLOYER_RATES.mutualityBase * mutualityFactor)
+      };
+    }
+
+    function calculateEmployeeContributions(grossSalary) {
+      const ceil = CONFIG.SOCIAL_SECURITY_PARAMETERS.monthlyIncomeCeiling;
+      const depBase = Math.max(0, grossSalary - CONFIG.SOCIAL_SECURITY_PARAMETERS.dependencyBaseReduction);
+      return {
+        health: applyMonthlyCeilingAndCalculate(grossSalary, ceil, CONFIG.EMPLOYER_RATES.healthInsurance), 
+        pension: applyMonthlyCeilingAndCalculate(grossSalary, ceil, CONFIG.EMPLOYER_RATES.pensionInsurance), 
+        dependency: depBase * CONFIG.SOCIAL_SECURITY_PARAMETERS.dependencyRate
+      };
+    }
+
+    function calculateIncomeTax(annualTaxableIncome, taxClass) {
+      let tax = 0; let prevLimit = 0;
+      const income = Math.max(0, annualTaxableIncome);
+      for (const br of CONFIG.TAX_BRACKETS) {
+        if (income <= prevLimit) break;
+        tax += (Math.min(income, br.limit) - prevLimit) * br.rate;
+        prevLimit = br.limit;
+      }
+      tax *= ({ '1': 1.0, '1a': 0.9, '2': 0.65 }[taxClass] || 1.0);
+      let solRate = 0.07;
+      if (((taxClass === '1' || taxClass === '1a') && income > 150000) || (taxClass === '2' && income > 300000)) solRate = 0.09;
+      const surcharge = tax * solRate;
+      return { incomeTax: tax, solidaritySurcharge: surcharge, totalTax: tax + surcharge };
+    }
+
+    function performCalculation() {
+      if (appState.isCalculating) return; 
+      showLoading(true); appState.salaryExceedsCeiling = false;
+      try {
+        const salaryIn = sanitizeInput(document.getElementById('salaryInput')?.value, 'number');
+        const taxCl = sanitizeInput(document.getElementById('taxClass')?.value, 'select') || '1';
+        const mutVal = document.getElementById('mutualityClass')?.value;
+        const mutCl = parseFloat(sanitizeInput(mutVal, 'select')) || 1.0;
+        const numChild = sanitizeInput(document.getElementById('numChildren')?.value, 'integer');
+
+        if (salaryIn <= 0) { showError('Salary must be > 0.'); showLoading(false); return; }
+        if (!taxCl) { showError('Select Tax Class.'); showLoading(false); return; }
+        if (!mutVal) { showError('Select Mutuality Class.'); showLoading(false); return; }
+
+        let grossSal = (appState.currentInputMode === 'gross') ? salaryIn : calculateGrossFromTotal(salaryIn, mutCl);
+        if (grossSal > CONFIG.SOCIAL_SECURITY_PARAMETERS.monthlyIncomeCeiling) appState.salaryExceedsCeiling = true;
+        
+        const annualGrossSal = grossSal * 12;
+        const employerContrib = calculateEmployerContributions(grossSal, mutCl);
+        const employeeContrib = calculateEmployeeContributions(grossSal);
+        const totalMonthlyEmpSSC = Object.values(employeeContrib).reduce((s, v) => s + v, 0);
+        const annualEmpSSC = totalMonthlyEmpSSC * 12;
+
+        const profExp = Math.max(CONFIG.PROFESSIONAL_EXPENSES_MIN_ANNUAL, sanitizeInput(document.getElementById('professionalExpenses')?.value,'number'));
+        const transDed = Math.min(sanitizeInput(document.getElementById('transportDeduction')?.value,'number'), CONFIG.TRANSPORT_DEDUCTION_MAX_ANNUAL);
+        const childExp = Math.min(sanitizeInput(document.getElementById('childcareExpenses')?.value,'number'), numChild * CONFIG.DEDUCTION_LIMITS.childcarePerChild);
+        const pensContr = Math.min(sanitizeInput(document.getElementById('pensionContributions')?.value,'number'), CONFIG.DEDUCTION_LIMITS.privatePension);
+        const mortInt = sanitizeInput(document.getElementById('mortgageInterest')?.value,'number');
+        const insPrem = Math.min(sanitizeInput(document.getElementById('insurancePremiums')?.value,'number'), CONFIG.DEDUCTION_LIMITS.insurancePremiums);
+        const medExpThresh = annualGrossSal * CONFIG.DEDUCTION_LIMITS.medicalExpensesThreshold;
+        const medExp = Math.max(0, sanitizeInput(document.getElementById('medicalExpenses')?.value,'number') - medExpThresh);
+        const charDonVal = sanitizeInput(document.getElementById('charitableDonations')?.value,'number');
+        const charDonMaxInc = annualGrossSal * CONFIG.CHARITABLE_DONATION.maxPercentIncome;
+        const charDon = charDonVal < CONFIG.CHARITABLE_DONATION.minAnnual ? 0 : Math.min(charDonVal, charDonMaxInc, CONFIG.CHARITABLE_DONATION.maxAbsoluteAnnual);
+        
+        const totalAnnualDed = profExp + transDed + childExp + pensContr + mortInt + insPrem + medExp + charDon;
+        const annualTaxInc = Math.max(0, annualGrossSal - annualEmpSSC - totalAnnualDed);
+        const taxCalc = calculateIncomeTax(annualTaxInc, taxCl);
+        const annualChildTaxCred = numChild * CONFIG.FAMILY_BENEFITS.childTaxCreditAnnual;
+        const effAnnualTax = Math.max(0, taxCalc.totalTax - annualChildTaxCred);
+        const monthlyTax = effAnnualTax / 12;
+        const netSal = grossSal - totalMonthlyEmpSSC - monthlyTax;
+        const annualChildAllow = numChild * CONFIG.FAMILY_BENEFITS.childAllowanceMonthly * 12;
+        const totalEmployerMonthContrib = Object.values(employerContrib).reduce((s, v) => s + v, 0);
+        const totalEmployerC = grossSal + totalEmployerMonthContrib;
+
+        appState.currentCalculationData = {
+          grossSalary: grossSal, netSalary: netSal, totalEmployerCost: totalEmployerC, 
+          employerContributions: employerContrib, employeeContributions: employeeContrib, 
+          totalMonthlyEmployeeSSC: totalMonthlyEmpSSC, totalEmployerMonthlyContributions: totalEmployerMonthContrib,
+          taxCalculation: taxCalc, effectiveAnnualTax: effAnnualTax, monthlyTaxes: monthlyTax, 
+          deductions: { totalAnnualDeductions: totalAnnualDed },
+          familyBenefits: { childAllowance: annualChildAllow, childTaxCredit: annualChildTaxCred },
+          numChildren: numChild // Store numChildren for monthly benefits display
+        };
+        displayResults(appState.currentCalculationData);
+        showNotification('Calculation complete!', 'success');
+      } catch (e) { console.error('Calc error:', e); showError('Error in calculation.');
+      } finally { showLoading(false); }
+    }
+
+    function displayResults(results) {
+      updateElementText('monthlyGrossSalary', formatCurrency(results.grossSalary));
+      updateElementText('monthlyNetSalary', formatCurrency(results.netSalary));
+      updateElementText('monthlyTotalCost', formatCurrency(results.totalEmployerCost));
+      updateElementText('employerHealth', formatCurrency(results.employerContributions.health));
+      updateElementText('employerPension', formatCurrency(results.employerContributions.pension));
+      updateElementText('employerAccident', formatCurrency(results.employerContributions.accident));
+      updateElementText('employerMutuality', formatCurrency(results.employerContributions.employersMutuality));
+      updateElementText('employerOccupational', formatCurrency(results.employerContributions.occupationalHealth));
+      updateElementText('employeeHealth', formatCurrency(results.employeeContributions.health));
+      updateElementText('employeePension', formatCurrency(results.employeeContributions.pension));
+      updateElementText('employeeDependency', formatCurrency(results.employeeContributions.dependency));
+      updateElementText('monthlyIncomeTax', formatCurrency(results.taxCalculation.incomeTax / 12)); 
+      updateElementText('monthlySolidaritySurcharge', formatCurrency(results.taxCalculation.solidaritySurcharge / 12));
+      
+      // Populate new Monthly Deductions & Benefits card
+      updateElementText('monthlyTotalDeductionsApplied', formatCurrency(results.deductions.totalAnnualDeductions / 12));
+      updateElementText('monthlyChildAllowance', formatCurrency(CONFIG.FAMILY_BENEFITS.childAllowanceMonthly * results.numChildren));
+      updateElementText('monthlyChildTaxCredit', formatCurrency(results.familyBenefits.childTaxCredit / 12));
+
+      const ceilingNoteDiv = document.getElementById('ceilingNote');
+      if (ceilingNoteDiv) {
+          if (appState.salaryExceedsCeiling) {
+              const ceilingAmountFormatted = formatCurrency(CONFIG.SOCIAL_SECURITY_PARAMETERS.monthlyIncomeCeiling);
+              const ssmReductionFormatted = formatCurrency(CONFIG.SOCIAL_SECURITY_PARAMETERS.dependencyBaseReduction);
+              ceilingNoteDiv.innerHTML = `
+                  <p><i class="fas fa-info-circle"></i> <strong>Note on Social Security Ceilings:</strong></p>
+                  <p>Your gross salary exceeds the monthly social security income ceiling of ${ceilingAmountFormatted}.</p>
+                  <p>Therefore, contributions for Health, Pension, Accident, and Employer's Mutuality are calculated based on this ceiling amount.</p>
+                  <p>Dependency Insurance is calculated on the gross salary minus a reduction of ${ssmReductionFormatted} and has no upper ceiling.</p>
+              `;
+              ceilingNoteDiv.classList.remove('d-none');
+          } else {
+              ceilingNoteDiv.classList.add('d-none');
+              ceilingNoteDiv.innerHTML = ''; 
+          }
+      }
+
+      const resultsSection = document.getElementById('resultsSection');
+      if (resultsSection) {
+        resultsSection.classList.remove('d-none');
+        const rect = resultsSection.getBoundingClientRect();
+        if (rect.top < 0 || rect.bottom > window.innerHeight) resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      loadAnnualSummary(results); 
+      updateCharts(results);
+    }
+
+    function updateElementText(id, content) {
+      const el = document.getElementById(id); if (el) el.textContent = content;
+    }
+
+    function formatCurrency(value) {
+      if (typeof value !== 'number' || isNaN(value)) return '€0.00'; 
+      return new Intl.NumberFormat('fr-LU', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
+    }
+    
+    function formatPercentage(value) {
+        if (typeof value !== 'number' || isNaN(value)) return '0.00%';
+        return value.toFixed(2) + '%';
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      toggleInputMode('gross'); 
+      document.getElementById('salaryInput')?.addEventListener('input', handleSalaryInput);
+      document.getElementById('payrollForm')?.addEventListener('submit', (e) => { e.preventDefault(); performCalculation(); });
+      document.getElementById('grossBtn')?.addEventListener('click', () => toggleInputMode('gross'));
+      document.getElementById('totalBtn')?.addEventListener('click', () => toggleInputMode('total'));
+      document.getElementById('mutualityClass')?.addEventListener('change', handleSalaryInput);
+      document.querySelectorAll('.tab').forEach(tab => tab.addEventListener('click', function() { switchTab(this.id.replace('Tab', '')); }));
+      document.getElementById('exportBtn')?.addEventListener('click', exportResults);
+      document.getElementById('shareBtn')?.addEventListener('click', shareResults);
+      document.getElementById('clearBtn')?.addEventListener('click', () => { 
+          if (window.confirm('Clear form and results?')) {
+            clearForm();
+            document.getElementById('ceilingNote')?.classList.add('d-none'); 
+            document.getElementById('ceilingNote').innerHTML = '';
+          }
+      });
+      setupInputValidation();
+      console.log('Luxembourg Payroll Calculator initialized (v3.3.2)'); 
+    });
+
+    function setupInputValidation() {
+      const numInputs = ['salaryInput', 'numChildren', 'professionalExpenses', 'transportDeduction', 'childcareExpenses', 'pensionContributions', 'mortgageInterest', 'insurancePremiums', 'medicalExpenses', 'charitableDonations'];
+      numInputs.forEach(id => {
+        const input = document.getElementById(id);
+        if (input) {
+          input.addEventListener('blur', function() {
+            const type = (id === 'numChildren' || (id === 'salaryInput' && this.step === '1')) ? 'integer' : 'number';
+            const val = sanitizeInput(this.value, type);
+            if (type === 'number' && !isNaN(parseFloat(val))) this.value = parseFloat(val).toFixed(this.step === "0.01" ? 2 : 0);
+            else this.value = val;
+          });
+        }
+      });
+    }
+
+    function clearForm() {
+      document.getElementById('payrollForm')?.reset();
+      toggleInputMode('gross'); 
+      document.getElementById('conversionDisplay')?.classList.add('d-none');
+      document.getElementById('resultsSection')?.classList.add('d-none');
+      document.getElementById('errorMessage')?.classList.remove('show');
+      const canvas = document.getElementById('salaryChart');
+      if (canvas?.getContext) canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+      appState.currentCalculationData = null;
+      appState.salaryExceedsCeiling = false; 
+      document.getElementById('ceilingNote')?.classList.add('d-none'); 
+      document.getElementById('ceilingNote').innerHTML = ''; 
+      showNotification('Form and results cleared.', 'info');
+    }
+
+    function loadAnnualSummary(data) {
+      if (!data) return;
+      const annualGross = data.grossSalary * 12;
+      const annualNet = data.netSalary * 12; 
+      const annualEmployerCost = data.totalEmployerCost * 12;
+
+      updateElementText('annualGrossSalary', formatCurrency(annualGross));
+      updateElementText('annualNetSalary', formatCurrency(annualNet));
+      updateElementText('annualNetSalaryPercent', annualGross > 0 ? formatPercentage((annualNet / annualGross) * 100) : '0.00%');
+      updateElementText('annualTotalTax', formatCurrency(data.effectiveAnnualTax)); 
+      updateElementText('annualEffectiveTaxRate', annualGross > 0 ? formatPercentage((data.effectiveAnnualTax / annualGross) * 100) : '0.00%');
+      updateElementText('annualTotalCost', formatCurrency(annualEmployerCost));
+      updateElementText('annualTotalDeductionsApplied', formatCurrency(data.deductions.totalAnnualDeductions));
+      updateElementText('annualChildAllowance', formatCurrency(data.familyBenefits.childAllowance));
+      updateElementText('annualChildTaxCredit', formatCurrency(data.familyBenefits.childTaxCredit));
+    }
+
+    function updateCharts(data) {
+      const canvas = document.getElementById('salaryChart');
+      if (canvas?.getContext) {
+        const ctx = canvas.getContext('2d');
+        canvas.width = canvas.offsetWidth; 
+        canvas.height = canvas.offsetHeight;
+        updateSalaryBreakdownChart(ctx, data);
+      }
+    }
+
+    function updateSalaryBreakdownChart(ctx, data) {
+        const canvas = ctx.canvas;
+        const width = canvas.width;
+        const height = canvas.height;
+        ctx.clearRect(0, 0, width, height);
+
+        const pieAreaWidthRatio = 0.45; 
+        const legendAreaWidthRatio = 1 - pieAreaWidthRatio;
+        const pieAreaWidth = width * pieAreaWidthRatio;
+        const legendAreaWidth = width * legendAreaWidthRatio;
+        const chartPadding = 10; 
+        const chartMaxRadius = Math.min(pieAreaWidth / 2 - chartPadding, height / 2 - chartPadding);
+        const centerX = pieAreaWidth / 2;
+        const centerY = height / 2;
+
+        const totalEmployerCost = data.totalEmployerCost;
+        if (totalEmployerCost <= 0) {
+            ctx.font = '13px Inter, Arial, sans-serif'; ctx.fillStyle = '#666'; ctx.textAlign = 'center';
+            ctx.fillText('No data for chart.', width / 2, height / 2); return;
+        }
+
+        const totalEmployerSSC = data.totalEmployerMonthlyContributions;
+        const totalEmployeeSSC = data.totalMonthlyEmployeeSSC;
+        const taxes = data.monthlyTaxes; 
+        const netSalary = data.netSalary;
+
+        const pieSlices = [
+            { name: 'Net Salary', value: netSalary, color: '#4CAF50' },
+            { name: 'Employee SS', value: totalEmployeeSSC, color: '#FF9800' },
+            { name: 'Taxes', value: taxes, color: '#F44336' },
+            { name: 'Employer SS', value: totalEmployerSSC, color: '#2196F3' }
+        ].filter(slice => slice.value > 0.001 * totalEmployerCost);
+
+        let currentAngle = -Math.PI / 2; 
+        pieSlices.forEach(slice => {
+            const sliceAngle = (slice.value / totalEmployerCost) * 2 * Math.PI;
+            if (sliceAngle < 0.001) return;
+            ctx.beginPath(); ctx.moveTo(centerX, centerY);
+            ctx.arc(centerX, centerY, chartMaxRadius, currentAngle, currentAngle + sliceAngle);
+            ctx.closePath(); ctx.fillStyle = slice.color; ctx.fill();
+            ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 1.5; ctx.stroke();
+            currentAngle += sliceAngle;
+        });
+
+        ctx.fillStyle = '#333333'; ctx.textAlign = 'center';
+        const centralTextBaseSize = Math.max(9, chartMaxRadius * 0.12);
+        ctx.font = `bold ${centralTextBaseSize}px Inter, Arial, sans-serif`;
+        ctx.fillText('Total Cost', centerX, centerY - centralTextBaseSize * 0.6);
+        ctx.font = `bold ${centralTextBaseSize * 1.2}px Inter, Arial, sans-serif`;
+        ctx.fillText(formatCurrency(totalEmployerCost), centerX, centerY + centralTextBaseSize * 0.9);
+
+        const legendX = pieAreaWidth + 15;
+        let legendY = 15;
+        const legendItemMinHeight = 18; 
+        const legendColorBoxSize = 10;
+        const legendFontSize = 9.5; 
+        const legendLineSpacing = 4; 
+        const maxLegendItemWidth = legendAreaWidth - 25; 
+
+        ctx.textAlign = 'left';
+        ctx.font = `bold ${legendFontSize + 1}px Inter, Arial, sans-serif`;
+        ctx.fillStyle = '#333333';
+        ctx.fillText('Total Employer Cost Breakdown:', legendX, legendY);
+        legendY += legendItemMinHeight;
+
+        ctx.font = `${legendFontSize}px Inter, Arial, sans-serif`;
+
+        const legendItems = [
+            { name: 'Total Employer Cost', value: totalEmployerCost, isTotal: true },
+            { name: 'Employer Social Security', value: totalEmployerSSC, color: '#2196F3' },
+            { name: 'Gross Salary', value: data.grossSalary, isInformational: true },
+            { name: 'Employee Social Security', value: totalEmployeeSSC, color: '#FF9800'},
+            { name: 'Taxes & Surcharges', value: taxes, color: '#F44336' },
+            { name: 'Net Salary', value: netSalary, color: '#4CAF50' }
+        ];
+        
+        legendItems.forEach(item => {
+            if (legendY + legendItemMinHeight > height - 5) return; 
+            const percentage = totalEmployerCost > 0 ? (item.value / totalEmployerCost * 100).toFixed(1) : "0.0";
+            let text = `${item.name}: ${formatCurrency(item.value)} (${percentage}%)`;
+            if (item.isTotal) text = `${item.name}: ${formatCurrency(item.value)} (100.0%)`;
+            
+            let textX = legendX;
+            if (item.color) {
+                ctx.fillStyle = item.color;
+                ctx.fillRect(legendX, legendY + (legendItemMinHeight - legendColorBoxSize) / 2 -1 , legendColorBoxSize, legendColorBoxSize);
+                textX += legendColorBoxSize + 5;
+            }
+            ctx.fillStyle = '#333333';
+            
+            let textToDraw = text;
+            if (ctx.measureText(textToDraw).width > maxLegendItemWidth) {
+                while(ctx.measureText(textToDraw + "...").width > maxLegendItemWidth && textToDraw.length > 15) {
+                    textToDraw = textToDraw.slice(0,-1);
+                }
+                textToDraw += "...";
+            }
+            ctx.fillText(textToDraw, textX, legendY + legendItemMinHeight / 2 + legendFontSize / 3 - 1);
+            legendY += legendItemMinHeight + legendLineSpacing;
+        });
+    }
+
+    function exportResults() {
+      if (!appState.currentCalculationData) { showError('No calculation data to export.'); return; }
+      const dataToExport = { ...appState.currentCalculationData, calculationDate: new Date().toISOString() };
+      const dataStr = JSON.stringify(dataToExport, null, 2); 
+      const dataBlob = new Blob([dataStr], { type: 'application/json;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(dataBlob);
+      link.download = `lux_payroll_${new Date().toISOString().slice(0,10)}.json`;
+      document.body.appendChild(link); link.click(); document.body.removeChild(link);
+      URL.revokeObjectURL(link.href); 
+      showNotification('Results exported!', 'success');
+    }
+
+    async function shareResults() {
+      if (!appState.currentCalculationData) { showError('No calculation data to share.'); return; }
+      const d = appState.currentCalculationData;
+      const text = `Lux Payroll Estimate:\nGross: ${formatCurrency(d.grossSalary)}\nNet: ${formatCurrency(d.netSalary)}\nTotal Cost: ${formatCurrency(d.totalEmployerCost)}`;
+      const shareData = { title: 'Luxembourg Payroll Estimate', text: text, url: window.location.href };
+      if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+        try { await navigator.share(shareData); showNotification('Results shared!', 'success'); }
+        catch (err) { if (err.name !== 'AbortError') fallbackCopyToClipboard(text); }
+      } else { fallbackCopyToClipboard(text); }
+    }
+
+    function fallbackCopyToClipboard(text) {
+      if (navigator.clipboard?.writeText) {
+        navigator.clipboard.writeText(text)
+          .then(() => showNotification('Results copied to clipboard!', 'success'))
+          .catch(() => showError('Could not copy results.'));
+      } else { 
+        const ta = document.createElement("textarea"); ta.value = text; ta.style.position = "fixed"; 
+        document.body.appendChild(ta); ta.focus(); ta.select();
+        try { document.execCommand('copy'); showNotification('Results copied!', 'success'); }
+        catch (err) { showError('Failed to copy.'); }
+        document.body.removeChild(ta);
+      }
+    }
+  </script>
+</body>
+</html>
