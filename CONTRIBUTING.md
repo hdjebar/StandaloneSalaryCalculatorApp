@@ -68,13 +68,15 @@ Luxembourg tax law changes regularly. When contributing updates:
 - Use modern ES6+ features appropriately
 - Keep functions focused and single-purpose
 
-**Validation Standards (v3.4.0+)**
+**Validation Standards (v3.4.2+)**
 - Use the centralized validation system for all new form inputs
 - Follow the established pattern: `validateNumericInput()` for numbers, `validateRequiredSelect()` for dropdowns
+- Implement cross-field business logic validation for data consistency when appropriate
 - Provide specific, user-friendly error messages for each validation case
 - Ensure all validation functions support accessibility features (ARIA attributes)
 - Test validation with keyboard navigation and screen readers
 - Include appropriate min/max validation with clear error messaging
+- Consider both blocking validation (prevents form submission) and warning validation (informational guidance)
 
 **Tax Calculation Standards**
 - Reference official sources in comments
@@ -112,14 +114,16 @@ Before submitting changes:
 - **Test form validation** with various input scenarios (valid, invalid, edge cases)
 - **Test input sanitization** with potentially problematic inputs
 
-#### Validation Testing (v3.4.0+)
+#### Validation Testing (v3.4.2+)
 When contributing validation enhancements:
 - Test all validation scenarios (valid inputs, invalid inputs, edge cases)
-- Verify error messages are clear and actionable
+- Test cross-field business logic validation with various input combinations
+- Verify error messages are clear and actionable for both field-level and business logic errors
 - Test with assistive technologies to ensure accessibility
 - Verify validation doesn't block legitimate use cases
-- Test cross-field validation (e.g., tax class warnings)
+- Test cross-field validation (e.g., tax class warnings, childcare/children consistency)
 - Ensure validation performance doesn't impact user experience
+- Test both blocking validation (prevents submission) and warning validation (informational)
 
 ### Quality Assurance
 
@@ -174,18 +178,20 @@ feat(validation): add centralized form validation system
 - Include input sanitization on blur events
 - Enhance ARIA labels for screen reader compatibility
 
-fix(validation): correct CISSM threshold calculation
+fix(validation): enhance childcare/children business logic validation
 
-- Fix monthly threshold from €3,500 to €3,600
-- Update validation ranges accordingly
-- Reference: CCSS notification 2025-05-01
+- Add blocking validation requiring children when childcare expenses entered
+- Implement validateChildcareRequiresChildrenRule() for data consistency
+- Update tax class warnings to consider childcare expenses
+- Enhance error messages for logical data validation
+- Reference: Business logic requirements for family deductions
 
-accessibility(forms): enhance screen reader support
+accessibility(validation): improve cross-field validation announcements
 
-- Add comprehensive ARIA labels to all form controls
-- Improve error message announcements
-- Fix keyboard navigation tab order
-- Reference: WCAG 2.1 AA compliance requirements
+- Enhanced ARIA support for business logic validation errors
+- Improve screen reader announcements for cross-field validation
+- Fix validation error focus management for complex scenarios
+- Reference: WCAG 2.1 AA cross-field validation requirements
 ```
 
 ### Pull Request Guidelines
@@ -207,11 +213,13 @@ accessibility(forms): enhance screen reader support
 
 **Validation-Specific Reviews**
 For changes affecting the validation system:
-- Test with various input scenarios
-- Verify error messages are user-friendly and actionable
+- Test with various input scenarios including cross-field business logic
+- Verify error messages are user-friendly and actionable for all validation types
 - Check accessibility compliance with assistive technologies
 - Ensure validation doesn't create barriers for legitimate use
+- Test both blocking validation and warning validation scenarios
 - Verify performance impact is minimal
+- Test cross-field business logic validation with edge cases
 
 ## Legislative Compliance
 

@@ -3,7 +3,7 @@
 A comprehensive web-based payroll calculator for Luxembourg, providing accurate calculations for gross/net salary, social security contributions, taxes, and employer costs based on legislation as of May 1st, 2025. The application features centralized form validation and enhanced user guidance for optimal tax planning.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/Version-3.4.0-blue.svg)](https://github.com/YOUR_USERNAME/StandaloneSalalaryCalculator)
+[![Version](https://img.shields.io/badge/Version-3.4.2-blue.svg)](https://github.com/YOUR_USERNAME/StandaloneSalalaryCalculator)
 [![Luxembourg Tax Law](https://img.shields.io/badge/Tax%20Law-May%202025-green.svg)](https://github.com/YOUR_USERNAME/StandaloneSalalaryCalculator)
 [![Status](https://img.shields.io/badge/Status-Production%20Ready-brightgreen.svg)](https://github.com/YOUR_USERNAME/StandaloneSalalaryCalculator)
 
@@ -38,10 +38,12 @@ The online calculator will be available shortly. Stay tuned for the live deploym
 - **Social Security**: Complete employer and employee contribution calculations
 - **Family Benefits**: Child allowances and tax credits integration
 
-### Enhanced Validation System (v3.4.0)
+### Enhanced Validation System (v3.4.2)
 - **Centralized Form Validation**: Comprehensive input validation with real-time feedback
 - **Per-field Error Messages**: Specific error guidance for each form field
+- **Cross-field Business Logic Validation**: Blocking validation requiring children when childcare expenses are entered
 - **Smart Tax Class Validation**: Cross-field validation with contextual warnings for tax optimization
+- **Enhanced Childcare/Children Validation**: Ensures logical consistency between family-related inputs
 - **Input Sanitization**: Automatic cleaning and formatting of numeric inputs
 - **Accessibility Compliance**: Enhanced ARIA labels and screen reader support
 
@@ -183,7 +185,7 @@ The calculator includes Luxembourg's comprehensive tax credit system:
 - **No Dependencies**: Self-contained single-file application
 - **Progressive Enhancement**: Works without JavaScript for basic functionality
 
-### Enhanced Validation System (v3.4.0)
+### Enhanced Validation System (v3.4.2)
 The new centralized validation system provides:
 
 ```javascript
@@ -197,8 +199,13 @@ function validateFormInputs() {
         isFormValid = false;
     }
     
-    // Cross-field validation for tax optimization
-    validateTaxClassAndChildrenRule(); // Non-blocking warning
+    // Cross-field business logic validation
+    if (!validateChildcareRequiresChildrenRule()) {
+        isFormValid = false; // Blocking validation
+    }
+    
+    // Cross-field validation for tax optimization (non-blocking warning)
+    validateTaxClassAndChildrenRule(); 
     
     return isFormValid;
 }
@@ -207,7 +214,8 @@ function validateFormInputs() {
 ### Key Validation Features
 - **Per-field Error Messages**: Specific feedback for each input field
 - **Real-time Validation**: Immediate feedback as users interact with form
-- **Cross-field Validation**: Smart warnings for tax class optimization
+- **Cross-field Business Logic**: Blocking validation ensuring data consistency (e.g., childcare expenses require children)
+- **Cross-field Tax Optimization**: Smart warnings for tax class optimization
 - **Input Sanitization**: Automatic cleaning of numeric inputs on blur events
 - **Accessibility Support**: Enhanced ARIA labels and screen reader compatibility
 
@@ -220,10 +228,11 @@ function validateFormInputs() {
 
 ## 🧪 Testing & Quality Assurance
 
-### Validation Testing (v3.4.0)
-- **Form Validation**: Comprehensive testing of all input validation scenarios
-- **Error Messaging**: Verification of user-friendly error messages
-- **Cross-field Validation**: Testing of tax class optimization warnings
+### Validation Testing (v3.4.2)
+- **Form Validation**: Comprehensive testing of all input validation scenarios including cross-field business logic
+- **Error Messaging**: Verification of user-friendly error messages for both field-level and business logic errors
+- **Cross-field Validation**: Testing of tax class optimization warnings and childcare/children consistency rules
+- **Business Logic Validation**: Testing of blocking validation rules that ensure data integrity
 - **Accessibility Validation**: Screen reader and keyboard navigation testing
 - **Input Sanitization**: Verification of automatic input cleaning
 
@@ -245,14 +254,15 @@ function validateFormInputs() {
 
 | Regulation | Status | Last Verified | Version |
 |------------|--------|---------------|---------|
-| Tax Law May 2025 | ✅ Compliant | May 2, 2025 | 3.4.0 |
-| CCSS Rates May 2025 | ✅ Compliant | May 2, 2025 | 3.4.0 |
-| Family Benefits 2025 | ✅ Compliant | May 1, 2025 | 3.4.0 |
-| Tax Credits (CIS/CI-CO2/CISSM) | ✅ Compliant | May 1, 2025 | 3.4.0 |
-| Centralized Form Validation | ✅ Implemented | June 4, 2025 | 3.4.0 |
-| Smart Tax Class Validation | ✅ Implemented | May 2, 2025 | 3.4.0 |
+| Tax Law May 2025 | ✅ Compliant | May 2, 2025 | 3.4.2 |
+| CCSS Rates May 2025 | ✅ Compliant | May 2, 2025 | 3.4.2 |
+| Family Benefits 2025 | ✅ Compliant | May 1, 2025 | 3.4.2 |
+| Tax Credits (CIS/CI-CO2/CISSM) | ✅ Compliant | May 1, 2025 | 3.4.2 |
+| Centralized Form Validation | ✅ Implemented | June 4, 2025 | 3.4.2 |
+| Cross-field Business Logic | ✅ Implemented | June 4, 2025 | 3.4.2 |
+| Smart Tax Class Validation | ✅ Implemented | May 2, 2025 | 3.4.2 |
 | GDPR Compliance | ✅ Compliant | No data stored | All |
-| Accessibility WCAG 2.1 AA | ✅ Compliant | June 4, 2025 | 3.4.0 |
+| Accessibility WCAG 2.1 AA | ✅ Compliant | June 4, 2025 | 3.4.2 |
 
 ### Key Components
 
@@ -282,6 +292,7 @@ const CONFIG = {
 - `performCalculation()`: Main calculation engine with validation
 - `validateFormInputs()`: Centralized form validation system
 - `validateTaxClassAndChildrenRule()`: Smart tax class optimization
+- `validateChildcareRequiresChildrenRule()`: Business logic validation for childcare/children consistency
 - `calculateEmployerContributions()`: Employer social security
 - `calculateEmployeeContributions()`: Employee social security
 - `calculateIncomeTax()`: Progressive tax calculation
@@ -292,11 +303,12 @@ const CONFIG = {
 
 ## 📱 Features Deep Dive
 
-### Enhanced Input Validation & Sanitization (v3.4.0)
+### Enhanced Input Validation & Sanitization (v3.4.2)
 - **Centralized Validation**: Single validation system for all form inputs
 - **Real-time Feedback**: Immediate validation as users interact with fields
 - **Specific Error Messages**: Detailed guidance for each type of validation error
-- **Cross-field Validation**: Smart warnings for tax optimization opportunities
+- **Cross-field Business Logic**: Blocking validation ensuring logical data consistency (childcare expenses require children)
+- **Cross-field Tax Optimization**: Smart warnings for tax optimization opportunities
 - **Input Sanitization**: Automatic cleaning and formatting on blur events
 - **Accessibility Compliance**: Enhanced ARIA labels and screen reader support
 
@@ -405,7 +417,7 @@ SOCIAL_SECURITY_PARAMETERS: {
 |----------------|----------------|------------|-------|
 | Professional Expenses | Minimum €540/year | Auto-applied | Automatically applied |
 | Transport | €4,620/year | Max validation | Commuting costs |
-| Childcare | €11,400/year per child | Per-child limit | Daycare, after-school care |
+| Childcare | €11,400/year per child | Per-child limit + requires children | Daycare, after-school care |
 | Private Pension | €3,200/year | Max validation | Pension plans and life insurance |
 | Insurance Premiums | €672/year | Max validation | Personal insurance premiums |
 | Mortgage Interest | No limit | Positive values | Home loans, energy renovations |
@@ -489,7 +501,13 @@ This calculator provides estimates based on Luxembourg tax laws and regulations 
 
 ## 📈 Version History
 
-### Version 3.4.0 (Current - Centralized Validation)
+### Version 3.4.2 (Current - Childcare/Children Validation)
+- **Enhanced Cross-field Validation**: Added blocking validation requiring children when childcare expenses are entered
+- **Business Logic Validation**: Implemented `validateChildcareRequiresChildrenRule()` for data consistency
+- **Enhanced Tax Class Warnings**: Updated tax class optimization warnings to include childcare expenses consideration
+- **Improved User Experience**: Better logical validation prevents submission of inconsistent family-related data
+- **Refined Validation Messages**: More specific error messages for childcare/children validation scenarios
+- **Enhanced Documentation**: Updated inline documentation to reflect business logic validation patterns
 - **Centralized Form Validation**: Comprehensive input validation system with real-time feedback
 - **Per-field Error Messages**: Specific error guidance for each form field with accessibility support
 - **Enhanced Input Sanitization**: Automatic cleaning and formatting of inputs on blur events
@@ -498,7 +516,7 @@ This calculator provides estimates based on Luxembourg tax laws and regulations 
 - **Professional Error Handling**: User-friendly error messages with clear guidance
 - **Enhanced Footer**: Updated version information to reflect validation enhancements
 
-### Version 3.3.4
+### Version 3.4.0 (Centralized Validation)
 - **Smart Tax Class Validation**: Added warnings for Tax Class 1 with children
 - **Enhanced User Guidance**: Contextual recommendations for tax optimization
 - **Improved Form Validation**: Cross-field validation for better user experience

@@ -6,7 +6,7 @@ We actively maintain and provide security updates for the following versions of 
 
 | Version | Supported          | Security Updates | End of Life | Notes |
 | ------- | ------------------ | ---------------- | ----------- | ----- |
-| 3.4.x   | ✅ Fully Supported | Active          | TBD         | Enhanced validation system |
+| 3.4.x   | ✅ Fully Supported | Active          | TBD         | Enhanced validation with business logic |
 | 3.3.x   | ✅ Security Only   | Critical Only   | 2025-12-31  | Tax credits implementation |
 | 3.2.x   | ❌ Limited Support | Critical Only   | 2025-08-31  | Legacy validation |
 | 3.1.x   | ❌ Unsupported     | None            | 2025-06-01  | End of life |
@@ -88,8 +88,9 @@ The Luxembourg Payroll Calculator implements several security measures to protec
 - **No External Requests**: Self-contained application with no external API calls
 - **Memory Management**: Efficient cleanup of calculation data and chart instances
 
-### Enhanced Input Security (v3.4.0+)
+### Enhanced Input Security (v3.4.2+)
 - **Centralized Validation**: All user inputs processed through secure validation functions
+- **Business Logic Validation**: Cross-field validation prevents logically inconsistent data submission
 - **Input Sanitization**: Comprehensive cleaning and validation of all form inputs
 - **Type Safety**: Strict type checking for numeric and select inputs
 - **Range Validation**: Comprehensive boundary checks with security implications
@@ -98,6 +99,7 @@ The Luxembourg Payroll Calculator implements several security measures to protec
 
 ### Validation System Security
 - **Server-Side Style Validation**: Client-side validation that mimics server-side security patterns
+- **Business Logic Protection**: Cross-field validation prevents data inconsistency attacks
 - **Input Sanitization on Blur**: Automatic cleaning of potentially malicious input
 - **Type Coercion Protection**: Strict type checking prevents unexpected data types
 - **Boundary Validation**: Prevents buffer overflow-style attacks through input limits
@@ -215,10 +217,11 @@ For security-related inquiries:
 ### Validation System Testing
 When testing for security issues in the validation system:
 - Test input sanitization with various malicious payloads
+- Test cross-field business logic validation with inconsistent data attempts
 - Verify XSS prevention in error messages and validation feedback
-- Check for validation bypass opportunities
+- Check for validation bypass opportunities in both field-level and business logic validation
 - Test boundary conditions for buffer overflow-style attacks
-- Verify type safety in input processing
+- Verify type safety in input processing for all validation scenarios
 
 ### Client-Side Security Testing
 - Test for DOM-based XSS vulnerabilities
@@ -261,6 +264,8 @@ When testing for security issues in the validation system:
 **Note**: This security policy applies specifically to the Luxembourg Payroll Calculator application. For general GitHub security policies, please refer to GitHub's official documentation.
 
 ### Version-Specific Security Notes
+
+**Version 3.4.2+**: Enhanced security through centralized validation system with business logic validation, improved input sanitization, and comprehensive XSS prevention.
 
 **Version 3.4.0+**: Enhanced security through centralized validation system, improved input sanitization, and comprehensive XSS prevention.
 

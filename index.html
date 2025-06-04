@@ -873,7 +873,9 @@
                   placeholder="0"
                   min="0"
                   step="1"
+                  aria-describedby="childcareExpensesFeedback"
                 />
+                <div id="childcareExpensesFeedback" class="invalid-feedback">Please enter valid childcare expenses.</div>
                 <small class="form-text"
                   >Maximum €11,400/year per child for daycare, after-school care
                   (Frais de Garde)</small
@@ -1357,7 +1359,7 @@
       </p>
       <p>
         <i class="fas fa-heart text-danger"></i>
-        Made for Luxembourg's workforce | Version 3.4.0 (Centralized Validation)
+        Made for Luxembourg's workforce | Version 3.4.2 (Childcare/Children Validation)
       </p>
     </footer>
   </div>
@@ -1377,19 +1379,12 @@
   <script>
     /**
      * Luxembourg Payroll Calculator 2025 - Full 2025 Updates
-     * Version: 3.4.0 (Centralized Validation)
+     * Version: 3.4.2 (Childcare/Children Validation)
      * Includes:
+     * - Added blocking validation: If Childcare Expenses > 0, Number of Children must be > 0.
+     * - Updated Tax Class 1 / Children / Childcare Expenses cross-validation warning.
      * - Centralized form input validation logic.
      * - Per-field error messages and styling.
-     * - Updated 2025 Tax Brackets
-     * - Updated Social Security Rates (Accident, Mutuality)
-     * - Updated SSM for May 2025 and dependent ceilings/reductions
-     * - Solidarity Surcharge logic confirmed
-     * - Family benefits and professional expenses confirmed
-     * - Added note for ceiling calculations
-     * - Enhanced Annual Summary & new Monthly Deductions/Benefits card
-     * - Added CIS, CI-CO2, CISSM tax credits
-     * - Added Tax Class 1 / Children cross-validation warning
      */
     'use strict';
 
@@ -1474,10 +1469,10 @@
         case 'number':
           const cleaned = stringValue.replace(/[^\d.-]/g, '');
           const number = parseFloat(cleaned);
-          return isNaN(number) ? 0 : number; // Keep negative for intermediate, will be max(0, val) later
+          return isNaN(number) ? 0 : number; 
         case 'integer':
           const integer = parseInt(stringValue.replace(/[^\d]/g, ''), 10);
-          return isNaN(integer) ? 0 : integer; // Keep negative for intermediate
+          return isNaN(integer) ? 0 : integer; 
         case 'select': return stringValue;
         default: return stringValue.replace(/[&<>"']/g, (match) => ({'&': '&amp;','<': '&lt;','>': '&gt;','"': '&quot;',"'": '&#39;'}[match]));
       }
@@ -1599,13 +1594,13 @@
         if (!inputEl || !feedbackEl) return false;
 
         const rawValue = inputEl.value.trim();
-        if (rawValue === '' && inputEl.placeholder !== '0') { // Allow empty if placeholder is not 0 (optional fields)
-             if (inputEl.hasAttribute('required')) { // If it's explicitly required, empty is invalid
-                setFieldValidationState(inputEl, feedbackEl, false, `${fieldName} is required.`);
-                return false;
-             }
-             setFieldValidationState(inputEl, feedbackEl, true); // Optional and empty is fine
+        if (rawValue === '' && !inputEl.hasAttribute('required')) {
+             setFieldValidationState(inputEl, feedbackEl, true); 
              return true;
+        }
+        if (rawValue === '' && inputEl.hasAttribute('required')) {
+            setFieldValidationState(inputEl, feedbackEl, false, `${fieldName} is required.`);
+            return false;
         }
         
         const value = integerOnly ? sanitizeInput(rawValue, 'integer') : sanitizeInput(rawValue, 'number');
@@ -1614,7 +1609,7 @@
             setFieldValidationState(inputEl, feedbackEl, false, `Please enter a valid number for ${fieldName.toLowerCase()}.`);
             return false;
         }
-        if (!allowZero && value <= 0 && inputEl.hasAttribute('required')) { // Check for required and <=0
+        if (!allowZero && value <= 0 && inputEl.hasAttribute('required')) { 
              setFieldValidationState(inputEl, feedbackEl, false, `${fieldName} must be greater than 0.`);
              return false;
         }
@@ -1626,7 +1621,7 @@
             setFieldValidationState(inputEl, feedbackEl, false, `${fieldName} cannot exceed ${max}.`);
             return false;
         }
-        if (integerOnly && !Number.isInteger(parseFloat(rawValue))) { // Check original input for float if integerOnly
+        if (integerOnly && !Number.isInteger(parseFloat(rawValue))) { 
              setFieldValidationState(inputEl, feedbackEl, false, `${fieldName} must be a whole number.`);
              return false;
         }
@@ -1635,18 +1630,24 @@
         return true;
     }
     
-    function validateTaxClassAndChildrenRule() { // This remains for the non-blocking warning
+    // Non-blocking warning rule
+    function validateTaxClassAndChildrenRule() { 
         const taxClassEl = document.getElementById('taxClass');
         const numChildrenEl = document.getElementById('numChildren');
+        const childcareExpensesEl = document.getElementById('childcareExpenses');
         const taxClassWarningDiv = document.getElementById('taxClassWarning');
 
-        if (!taxClassEl || !numChildrenEl || !taxClassWarningDiv) return;
+        if (!taxClassEl || !numChildrenEl || !childcareExpensesEl || !taxClassWarningDiv) return;
 
         const taxClass = taxClassEl.value;
-        const numChildren = parseInt(numChildrenEl.value, 10); // Use parsed value
+        const numChildren = parseInt(numChildrenEl.value, 10);
+        const childcareExpenses = parseFloat(childcareExpensesEl.value);
 
-        if (taxClass === '1' && !isNaN(numChildren) && numChildren > 0) {
-            taxClassWarningDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Note: Tax Class 1a is typically more beneficial for single taxpayers with children. Please verify your selection.`;
+        const hasChildren = !isNaN(numChildren) && numChildren > 0;
+        const hasChildcareExpenses = !isNaN(childcareExpenses) && childcareExpenses > 0;
+
+        if (taxClass === '1' && (hasChildren || hasChildcareExpenses)) {
+            taxClassWarningDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Note: Tax Class 1a is typically more beneficial for single taxpayers with children or significant childcare expenses. Please verify your selection.`;
             taxClassWarningDiv.classList.remove('d-none');
         } else {
             taxClassWarningDiv.innerHTML = '';
@@ -1654,35 +1655,77 @@
         }
     }
 
+    // Blocking cross-field validation rule
+    function validateChildcareRequiresChildrenRule() {
+        const numChildrenEl = document.getElementById('numChildren');
+        const childcareExpensesEl = document.getElementById('childcareExpenses');
+        const numChildrenFeedbackEl = document.getElementById('numChildrenFeedback');
+
+        if (!numChildrenEl || !childcareExpensesEl || !numChildrenFeedbackEl) return true; // Should not happen
+
+        const numChildrenRaw = numChildrenEl.value.trim();
+        const childcareExpensesRaw = childcareExpensesEl.value.trim();
+
+        // If childcare expenses are not entered or are zero, this specific rule does not apply,
+        // or rather, it's satisfied. We need to ensure any previous error from *this rule* is cleared.
+        if (childcareExpensesRaw === '' || parseFloat(childcareExpensesRaw) <= 0) {
+            if (numChildrenFeedbackEl.textContent === "Number of children must be > 0 if childcare expenses are entered.") {
+                // The field was invalid ONLY because of this rule. Re-validate it on its own merits.
+                return validateNumericInput('numChildren', 'numChildrenFeedback', 'Number of Children', { min: 0, max: 20, integerOnly: true, allowZero: true });
+            }
+            return true; // Rule is satisfied or not applicable
+        }
+
+        const childcareExpensesVal = parseFloat(childcareExpensesRaw); // Already know it's > 0
+        const numChildrenVal = (numChildrenRaw !== '') ? parseInt(numChildrenRaw, 10) : 0; // Default to 0 if empty for logic
+
+        if (numChildrenVal <= 0) { // childcareExpensesVal > 0 is established
+            setFieldValidationState(numChildrenEl, numChildrenFeedbackEl, false, "Number of children must be > 0 if childcare expenses are entered.");
+            return false; // Rule violated
+        }
+
+        // If the rule was previously violated (specific message was shown) but now numChildren > 0,
+        // we need to clear that specific message and let numChildren be validated on its own.
+        if (numChildrenFeedbackEl.textContent === "Number of children must be > 0 if childcare expenses are entered.") {
+             return validateNumericInput('numChildren', 'numChildrenFeedback', 'Number of Children', { min: 0, max: 20, integerOnly: true, allowZero: true });
+        }
+        
+        return true; // Rule satisfied
+    }
+
+
     function validateFormInputs() {
-        clearGeneralError(); // Clear any previous general error messages
+        clearGeneralError(); 
         let isFormValid = true;
 
-        // Validate Salary Input
+        // Individual field validations
         if (!validateNumericInput('salaryInput', 'salaryInputFeedback', 'Salary', { min: 0.01, allowZero: false })) {
             isFormValid = false;
         }
-        // Validate Tax Class
         if (!validateRequiredSelect('taxClass', 'taxClassFeedback', 'Tax Class')) {
             isFormValid = false;
         }
-        // Validate Mutuality Class
         if (!validateRequiredSelect('mutualityClass', 'mutualityClassFeedback', 'Mutuality Class')) {
             isFormValid = false;
         }
-        // Validate Number of Children (optional, but if provided, must be valid)
+        
+        // Validate numChildren on its own first
         if (!validateNumericInput('numChildren', 'numChildrenFeedback', 'Number of Children', { min: 0, max: 20, integerOnly: true, allowZero: true })) {
            isFormValid = false;
         }
+        // Validate childcareExpenses on its own first
+        if (!validateNumericInput('childcareExpenses', 'childcareExpensesFeedback', 'Childcare Expenses', { min: 0, allowZero: true })) {
+            isFormValid = false;
+        }
 
-
-        // Non-blocking warning for Tax Class / Children
+        // Then, apply the cross-field validation rule
+        // This rule might override the validation state of numChildren if it fails
+        if (!validateChildcareRequiresChildrenRule()) {
+            isFormValid = false;
+        }
+        
+        // Non-blocking warning (run regardless of isFormValid state for UX)
         validateTaxClassAndChildrenRule(); 
-
-        // Add more specific validations for other fields if needed here, e.g.:
-        // validateNumericInput('childcareExpenses', 'childcareExpensesFeedback', 'Childcare Expenses', { min: 0, allowZero: true });
-        // ... and so on for other numeric fields if they had specific feedback divs and stricter rules.
-        // For now, other fields are sanitized but don't have blocking validation apart from their min/max attributes.
 
         return isFormValid;
     }
@@ -1782,7 +1825,6 @@
       
       if (!validateFormInputs()) {
           showGeneralError('Please correct the highlighted errors before calculating.');
-          // Ensure loading is not shown if validation fails early
           const calculateBtn = document.getElementById('calculateBtn');
           if (calculateBtn && calculateBtn.classList.contains('loading')) {
               showLoading(false);
@@ -1794,13 +1836,17 @@
       appState.salaryExceedsCeiling = false;
       
       try {
-        // Get already sanitized and validated (to some extent) values
-        const salaryIn = parseFloat(document.getElementById('salaryInput')?.value); // Already validated as numeric > 0
-        const taxCl = document.getElementById('taxClass')?.value; // Already validated as selected
-        const mutVal = document.getElementById('mutualityClass')?.value; // Already validated as selected
+        const salaryIn = parseFloat(document.getElementById('salaryInput')?.value); 
+        const taxCl = document.getElementById('taxClass')?.value; 
+        const mutVal = document.getElementById('mutualityClass')?.value; 
         const mutCl = parseFloat(mutVal);
+        
         const numChildRaw = document.getElementById('numChildren')?.value;
-        const numChild = numChildRaw ? parseInt(numChildRaw, 10) : 0; // Already validated as integer 0-20
+        const numChild = (numChildRaw && numChildRaw.trim() !== '') ? parseInt(numChildRaw, 10) : 0;
+
+        const childcareExpensesRaw = document.getElementById('childcareExpenses')?.value;
+        const childcareExpensesVal = (childcareExpensesRaw && childcareExpensesRaw.trim() !== '') ? parseFloat(childcareExpensesRaw) : 0;
+
 
         let grossSal = (appState.currentInputMode === 'gross') ? salaryIn : calculateGrossFromTotal(salaryIn, mutCl); 
         if (grossSal > CONFIG.SOCIAL_SECURITY_PARAMETERS.monthlyIncomeCeiling) appState.salaryExceedsCeiling = true;
@@ -1813,7 +1859,8 @@
 
         const profExp = Math.max(CONFIG.PROFESSIONAL_EXPENSES_MIN_ANNUAL, sanitizeInput(document.getElementById('professionalExpenses')?.value,'number'));
         const transDed = Math.min(sanitizeInput(document.getElementById('transportDeduction')?.value,'number'), CONFIG.TRANSPORT_DEDUCTION_MAX_ANNUAL);
-        const childExp = Math.min(sanitizeInput(document.getElementById('childcareExpenses')?.value,'number'), numChild * CONFIG.DEDUCTION_LIMITS.childcarePerChild);
+        // Use childcareExpensesVal which defaults to 0 if empty
+        const childExp = Math.min(childcareExpensesVal, numChild * CONFIG.DEDUCTION_LIMITS.childcarePerChild);
         const pensContr = Math.min(sanitizeInput(document.getElementById('pensionContributions')?.value,'number'), CONFIG.DEDUCTION_LIMITS.privatePension);
         const mortInt = sanitizeInput(document.getElementById('mortgageInterest')?.value,'number');
         const insPrem = Math.min(sanitizeInput(document.getElementById('insurancePremiums')?.value,'number'), CONFIG.DEDUCTION_LIMITS.insurancePremiums);
@@ -1953,57 +2000,77 @@
       document.getElementById('totalBtn')?.addEventListener('click', () => toggleInputMode('total'));
       document.getElementById('mutualityClass')?.addEventListener('change', handleSalaryInput);
       
-      // Event listeners for real-time tax class/children warning
+      // Event listeners for real-time non-blocking tax class warning
       document.getElementById('taxClass')?.addEventListener('change', validateTaxClassAndChildrenRule);
       document.getElementById('numChildren')?.addEventListener('input', validateTaxClassAndChildrenRule);
+      document.getElementById('childcareExpenses')?.addEventListener('input', validateTaxClassAndChildrenRule);
+
 
       document.querySelectorAll('.tab').forEach(tab => tab.addEventListener('click', function() { switchTab(this.id.replace('Tab', '')); }));
       document.getElementById('exportBtn')?.addEventListener('click', exportResults);
       document.getElementById('shareBtn')?.addEventListener('click', shareResults);
       document.getElementById('clearBtn')?.addEventListener('click', () => { 
-          // Using a custom modal for confirmation is preferred, but window.confirm is used here for simplicity.
-          // In a real app, replace with a custom modal to avoid issues in iframe environments.
           if (window.confirm('Are you sure you want to clear the form and results? This action cannot be undone.')) {
             clearForm();
           }
       });
-      setupInputBlurSanitization(); // Renamed for clarity
-      console.log('Luxembourg Payroll Calculator initialized (v3.4.0)'); 
+      setupInputBlurSanitizationAndValidation(); 
+      console.log('Luxembourg Payroll Calculator initialized (v3.4.2)'); 
     });
 
-    function setupInputBlurSanitization() { // Renamed for clarity
-      const numInputs = ['salaryInput', 'numChildren', 'professionalExpenses', 'transportDeduction', 'childcareExpenses', 'pensionContributions', 'mortgageInterest', 'insurancePremiums', 'medicalExpenses', 'charitableDonations'];
-      numInputs.forEach(id => {
-        const input = document.getElementById(id);
+    function setupInputBlurSanitizationAndValidation() { 
+      const inputConfigs = [
+        { id: 'salaryInput', feedbackId: 'salaryInputFeedback', fieldName: 'Salary', options: { min: 0.01, allowZero: false, required: true } },
+        { id: 'numChildren', feedbackId: 'numChildrenFeedback', fieldName: 'Number of Children', options: { min: 0, max: 20, integerOnly: true, allowZero: true } },
+        { id: 'childcareExpenses', feedbackId: 'childcareExpensesFeedback', fieldName: 'Childcare Expenses', options: { min: 0, allowZero: true } },
+        // Add other numeric inputs here if they need specific blur validation beyond sanitization
+        { id: 'professionalExpenses', options: { min:0 } },
+        { id: 'transportDeduction', options: { min:0, max:4620 } },
+        { id: 'pensionContributions', options: { min:0, max:3200 } },
+        { id: 'mortgageInterest', options: { min:0 } },
+        { id: 'insurancePremiums', options: { min:0, max:672 } },
+        { id: 'medicalExpenses', options: { min:0 } },
+        { id: 'charitableDonations', options: { min:0 } }
+      ];
+
+      inputConfigs.forEach(config => {
+        const input = document.getElementById(config.id);
         if (input) {
           input.addEventListener('blur', function() {
-            const isIntegerField = (id === 'numChildren' || (id === 'salaryInput' && this.step === '1')); // Example, refine if salary can be integer
+            const isIntegerField = config.options?.integerOnly;
             const type = isIntegerField ? 'integer' : 'number';
             let val = sanitizeInput(this.value, type);
 
-            // Apply min/max from attributes if they exist
-            const minAttr = parseFloat(this.min);
+            const minAttr = parseFloat(this.min); // Use HTML min/max if defined
             const maxAttr = parseFloat(this.max);
             if (!isNaN(minAttr) && val < minAttr) val = minAttr;
             if (!isNaN(maxAttr) && val > maxAttr) val = maxAttr;
             
-            if (type === 'number' && !isNaN(parseFloat(val))) {
+            if (this.value.trim() === '' && !this.hasAttribute('required')) {
+                this.value = ''; 
+            } else if (type === 'number' && !isNaN(parseFloat(val))) {
                  this.value = parseFloat(val).toFixed(this.step === "0.01" ? 2 : 0);
             } else if (type === 'integer' && !isNaN(parseInt(val))) {
                  this.value = parseInt(val);
-            } else if (this.value.trim() !== '') { // If not a valid number but not empty, keep original for validation to catch
-                 // this.value = ''; // Or clear if preferred
             }
-            // Trigger validation for the specific field on blur for immediate feedback
-            // This could be expanded to call parts of validateFormInputs for the specific field
-            if (id === 'salaryInput') validateNumericInput('salaryInput', 'salaryInputFeedback', 'Salary', { min: 0.01, allowZero: false });
-            if (id === 'taxClass') validateRequiredSelect('taxClass', 'taxClassFeedback', 'Tax Class');
-            if (id === 'mutualityClass') validateRequiredSelect('mutualityClass', 'mutualityClassFeedback', 'Mutuality Class');
-            if (id === 'numChildren') validateNumericInput('numChildren', 'numChildrenFeedback', 'Number of Children', { min: 0, max: 20, integerOnly: true, allowZero: true });
-
+            
+            // Trigger specific field validation if feedbackId and fieldName are provided
+            if (config.feedbackId && config.fieldName) {
+                validateNumericInput(config.id, config.feedbackId, config.fieldName, config.options);
+            }
+            
+            // Always re-check cross-field rules on blur of relevant fields
+            if (config.id === 'numChildren' || config.id === 'childcareExpenses') {
+                validateChildcareRequiresChildrenRule();
+            }
+            validateTaxClassAndChildrenRule(); // For the non-blocking warning
           });
         }
       });
+
+      // Add blur listeners for select elements if needed for immediate validation
+      document.getElementById('taxClass')?.addEventListener('blur', () => validateRequiredSelect('taxClass', 'taxClassFeedback', 'Tax Class'));
+      document.getElementById('mutualityClass')?.addEventListener('blur', () => validateRequiredSelect('mutualityClass', 'mutualityClassFeedback', 'Mutuality Class'));
     }
 
     function clearForm() {
@@ -2013,18 +2080,18 @@
       document.getElementById('resultsSection')?.classList.add('d-none');
       clearGeneralError();
       
-      // Clear all field-specific validation states
       const fieldsToClear = [
           { inputId: 'salaryInput', feedbackId: 'salaryInputFeedback' },
           { inputId: 'taxClass', feedbackId: 'taxClassFeedback' },
           { inputId: 'mutualityClass', feedbackId: 'mutualityClassFeedback' },
-          { inputId: 'numChildren', feedbackId: 'numChildrenFeedback' }
+          { inputId: 'numChildren', feedbackId: 'numChildrenFeedback' },
+          { inputId: 'childcareExpenses', feedbackId: 'childcareExpensesFeedback'}
       ];
       fieldsToClear.forEach(field => {
           const inputEl = document.getElementById(field.inputId);
           const feedbackEl = document.getElementById(field.feedbackId);
           if (inputEl && feedbackEl) {
-              setFieldValidationState(inputEl, feedbackEl, true); // Resets to valid state
+              setFieldValidationState(inputEl, feedbackEl, true); // Resets to valid state (clears error message)
           }
       });
 
@@ -2082,9 +2149,6 @@
       const canvas = document.getElementById('salaryChart');
       if (canvas?.getContext) {
         const ctx = canvas.getContext('2d');
-        // Ensure canvas is responsive to container size changes before drawing
-        // This should ideally be handled if the container can resize dynamically
-        // For now, setting it once based on offsetWidth/Height is a good start
         if (canvas.width !== canvas.offsetWidth || canvas.height !== canvas.offsetHeight) {
              canvas.width = canvas.offsetWidth; 
              canvas.height = canvas.offsetHeight;
@@ -2124,12 +2188,12 @@
             { name: 'Employee SS', value: totalEmployeeSSC, color: '#FF9800' },
             { name: 'Taxes', value: taxes, color: '#F44336' },
             { name: 'Employer SS', value: totalEmployerSSC, color: '#2196F3' }
-        ].filter(slice => slice.value > 0.001 * totalEmployerCost); // Filter out very small slices
+        ].filter(slice => slice.value > 0.001 * totalEmployerCost); 
 
         let currentAngle = -Math.PI / 2; 
         pieSlices.forEach(slice => {
             const sliceAngle = (slice.value / totalEmployerCost) * 2 * Math.PI;
-            if (sliceAngle < 0.001) return; // Don't draw extremely small slices
+            if (sliceAngle < 0.001) return; 
             ctx.beginPath(); ctx.moveTo(centerX, centerY);
             ctx.arc(centerX, centerY, chartMaxRadius, currentAngle, currentAngle + sliceAngle);
             ctx.closePath(); ctx.fillStyle = slice.color; ctx.fill();
@@ -2137,22 +2201,20 @@
             currentAngle += sliceAngle;
         });
 
-        // Central text
         ctx.fillStyle = '#333333'; ctx.textAlign = 'center';
-        const centralTextBaseSize = Math.max(9, chartMaxRadius * 0.12); // Responsive font size
+        const centralTextBaseSize = Math.max(9, chartMaxRadius * 0.12); 
         ctx.font = `bold ${centralTextBaseSize}px Inter, Arial, sans-serif`;
         ctx.fillText('Total Cost', centerX, centerY - centralTextBaseSize * 0.6);
         ctx.font = `bold ${centralTextBaseSize * 1.2}px Inter, Arial, sans-serif`;
         ctx.fillText(formatCurrency(totalEmployerCost), centerX, centerY + centralTextBaseSize * 0.9);
 
-        // Legend
-        const legendX = pieAreaWidth + 15; // Start legend to the right of the pie
+        const legendX = pieAreaWidth + 15; 
         let legendY = 15;
         const legendItemMinHeight = 18; 
         const legendColorBoxSize = 10;
         const legendFontSize = 9.5; 
         const legendLineSpacing = 4; 
-        const maxLegendItemWidth = legendAreaWidth - 25; // Max width for legend text
+        const maxLegendItemWidth = legendAreaWidth - 25; 
 
         ctx.textAlign = 'left';
         ctx.font = `bold ${legendFontSize + 1}px Inter, Arial, sans-serif`;
@@ -2165,14 +2227,14 @@
         const legendItems = [
             { name: 'Total Employer Cost', value: totalEmployerCost, isTotal: true },
             { name: 'Employer Social Security', value: totalEmployerSSC, color: '#2196F3' },
-            { name: 'Gross Salary', value: data.grossSalary, isInformational: true }, // Informational, not part of pie directly
+            { name: 'Gross Salary', value: data.grossSalary, isInformational: true }, 
             { name: 'Employee Social Security', value: totalEmployeeSSC, color: '#FF9800'},
             { name: 'Taxes & Surcharges', value: taxes, color: '#F44336' },
             { name: 'Net Salary', value: netSalary, color: '#4CAF50' }
         ];
         
         legendItems.forEach(item => {
-            if (legendY + legendItemMinHeight > height - 5) return; // Prevent overflow
+            if (legendY + legendItemMinHeight > height - 5) return; 
             const percentage = totalEmployerCost > 0 ? (item.value / totalEmployerCost * 100).toFixed(1) : "0.0";
             let text = `${item.name}: ${formatCurrency(item.value)} (${percentage}%)`;
             if (item.isTotal) text = `${item.name}: ${formatCurrency(item.value)} (100.0%)`;
@@ -2185,15 +2247,14 @@
             }
             ctx.fillStyle = '#333333';
             
-            // Truncate text if too long for the legend area
             let textToDraw = text;
             if (ctx.measureText(textToDraw).width > maxLegendItemWidth) {
-                while(ctx.measureText(textToDraw + "...").width > maxLegendItemWidth && textToDraw.length > 15) { // Heuristic length
+                while(ctx.measureText(textToDraw + "...").width > maxLegendItemWidth && textToDraw.length > 15) { 
                     textToDraw = textToDraw.slice(0,-1);
                 }
                 textToDraw += "...";
             }
-            ctx.fillText(textToDraw, textX, legendY + legendItemMinHeight / 2 + legendFontSize / 3 - 1); // Adjusted for better vertical alignment
+            ctx.fillText(textToDraw, textX, legendY + legendItemMinHeight / 2 + legendFontSize / 3 - 1); 
             legendY += legendItemMinHeight + legendLineSpacing;
         });
     }
