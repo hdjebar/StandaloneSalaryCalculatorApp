@@ -68,7 +68,7 @@ Luxembourg tax law changes regularly. When contributing updates:
 - Use modern ES6+ features appropriately
 - Keep functions focused and single-purpose
 
-**Validation Standards (v3.4.2+)**
+**Validation Standards (v3.4.3+)**
 - Use the centralized validation system for all new form inputs
 - Follow the established pattern: `validateNumericInput()` for numbers, `validateRequiredSelect()` for dropdowns
 - Implement cross-field business logic validation for data consistency when appropriate
@@ -114,7 +114,7 @@ Before submitting changes:
 - **Test form validation** with various input scenarios (valid, invalid, edge cases)
 - **Test input sanitization** with potentially problematic inputs
 
-#### Validation Testing (v3.4.2+)
+#### Validation Testing (v3.4.3+)
 When contributing validation enhancements:
 - Test all validation scenarios (valid inputs, invalid inputs, edge cases)
 - Test cross-field business logic validation with various input combinations

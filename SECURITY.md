@@ -88,7 +88,7 @@ The Luxembourg Payroll Calculator implements several security measures to protec
 - **No External Requests**: Self-contained application with no external API calls
 - **Memory Management**: Efficient cleanup of calculation data and chart instances
 
-### Enhanced Input Security (v3.4.2+)
+### Enhanced Input Security (v3.4.3+)
 - **Centralized Validation**: All user inputs processed through secure validation functions
 - **Business Logic Validation**: Cross-field validation prevents logically inconsistent data submission
 - **Input Sanitization**: Comprehensive cleaning and validation of all form inputs
@@ -265,7 +265,7 @@ When testing for security issues in the validation system:
 
 ### Version-Specific Security Notes
 
-**Version 3.4.2+**: Enhanced security through centralized validation system with business logic validation, improved input sanitization, and comprehensive XSS prevention.
+**Version 3.4.3+**: Enhanced security through centralized validation system with business logic validation, improved input sanitization, and comprehensive XSS prevention.
 
 **Version 3.4.0+**: Enhanced security through centralized validation system, improved input sanitization, and comprehensive XSS prevention.
 
