@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [3.4.2] - 2025-06-04
+## [3.4.3] - 2025-06-04
 
 ### Added
 - **Cross-field Business Logic Validation**: Blocking validation requiring children when childcare expenses are entered
@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - **Tax Class Warning Logic**: Updated `validateTaxClassAndChildrenRule()` to include childcare expenses in optimization suggestions
 - **Form Validation Flow**: Enhanced validation sequence to handle both individual field and cross-field business logic validation
-- **Footer Version**: Updated to reflect childcare/children validation enhancements (v3.4.2)
+- **Footer Version**: Updated to reflect childcare/children validation enhancements (v3.4.3)
 - **Validation Error Handling**: Improved error state management for cross-field validation scenarios
 - **Input Event Listeners**: Enhanced blur event handling for childcare and children fields with cross-validation
 
