@@ -91,7 +91,14 @@ git clone https://github.com/YOUR_USERNAME/StandaloneSalalaryCalculator.git
 cd StandaloneSalalaryCalculator
 
 # Open in browser (no build process required)
-open index.html
+- double click index.html 
+- Linux/macOS:
+open index.html (macOS) or xdg-open index.html (Linux) will open the HTML file in your default web browser
+On some Linux distributions, you might also use gnome-open or kde-open
+- Windows:
+start index.html is the Windows equivalent
+You can also just type index.html in Command Prompt and it will open with the default program
+Or use explorer index.html
 ```
 
 ### Production Deployment
