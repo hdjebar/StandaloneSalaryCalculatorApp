@@ -3,7 +3,7 @@
 A comprehensive web-based payroll calculator for Luxembourg, providing accurate calculations for gross/net salary, social security contributions, taxes, and employer costs based on legislation as of May 1st, 2025. The application features centralized form validation and enhanced user guidance for optimal tax planning.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/Version-3.4.3-blue.svg)](https://github.com/YOUR_USERNAME/StandaloneSalalaryCalculator)
+[![Version](https://img.shields.io/badge/Version-3.5.0-blue.svg)](https://github.com/hdjebar/StandaloneSalalaryCalculator)
 [![Luxembourg Tax Law](https://img.shields.io/badge/Tax%20Law-May%202025-green.svg)](https://github.com/YOUR_USERNAME/StandaloneSalalaryCalculator)
 [![Status](https://img.shields.io/badge/Status-Production%20Ready-brightgreen.svg)](https://github.com/YOUR_USERNAME/StandaloneSalalaryCalculator)
 
@@ -38,14 +38,17 @@ The online calculator will be available shortly. Stay tuned for the live deploym
 - **Social Security**: Complete employer and employee contribution calculations
 - **Family Benefits**: Child allowances and tax credits integration
 
-### Enhanced Validation System (v3.4.3)
-- **Centralized Form Validation**: Comprehensive input validation with real-time feedback
-- **Per-field Error Messages**: Specific error guidance for each form field
-- **Cross-field Business Logic Validation**: Blocking validation requiring children when childcare expenses are entered
+### Enhanced UX System (v3.5.0)
+- **Quick Start Templates**: 4 professional salary templates (Junior Dev, Senior Dev, Manager, Executive) for instant form completion
+- **Real-time Live Preview**: Instant calculation estimates as users type, showing net salary, tax rate, and employer cost
+- **Progress Tracking**: Visual progress bar with percentage showing form completion status
+- **Smart Form Guidance**: Contextual tooltips on form labels with helpful explanations
+- **Data Persistence**: Auto-save form state to localStorage with session restoration and 7-day expiry
+- **Mobile-First Design**: Touch-optimized interface with 44px minimum targets and responsive layouts
+- **Visual Enhancements**: Modern CSS animations, hover effects, and micro-interactions for engaging UX
+- **Centralized Form Validation**: Comprehensive input validation with real-time feedback and specific error messages
 - **Smart Tax Class Validation**: Cross-field validation with contextual warnings for tax optimization
-- **Enhanced Childcare/Children Validation**: Ensures logical consistency between family-related inputs
-- **Input Sanitization**: Automatic cleaning and formatting of numeric inputs
-- **Accessibility Compliance**: Enhanced ARIA labels and screen reader support
+- **Enhanced Accessibility**: WCAG 2.1 AA compliant with improved ARIA labels and screen reader support
 
 ### Tax & Deduction Support
 - **Tax Classes**: Support for Class 1, 1a, and 2 with optimization guidance
@@ -66,17 +69,23 @@ The online calculator will be available shortly. Stay tuned for the live deploym
 - **Child Tax Credits**: Family support integration
 - **Single Parent Credit (CIM)**: Information and guidance for Class 1a
 
-### User Experience
-- **Monthly & Annual Views**: Toggle between time periods
-- **Interactive Charts**: Visual salary breakdown with pie charts
-- **Real-time Validation**: Advanced input validation with immediate feedback
-- **Smart Tax Class Warnings**: Non-blocking warnings for potentially suboptimal tax class selections
-- **Export & Share**: JSON export and native sharing capabilities
-- **Print-friendly**: Optimized print layouts
-- **Responsive Design**: Mobile and desktop compatible
-- **Enhanced Accessibility**: WCAG 2.1 AA compliant with improved ARIA support
-- **Tax Credits Display**: Comprehensive breakdown of all applicable credits
-- **Visual Notifications**: Contextual information for special cases
+### Enhanced User Experience (v3.5.0)
+- **🚀 Quick Start Templates**: Professional templates (Junior Dev €3,500, Senior Dev €6,500, Manager €8,200, Executive €12,000)
+- **⚡ Real-time Live Preview**: Instant calculations without form submission, debounced for performance
+- **📊 Progress Tracking**: Visual completion indicator with weighted progress (required 60%, optional 40%)
+- **💡 Smart Tooltips**: Contextual help on tax classes, mutuality, and complex fields
+- **💾 Auto-save & Restore**: Seamless session persistence with 7-day expiry and privacy protection
+- **📱 Mobile-Optimized**: Touch-friendly interface with enhanced mobile tooltips and gestures
+- **🎨 Modern Animations**: Smooth transitions, hover effects, and micro-interactions for engaging UX
+- **📅 Monthly & Annual Views**: Toggle between time periods with enhanced tab design
+- **📈 Interactive Charts**: Visual salary breakdown with pie charts and responsive design
+- **✅ Real-time Validation**: Advanced input validation with immediate visual feedback
+- **⚠️ Smart Tax Class Warnings**: Non-blocking warnings for potentially suboptimal tax class selections
+- **📤 Export & Share**: JSON export and native sharing capabilities with fallback support
+- **🖨️ Print-friendly**: Optimized print layouts for professional documentation
+- **♿ Enhanced Accessibility**: WCAG 2.1 AA compliant with improved ARIA support and keyboard navigation
+- **💳 Tax Credits Display**: Comprehensive breakdown of all applicable credits
+- **🔔 Visual Notifications**: Contextual success feedback and informational messages
 
 ## 🚀 Quick Start
 
@@ -508,7 +517,18 @@ This calculator provides estimates based on Luxembourg tax laws and regulations 
 
 ## 📈 Version History
 
-### Version 3.4.3 (Current - Childcare/Children Validation)
+### Version 3.5.0 (Current - Enhanced UX)
+- **🎉 Major UX Overhaul**: Complete user experience transformation
+- **✨ Quick Start Templates**: 4 professional salary templates for instant completion
+- **📊 Real-time Live Preview**: Instant calculation estimates as users type
+- **📈 Progress Tracking**: Visual progress bar showing form completion (0-100%)
+- **🔍 Smart Form Guidance**: Contextual tooltips and enhanced help text
+- **💾 Data Persistence**: Auto-save and session restoration with 7-day expiry
+- **📱 Mobile Experience**: Touch-optimized with responsive design enhancements
+- **🎨 Visual Enhancements**: Modern animations, hover effects, and micro-interactions
+- **🏗️ Architecture Improvements**: Enhanced performance and accessibility
+
+### Version 3.4.3 (Childcare/Children Validation)
 - **Enhanced Cross-field Validation**: Added blocking validation requiring children when childcare expenses are entered
 - **Business Logic Validation**: Implemented `validateChildcareRequiresChildrenRule()` for data consistency
 - **Enhanced Tax Class Warnings**: Updated tax class optimization warnings to include childcare expenses consideration
