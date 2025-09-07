@@ -50,27 +50,36 @@
       --spacing-lg: 24px;
       --spacing-xl: 32px;
       --border-radius: 8px;
-      --border-color: #e2e8f0; /* Lighter border */
+      --border-radius-lg: 12px;
+      --border-color: #e2e8f0;
       --white-bg: #ffffff;
-      --light-bg: #f7fafc; /* Slightly different light bg */
+      --light-bg: #f7fafc;
       --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
       --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
       --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-      --primary-color: #4A5568; /* Darker primary for text */
-      --primary-accent: #667eea; /* Indigo accent */
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      --primary-color: #4A5568;
+      --primary-accent: #667eea;
       --primary-accent-dark: #5a67d8;
-      --success-color: #38a169; /* Green */
-      --warning-color: #dd6b20; /* Orange */
+      --primary-accent-light: #f0f4ff;
+      --success-color: #38a169;
+      --success-light: #f0fff4;
+      --warning-color: #dd6b20;
       --warning-bg-light: #fffaf0;
       --warning-border-light: #fbd38d;
       --warning-text-dark: #7b341e;
-      --danger-color: #e53e3e; /* Red */
-      --text-primary: #2d3748; /* Darker text */
+      --danger-color: #e53e3e;
+      --info-color: #3182ce;
+      --info-light: #ebf8ff;
+      --text-primary: #2d3748;
       --text-secondary: #4a5568;
       --text-muted: #718096;
+      --font-size-xs: 0.75rem;
       --font-size-sm: 0.875rem;
-      --primary-gradient: linear-gradient(90deg, #667eea, #764ba2);
-      --transition: all 0.2s ease-in-out;
+      --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --success-gradient: linear-gradient(135deg, #38a169 0%, #48bb78 100%);
+      --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-bounce: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     }
 
     /* Basic Reset & Body Styles */
@@ -140,9 +149,10 @@
       margin-right: var(--spacing-sm);
     }
 
-    /* Form Group Styles */
+    /* Form Group Styles with Enhanced UX */
     .form-group {
       margin-bottom: var(--spacing-lg);
+      position: relative;
     }
     .form-label,
     legend {
@@ -150,23 +160,31 @@
       font-weight: 600;
       margin-bottom: var(--spacing-sm);
       color: var(--text-secondary);
+      position: relative;
     }
     .form-control,
     .form-select {
       width: 100%;
       padding: var(--spacing-md);
-      border: 1px solid var(--border-color);
+      border: 2px solid var(--border-color);
       border-radius: var(--border-radius);
       font-size: 1rem;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      transition: var(--transition);
       background-color: var(--white-bg);
       color: var(--text-primary);
+    }
+    .form-control:hover,
+    .form-select:hover {
+      border-color: var(--primary-accent);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
     }
     .form-control:focus,
     .form-select:focus {
       border-color: var(--primary-accent);
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.25);
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15), var(--shadow-lg);
       outline: none;
+      transform: translateY(-2px);
     }
     .form-text {
       display: block;
@@ -223,20 +241,38 @@
       color: var(--success-color);
     }
 
-    /* Button Styles */
+    /* Enhanced Button Styles */
     .btn {
       padding: var(--spacing-md) var(--spacing-lg);
       font-size: 1rem;
       font-weight: 600;
       border-radius: var(--border-radius);
       cursor: pointer;
-      transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
-      border: 1px solid transparent;
+      transition: var(--transition);
+      border: 2px solid transparent;
       text-align: center;
       text-decoration: none;
-      display: inline-flex; /* For icon alignment */
+      display: inline-flex;
       align-items: center;
       justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.4s ease, height 0.4s ease;
+    }
+    .btn:active::before {
+      width: 300px;
+      height: 300px;
     }
     .btn .fas {
       margin-right: var(--spacing-sm);
@@ -750,6 +786,203 @@
     .badge-warning { background-color: var(--warning-color); color: var(--text-primary); }
     .badge-danger { background-color: var(--danger-color); color: var(--white-bg); }
 
+    /* Smart Form Guidance Styles */
+    .form-progress {
+      background: var(--light-bg);
+      border-radius: var(--border-radius-lg);
+      padding: var(--spacing-md);
+      margin-bottom: var(--spacing-xl);
+      border: 1px solid var(--border-color);
+    }
+    .progress-bar {
+      height: 6px;
+      background: var(--primary-gradient);
+      border-radius: 3px;
+      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+    .progress-bar::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      animation: shimmer 2s infinite;
+    }
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+    .progress-text {
+      font-size: var(--font-size-sm);
+      color: var(--text-muted);
+      margin-bottom: var(--spacing-sm);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Enhanced Tooltips */
+    .tooltip-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+    .tooltip-trigger {
+      color: var(--primary-accent);
+      cursor: help;
+      margin-left: var(--spacing-xs);
+      opacity: 0.7;
+      transition: var(--transition);
+    }
+    .tooltip-trigger:hover {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+    .tooltip-content {
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%) translateY(-8px);
+      background: var(--text-primary);
+      color: white;
+      padding: var(--spacing-sm) var(--spacing-md);
+      border-radius: var(--border-radius);
+      font-size: var(--font-size-sm);
+      white-space: nowrap;
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transition);
+      z-index: 1000;
+      box-shadow: var(--shadow-lg);
+      pointer-events: none;
+    }
+    .tooltip-content::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 5px solid transparent;
+      border-top-color: var(--text-primary);
+    }
+    .tooltip-wrapper:hover .tooltip-content {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(-4px);
+    }
+
+    /* Quick Start Templates */
+    .quick-start {
+      background: linear-gradient(135deg, var(--primary-accent-light) 0%, var(--info-light) 100%);
+      border-radius: var(--border-radius-lg);
+      padding: var(--spacing-lg);
+      margin-bottom: var(--spacing-xl);
+      border: 1px solid rgba(102, 126, 234, 0.2);
+    }
+    .quick-start h3 {
+      margin: 0 0 var(--spacing-md) 0;
+      color: var(--text-primary);
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+    }
+    .quick-start h3 i {
+      margin-right: var(--spacing-sm);
+      color: var(--primary-accent);
+    }
+    .template-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--spacing-md);
+    }
+    .template-card {
+      background: white;
+      border: 2px solid transparent;
+      border-radius: var(--border-radius);
+      padding: var(--spacing-md);
+      cursor: pointer;
+      transition: var(--transition-bounce);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .template-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+      transition: left 0.5s ease;
+    }
+    .template-card:hover::before {
+      left: 100%;
+    }
+    .template-card:hover {
+      border-color: var(--primary-accent);
+      transform: translateY(-4px) scale(1.02);
+      box-shadow: var(--shadow-lg);
+    }
+    .template-card h4 {
+      margin: 0 0 var(--spacing-xs) 0;
+      color: var(--text-primary);
+      font-size: 0.95rem;
+    }
+    .template-card .salary {
+      color: var(--primary-accent);
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+    .template-card .description {
+      color: var(--text-muted);
+      font-size: var(--font-size-xs);
+      margin-top: var(--spacing-xs);
+    }
+
+    /* Real-time Preview */
+    .live-preview {
+      background: var(--success-light);
+      border: 2px dashed var(--success-color);
+      border-radius: var(--border-radius-lg);
+      padding: var(--spacing-lg);
+      margin-top: var(--spacing-md);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: var(--transition);
+    }
+    .live-preview.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .preview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: var(--spacing-md);
+      text-align: center;
+    }
+    .preview-item {
+      background: white;
+      padding: var(--spacing-md);
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-sm);
+    }
+    .preview-label {
+      font-size: var(--font-size-xs);
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .preview-value {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--success-color);
+      margin-top: var(--spacing-xs);
+    }
+
     /* Focus visible styles for accessibility */
     .form-control:focus-visible, .form-select:focus-visible, 
     .btn:focus-visible, .tab:focus-visible,
@@ -783,10 +1016,48 @@
       .tab.active { border-bottom-color: var(--primary-accent); }
       .action-buttons .btn { width: 100%; margin-bottom: var(--spacing-sm); }
       .action-buttons .btn:last-child { margin-bottom: 0; }
-      .chart-container { height: auto; min-height: 300px; /* Adjusted min-height */ }
+      .chart-container { height: auto; min-height: 300px; }
       .form-row { flex-direction: column; gap: var(--spacing-lg); }
       .form-row .form-group { margin-bottom: var(--spacing-lg); min-width: 100%; }
       .modal-content { width: 95%; }
+      
+      /* Mobile UX Enhancements */
+      .template-grid { grid-template-columns: repeat(2, 1fr); gap: var(--spacing-sm); }
+      .template-card { padding: var(--spacing-sm); }
+      .template-card h4 { font-size: 0.85rem; }
+      .template-card .salary { font-size: 1rem; }
+      .quick-start { padding: var(--spacing-md); }
+      .preview-grid { grid-template-columns: repeat(2, 1fr); }
+      .preview-item { padding: var(--spacing-sm); }
+      .tooltip-content { 
+        white-space: normal; 
+        width: 200px; 
+        left: auto; 
+        right: 0;
+        transform: translateX(0) translateY(-8px);
+      }
+      .tooltip-wrapper:hover .tooltip-content {
+        transform: translateX(0) translateY(-4px);
+      }
+      
+      /* Enhanced touch targets for mobile */
+      .form-control, .form-select, .btn, .template-card {
+        min-height: 44px; /* Apple recommended touch target */
+        touch-action: manipulation; /* Prevent double-tap zoom */
+      }
+      .tabs { 
+        overflow-x: auto;
+        flex-direction: row;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+      .tabs::-webkit-scrollbar { display: none; }
+      .tab { 
+        min-width: 120px;
+        flex-shrink: 0;
+        border-bottom: 3px solid transparent;
+        margin-bottom: 0;
+      }
     }
 
     @media (max-width: 480px) {
@@ -824,6 +1095,51 @@
           Salary Calculator
         </h2>
 
+        <!-- Quick Start Templates -->
+        <div class="quick-start">
+          <h3>
+            <i class="fas fa-bolt" aria-hidden="true"></i>
+            Quick Start - Choose a Template
+            <div class="tooltip-wrapper">
+              <i class="fas fa-info-circle tooltip-trigger" aria-hidden="true"></i>
+              <div class="tooltip-content">Click a template to auto-fill with realistic values</div>
+            </div>
+          </h3>
+          <div class="template-grid">
+            <div class="template-card" data-template="junior">
+              <h4>Junior Developer</h4>
+              <div class="salary">€3,500</div>
+              <div class="description">Entry-level tech position</div>
+            </div>
+            <div class="template-card" data-template="senior">
+              <h4>Senior Developer</h4>
+              <div class="salary">€6,500</div>
+              <div class="description">Experienced professional</div>
+            </div>
+            <div class="template-card" data-template="manager">
+              <h4>Team Manager</h4>
+              <div class="salary">€8,200</div>
+              <div class="description">Management role with family</div>
+            </div>
+            <div class="template-card" data-template="executive">
+              <h4>Executive</h4>
+              <div class="salary">€12,000</div>
+              <div class="description">Senior leadership position</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Form Progress Indicator -->
+        <div class="form-progress">
+          <div class="progress-text">
+            <span>Form Completion</span>
+            <span id="progressPercentage">0%</span>
+          </div>
+          <div class="progress" style="background-color: var(--border-color); border-radius: 3px; height: 6px; overflow: hidden;">
+            <div class="progress-bar" id="formProgressBar" style="width: 0%;"></div>
+          </div>
+        </div>
+
         <!-- General Error Message Area -->
         <div class="error-message" id="generalErrorMessage" role="alert" aria-live="assertive"></div>
 
@@ -860,7 +1176,13 @@
 
           <!-- Salary Input -->
           <div class="form-group">
-            <label for="salaryInput" id="salaryLabel">Monthly Gross Salary (€)</label>
+            <label for="salaryInput" id="salaryLabel">
+              Monthly Gross Salary (€)
+              <div class="tooltip-wrapper">
+                <i class="fas fa-question-circle tooltip-trigger" aria-hidden="true"></i>
+                <div class="tooltip-content">Enter your monthly salary before taxes and deductions</div>
+              </div>
+            </label>
             <input
               type="number"
               class="form-control"
@@ -883,7 +1205,13 @@
 
           <!-- Tax Class -->
           <div class="form-group">
-            <label for="taxClass">Tax Class</label>
+            <label for="taxClass">
+              Tax Class
+              <div class="tooltip-wrapper">
+                <i class="fas fa-question-circle tooltip-trigger" aria-hidden="true"></i>
+                <div class="tooltip-content">Your tax class affects your tax rate - Class 2 is best for married couples</div>
+              </div>
+            </label>
             <select class="form-select" id="taxClass" required aria-describedby="taxClassFeedback" aria-invalid="false">
               <option value="">Select Tax Class</option>
               <option value="1">Class 1 - Single Person</option>
@@ -896,7 +1224,13 @@
 
           <!-- Mutuality Class -->
           <div class="form-group">
-            <label for="mutualityClass">Mutuality Class</label>
+            <label for="mutualityClass">
+              Mutuality Class
+              <div class="tooltip-wrapper">
+                <i class="fas fa-question-circle tooltip-trigger" aria-hidden="true"></i>
+                <div class="tooltip-content">Based on your health record - Class A is best, Class E is highest cost</div>
+              </div>
+            </label>
             <select class="form-select" id="mutualityClass" required aria-describedby="mutualityClassFeedback" aria-invalid="false">
               <option value="">Select Mutuality Class</option>
               <option value="0.85">Class A - 0.85 (Excellent record)</option>
@@ -1053,6 +1387,32 @@
               <small class="form-text" id="charitableDonationsHelp">Minimum €120/year, maximum 20% of income.</small>
             </div>
           </fieldset>
+
+          <!-- Live Preview Section -->
+          <div class="live-preview" id="livePreview">
+            <h4 style="margin: 0 0 var(--spacing-md) 0; color: var(--success-color); text-align: center;">
+              <i class="fas fa-eye" aria-hidden="true"></i>
+              Live Preview
+            </h4>
+            <div class="preview-grid">
+              <div class="preview-item">
+                <div class="preview-label">Net Salary</div>
+                <div class="preview-value" id="previewNet">€0.00</div>
+              </div>
+              <div class="preview-item">
+                <div class="preview-label">Tax Rate</div>
+                <div class="preview-value" id="previewTaxRate">0.0%</div>
+              </div>
+              <div class="preview-item">
+                <div class="preview-label">Employer Cost</div>
+                <div class="preview-value" id="previewEmployerCost">€0.00</div>
+              </div>
+              <div class="preview-item">
+                <div class="preview-label">Take Home</div>
+                <div class="preview-value" id="previewTakeHome">€0.00</div>
+              </div>
+            </div>
+          </div>
 
           <!-- Action Buttons -->
           <div class="action-buttons">
@@ -1339,7 +1699,7 @@
       </p>
       <p>
         <i class="fas fa-heart text-danger" aria-hidden="true"></i>
-        Made for Luxembourg's workforce | Version 3.4.3 (UI & Code Cleanup)
+        Made for Luxembourg's workforce | Version 3.5.0 (Enhanced UX)
       </p>
     </footer>
   </div>
@@ -1372,9 +1732,10 @@
   <script>
     /**
      * Luxembourg Payroll Calculator 2025
-     * Version: 3.4.3 (UI & Code Cleanup)
+     * Version: 3.5.0 (Enhanced UX)
      * Description: Calculates Luxembourg payroll including taxes, social security, and benefits.
-     * This version includes UI enhancements, code cleanup, and a custom confirmation modal.
+     * This version includes major UX enhancements: Quick Start templates, live preview,
+     * progress indicators, enhanced tooltips, data persistence, and mobile optimizations.
      */
     'use strict';
 
@@ -1467,7 +1828,50 @@
         mutualityClassFeedback: null, numChildrenFeedback: null, childcareExpensesFeedback: null,
         loadingOverlay: null, ceilingNote: null, cimNoteMonthly: null, cimNoteAnnual: null,
         confirmationModal: null, modalTitle: null, modalMessage: null, modalConfirmBtn: null, modalCancelBtn: null,
-        installBtn: null
+        installBtn: null, formProgressBar: null, progressPercentage: null, livePreview: null,
+        previewNet: null, previewTaxRate: null, previewEmployerCost: null, previewTakeHome: null
+    };
+
+    // Template data for quick start
+    const SALARY_TEMPLATES = {
+        junior: {
+            salary: 3500,
+            taxClass: '1',
+            mutualityClass: '1.0',
+            numChildren: 0,
+            professionalExpenses: 800,
+            transportDeduction: 2400
+        },
+        senior: {
+            salary: 6500,
+            taxClass: '2',
+            mutualityClass: '0.85',
+            numChildren: 1,
+            professionalExpenses: 1200,
+            transportDeduction: 3600,
+            childcareExpenses: 8000
+        },
+        manager: {
+            salary: 8200,
+            taxClass: '2',
+            mutualityClass: '0.85',
+            numChildren: 2,
+            professionalExpenses: 1500,
+            transportDeduction: 4620,
+            childcareExpenses: 15000,
+            pensionContributions: 2500
+        },
+        executive: {
+            salary: 12000,
+            taxClass: '2',
+            mutualityClass: '0.85',
+            numChildren: 2,
+            professionalExpenses: 2000,
+            transportDeduction: 4620,
+            pensionContributions: 3200,
+            insurancePremiums: 672,
+            mortgageInterest: 15000
+        }
     };
 
     // ============================================
@@ -1541,6 +1945,197 @@
         el.textContent = '';
     }
 
+    /**
+     * Updates form completion progress indicator.
+     */
+    function updateFormProgress() {
+        const requiredFields = [DOMElements.salaryInput, DOMElements.taxClass, DOMElements.mutualityClass];
+        const optionalFields = [
+            DOMElements.numChildren, DOMElements.childcareExpenses, DOMElements.professionalExpenses,
+            DOMElements.transportDeduction, DOMElements.pensionContributions, DOMElements.mortgageInterest,
+            DOMElements.insurancePremiums, DOMElements.medicalExpenses, DOMElements.charitableDonations
+        ];
+        
+        let filledRequired = 0;
+        let filledOptional = 0;
+        
+        requiredFields.forEach(field => {
+            if (field && field.value.trim() !== '') filledRequired++;
+        });
+        
+        optionalFields.forEach(field => {
+            if (field && field.value.trim() !== '' && field.value !== '0') filledOptional++;
+        });
+        
+        // Calculate progress: required fields are 60%, optional fields are 40%
+        const requiredProgress = (filledRequired / requiredFields.length) * 60;
+        const optionalProgress = (filledOptional / optionalFields.length) * 40;
+        const totalProgress = Math.round(requiredProgress + optionalProgress);
+        
+        if (DOMElements.formProgressBar) {
+            DOMElements.formProgressBar.style.width = `${totalProgress}%`;
+        }
+        if (DOMElements.progressPercentage) {
+            DOMElements.progressPercentage.textContent = `${totalProgress}%`;
+        }
+        
+        return totalProgress;
+    }
+    
+    /**
+     * Applies a salary template to the form.
+     * @param {string} templateName - The template name to apply.
+     */
+    function applyTemplate(templateName) {
+        const template = SALARY_TEMPLATES[templateName];
+        if (!template) return;
+        
+        // Clear form first
+        clearForm();
+        
+        // Apply template values with animation
+        setTimeout(() => {
+            Object.entries(template).forEach(([key, value]) => {
+                const fieldMap = {
+                    salary: DOMElements.salaryInput,
+                    taxClass: DOMElements.taxClass,
+                    mutualityClass: DOMElements.mutualityClass,
+                    numChildren: DOMElements.numChildren,
+                    childcareExpenses: DOMElements.childcareExpenses,
+                    professionalExpenses: DOMElements.professionalExpenses,
+                    transportDeduction: DOMElements.transportDeduction,
+                    pensionContributions: DOMElements.pensionContributions,
+                    mortgageInterest: DOMElements.mortgageInterest,
+                    insurancePremiums: DOMElements.insurancePremiums
+                };
+                
+                const field = fieldMap[key];
+                if (field) {
+                    field.value = value;
+                    // Trigger change event for validation and live preview
+                    field.dispatchEvent(new Event('change', { bubbles: true }));
+                    field.dispatchEvent(new Event('input', { bubbles: true }));
+                }
+            });
+            
+            updateFormProgress();
+            updateLivePreview();
+            showNotification(`Applied ${templateName.charAt(0).toUpperCase() + templateName.slice(1)} template!`, 'success', 2000);
+        }, 100);
+    }
+    
+    /**
+     * Saves form state to localStorage.
+     */
+    function saveFormState() {
+        try {
+            const formState = {
+                inputMode: appState.currentInputMode,
+                salary: DOMElements.salaryInput?.value || '',
+                taxClass: DOMElements.taxClass?.value || '',
+                mutualityClass: DOMElements.mutualityClass?.value || '',
+                numChildren: DOMElements.numChildren?.value || '',
+                childcareExpenses: DOMElements.childcareExpenses?.value || '',
+                professionalExpenses: DOMElements.professionalExpenses?.value || '',
+                transportDeduction: DOMElements.transportDeduction?.value || '',
+                pensionContributions: DOMElements.pensionContributions?.value || '',
+                mortgageInterest: DOMElements.mortgageInterest?.value || '',
+                insurancePremiums: DOMElements.insurancePremiums?.value || '',
+                medicalExpenses: DOMElements.medicalExpenses?.value || '',
+                charitableDonations: DOMElements.charitableDonations?.value || '',
+                timestamp: Date.now()
+            };
+            localStorage.setItem('luxPayrollCalculatorState', JSON.stringify(formState));
+        } catch (error) {
+            console.warn('Could not save form state:', error);
+        }
+    }
+    
+    /**
+     * Loads form state from localStorage.
+     */
+    function loadFormState() {
+        try {
+            const saved = localStorage.getItem('luxPayrollCalculatorState');
+            if (!saved) return false;
+            
+            const formState = JSON.parse(saved);
+            const maxAge = 7 * 24 * 60 * 60 * 1000; // 7 days
+            
+            if (Date.now() - formState.timestamp > maxAge) {
+                localStorage.removeItem('luxPayrollCalculatorState');
+                return false;
+            }
+            
+            // Restore form values
+            if (DOMElements.salaryInput) DOMElements.salaryInput.value = formState.salary || '';
+            if (DOMElements.taxClass) DOMElements.taxClass.value = formState.taxClass || '';
+            if (DOMElements.mutualityClass) DOMElements.mutualityClass.value = formState.mutualityClass || '';
+            if (DOMElements.numChildren) DOMElements.numChildren.value = formState.numChildren || '';
+            if (DOMElements.childcareExpenses) DOMElements.childcareExpenses.value = formState.childcareExpenses || '';
+            if (DOMElements.professionalExpenses) DOMElements.professionalExpenses.value = formState.professionalExpenses || '';
+            if (DOMElements.transportDeduction) DOMElements.transportDeduction.value = formState.transportDeduction || '';
+            if (DOMElements.pensionContributions) DOMElements.pensionContributions.value = formState.pensionContributions || '';
+            if (DOMElements.mortgageInterest) DOMElements.mortgageInterest.value = formState.mortgageInterest || '';
+            if (DOMElements.insurancePremiums) DOMElements.insurancePremiums.value = formState.insurancePremiums || '';
+            if (DOMElements.medicalExpenses) DOMElements.medicalExpenses.value = formState.medicalExpenses || '';
+            if (DOMElements.charitableDonations) DOMElements.charitableDonations.value = formState.charitableDonations || '';
+            
+            // Restore input mode
+            if (formState.inputMode) {
+                toggleInputMode(formState.inputMode);
+            }
+            
+            // Update progress and preview
+            updateFormProgress();
+            updateLivePreview();
+            
+            return true;
+        } catch (error) {
+            console.warn('Could not load form state:', error);
+            return false;
+        }
+    }
+    
+    /**
+     * Updates the live preview with estimated values.
+     */
+    function updateLivePreview() {
+        const salary = parseFloat(DOMElements.salaryInput?.value) || 0;
+        const taxClass = DOMElements.taxClass?.value || '';
+        const mutualityClass = parseFloat(DOMElements.mutualityClass?.value) || 1.0;
+        
+        if (salary > 0 && taxClass) {
+            // Quick estimation (simplified calculation for preview)
+            const grossAnnual = salary * 12;
+            const employeeSocialSecurity = salary * (0.0305 + 0.08 + 0.014); // Health + Pension + Dependency
+            const employerSocialSecurity = salary * (0.0305 + 0.08 + 0.007 + 0.0014 + (0.0072 * mutualityClass));
+            
+            // Simple tax estimation based on class
+            const taxMultiplier = taxClass === '1' ? 1.0 : taxClass === '1a' ? 0.9 : 0.65;
+            const estimatedTaxRate = Math.min(grossAnnual * 0.15 * taxMultiplier / grossAnnual, 0.42); // Rough estimate
+            const estimatedTax = grossAnnual * estimatedTaxRate;
+            
+            const netSalary = salary - employeeSocialSecurity - (estimatedTax / 12);
+            const employerCost = salary + employerSocialSecurity;
+            
+            if (DOMElements.previewNet) DOMElements.previewNet.textContent = `€${netSalary.toFixed(0)}`;
+            if (DOMElements.previewTaxRate) DOMElements.previewTaxRate.textContent = `${(estimatedTaxRate * 100).toFixed(1)}%`;
+            if (DOMElements.previewEmployerCost) DOMElements.previewEmployerCost.textContent = `€${employerCost.toFixed(0)}`;
+            if (DOMElements.previewTakeHome) DOMElements.previewTakeHome.textContent = `€${netSalary.toFixed(0)}`;
+            
+            // Show preview with animation
+            if (DOMElements.livePreview && !DOMElements.livePreview.classList.contains('show')) {
+                DOMElements.livePreview.classList.add('show');
+            }
+        } else {
+            // Hide preview if insufficient data
+            if (DOMElements.livePreview) {
+                DOMElements.livePreview.classList.remove('show');
+            }
+        }
+    }
+    
     /**
      * Shows or hides the loading indicator.
      * @param {boolean} [show=true] - True to show, false to hide.
@@ -2231,11 +2826,60 @@
 
     /** Initializes DOM element references. */
     function initializeDOMElements() {
-        for (const key in DOMElements) {
-            if (Object.hasOwnProperty.call(DOMElements, key)) {
-                DOMElements[key] = document.getElementById(key);
-            }
-        }
+        // Initialize standard elements
+        DOMElements.payrollForm = document.getElementById('payrollForm');
+        DOMElements.salaryInput = document.getElementById('salaryInput');
+        DOMElements.salaryLabel = document.getElementById('salaryLabel');
+        DOMElements.taxClass = document.getElementById('taxClass');
+        DOMElements.mutualityClass = document.getElementById('mutualityClass');
+        DOMElements.numChildren = document.getElementById('numChildren');
+        DOMElements.childcareExpenses = document.getElementById('childcareExpenses');
+        DOMElements.professionalExpenses = document.getElementById('professionalExpenses');
+        DOMElements.transportDeduction = document.getElementById('transportDeduction');
+        DOMElements.pensionContributions = document.getElementById('pensionContributions');
+        DOMElements.mortgageInterest = document.getElementById('mortgageInterest');
+        DOMElements.insurancePremiums = document.getElementById('insurancePremiums');
+        DOMElements.medicalExpenses = document.getElementById('medicalExpenses');
+        DOMElements.charitableDonations = document.getElementById('charitableDonations');
+        DOMElements.grossBtn = document.getElementById('grossBtn');
+        DOMElements.totalBtn = document.getElementById('totalBtn');
+        DOMElements.conversionDisplay = document.getElementById('conversionDisplay');
+        DOMElements.conversionLabel = document.getElementById('conversionLabel');
+        DOMElements.conversionValue = document.getElementById('conversionValue');
+        DOMElements.calculateBtn = document.getElementById('calculateBtn');
+        DOMElements.clearBtn = document.getElementById('clearBtn');
+        DOMElements.printBtn = document.getElementById('printBtn');
+        DOMElements.resultsSection = document.getElementById('resultsSection');
+        DOMElements.monthlyTab = document.getElementById('monthlyTab');
+        DOMElements.annualTab = document.getElementById('annualTab');
+        DOMElements.exportBtn = document.getElementById('exportBtn');
+        DOMElements.shareBtn = document.getElementById('shareBtn');
+        DOMElements.generalErrorMessage = document.getElementById('generalErrorMessage');
+        DOMElements.taxClassWarning = document.getElementById('taxClassWarning');
+        DOMElements.salaryInputFeedback = document.getElementById('salaryInputFeedback');
+        DOMElements.taxClassFeedback = document.getElementById('taxClassFeedback');
+        DOMElements.mutualityClassFeedback = document.getElementById('mutualityClassFeedback');
+        DOMElements.numChildrenFeedback = document.getElementById('numChildrenFeedback');
+        DOMElements.childcareExpensesFeedback = document.getElementById('childcareExpensesFeedback');
+        DOMElements.loadingOverlay = document.getElementById('loadingOverlay');
+        DOMElements.ceilingNote = document.getElementById('ceilingNote');
+        DOMElements.cimNoteMonthly = document.getElementById('cimNoteMonthly');
+        DOMElements.cimNoteAnnual = document.getElementById('cimNoteAnnual');
+        DOMElements.confirmationModal = document.getElementById('confirmationModal');
+        DOMElements.modalTitle = document.getElementById('modalTitle');
+        DOMElements.modalMessage = document.getElementById('modalMessage');
+        DOMElements.modalConfirmBtn = document.getElementById('modalConfirmBtn');
+        DOMElements.modalCancelBtn = document.getElementById('modalCancelBtn');
+        DOMElements.installBtn = document.getElementById('installBtn');
+        
+        // UX Enhancement Elements
+        DOMElements.formProgressBar = document.getElementById('formProgressBar');
+        DOMElements.progressPercentage = document.getElementById('progressPercentage');
+        DOMElements.livePreview = document.getElementById('livePreview');
+        DOMElements.previewNet = document.getElementById('previewNet');
+        DOMElements.previewTaxRate = document.getElementById('previewTaxRate');
+        DOMElements.previewEmployerCost = document.getElementById('previewEmployerCost');
+        DOMElements.previewTakeHome = document.getElementById('previewTakeHome');
     }
     
     /** Sets up all event listeners for the application. */
@@ -2286,9 +2930,43 @@
             hideConfirmationModal();
         }
       });
+      
+      // Template card event listeners
+      document.querySelectorAll('.template-card').forEach(card => {
+          card.addEventListener('click', () => {
+              const template = card.getAttribute('data-template');
+              applyTemplate(template);
+          });
+      });
+      
+      // Form field event listeners for progress and live preview
+      const formFields = [
+          DOMElements.salaryInput, DOMElements.taxClass, DOMElements.mutualityClass,
+          DOMElements.numChildren, DOMElements.childcareExpenses, DOMElements.professionalExpenses,
+          DOMElements.transportDeduction, DOMElements.pensionContributions, DOMElements.mortgageInterest,
+          DOMElements.insurancePremiums, DOMElements.medicalExpenses, DOMElements.charitableDonations
+      ];
+      
+      formFields.forEach(field => {
+          if (field) {
+              field.addEventListener('input', () => {
+                  updateFormProgress();
+                  // Debounce live preview updates
+                  clearTimeout(field.previewTimeout);
+                  field.previewTimeout = setTimeout(updateLivePreview, 500);
+                  // Debounce auto-save
+                  clearTimeout(field.saveTimeout);
+                  field.saveTimeout = setTimeout(saveFormState, 1000);
+              });
+              field.addEventListener('change', () => {
+                  updateFormProgress();
+                  updateLivePreview();
+                  saveFormState(); // Immediate save on change
+              });
+          }
+      });
 
-
-      setupInputBlurSanitizationAndValidation(); 
+      setupInputBlurSanitizationAndValidation();
     }
 
     /** Sets up blur event listeners for input sanitization and validation. */
@@ -2365,6 +3043,30 @@
       DOMElements.conversionDisplay?.classList.add('d-none');
       DOMElements.resultsSection?.classList.add('d-none');
       clearGeneralError();
+      
+      // Reset UX elements
+      if (DOMElements.livePreview) {
+        DOMElements.livePreview.classList.remove('show');
+      }
+      if (DOMElements.formProgressBar) {
+        DOMElements.formProgressBar.style.width = '0%';
+      }
+      if (DOMElements.progressPercentage) {
+        DOMElements.progressPercentage.textContent = '0%';
+      }
+      
+      // Clear tax class warning
+      if (DOMElements.taxClassWarning) {
+        DOMElements.taxClassWarning.classList.add('d-none');
+        DOMElements.taxClassWarning.innerHTML = '';
+      }
+      
+      // Clear saved form state
+      try {
+        localStorage.removeItem('luxPayrollCalculatorState');
+      } catch (error) {
+        console.warn('Could not clear saved form state:', error);
+      }
       
       // Reset validation states for all relevant fields
       const fieldsToResetValidation = [
@@ -2730,6 +3432,14 @@
       setupEventListeners();   // Set up event listeners
       toggleInputMode('gross'); // Set initial input mode
       
+      // Try to load saved form state
+      const hasRestoredState = loadFormState();
+      if (hasRestoredState) {
+        showNotification('Previous session restored', 'info', 2000);
+      }
+      
+      updateFormProgress();     // Initialize progress indicator
+      
       // Add a resize listener for the chart
       let resizeTimeout;
       window.addEventListener('resize', () => {
@@ -2740,8 +3450,22 @@
               }
           }, 250); // Debounce resize event
       });
+      
+      // Show welcome animation for quick start section
+      setTimeout(() => {
+        const quickStart = document.querySelector('.quick-start');
+        if (quickStart) {
+          quickStart.style.opacity = '0';
+          quickStart.style.transform = 'translateY(20px)';
+          quickStart.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+          requestAnimationFrame(() => {
+            quickStart.style.opacity = '1';
+            quickStart.style.transform = 'translateY(0)';
+          });
+        }
+      }, 100);
 
-      console.log('Luxembourg Payroll Calculator initialized (v3.4.3)'); 
+      console.log('Luxembourg Payroll Calculator v3.5.0 initialized with Enhanced UX');
     });
 
   </script>
