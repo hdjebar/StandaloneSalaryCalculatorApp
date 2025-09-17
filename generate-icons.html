@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Icon Generator</title>
+</head>
+<body>
+    <canvas id="canvas" width="512" height="512" style="border: 1px solid #ccc;"></canvas>
+    <div>
+        <button onclick="generateIcon(72)">72x72</button>
+        <button onclick="generateIcon(96)">96x96</button>
+        <button onclick="generateIcon(128)">128x128</button>
+        <button onclick="generateIcon(144)">144x144</button>
+        <button onclick="generateIcon(152)">152x152</button>
+        <button onclick="generateIcon(192)">192x192</button>
+        <button onclick="generateIcon(384)">384x384</button>
+        <button onclick="generateIcon(512)">512x512</button>
+    </div>
+
+    <script>
+        function generateIcon(size) {
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Set canvas size
+            canvas.width = size;
+            canvas.height = size;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, size, size);
+            
+            // Background gradient
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#667eea');
+            gradient.addColorStop(1, '#764ba2');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, size, size);
+            
+            // Add Luxembourg flag colors as accent
+            const flagHeight = size * 0.1;
+            ctx.fillStyle = '#ed2939'; // Red
+            ctx.fillRect(0, 0, size, flagHeight);
+            ctx.fillStyle = '#ffffff'; // White
+            ctx.fillRect(0, flagHeight, size, flagHeight);
+            ctx.fillStyle = '#00a1de'; // Blue
+            ctx.fillRect(0, flagHeight * 2, size, flagHeight);
+            
+            // Add calculator icon
+            const iconSize = size * 0.4;
+            const iconX = (size - iconSize) / 2;
+            const iconY = (size - iconSize) / 2;
+            
+            // Calculator body
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(iconX, iconY, iconSize, iconSize);
+            ctx.strokeStyle = '#333333';
+            ctx.lineWidth = size * 0.01;
+            ctx.strokeRect(iconX, iconY, iconSize, iconSize);
+            
+            // Calculator screen
+            const screenHeight = iconSize * 0.25;
+            ctx.fillStyle = '#2d3748';
+            ctx.fillRect(iconX + iconSize * 0.1, iconY + iconSize * 0.1, iconSize * 0.8, screenHeight);
+            
+            // Calculator buttons (simplified)
+            const buttonSize = iconSize * 0.12;
+            const buttonSpacing = iconSize * 0.18;
+            ctx.fillStyle = '#e2e8f0';
+            
+            for (let row = 0; row < 3; row++) {
+                for (let col = 0; col < 3; col++) {
+                    const x = iconX + iconSize * 0.15 + col * buttonSpacing;
+                    const y = iconY + iconSize * 0.45 + row * buttonSpacing;
+                    ctx.fillRect(x, y, buttonSize, buttonSize);
+                }
+            }
+            
+            // Euro symbol
+            ctx.fillStyle = '#667eea';
+            ctx.font = `bold ${size * 0.15}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.fillText('€', size / 2, iconY + iconSize * 0.25);
+            
+            // Download the icon
+            const link = document.createElement('a');
+            link.download = `icon-${size}x${size}.png`;
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+    </script>
+</body>
+</html>

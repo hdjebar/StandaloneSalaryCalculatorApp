@@ -1,0 +1,85 @@
+name: Deploy PWA to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          
+      - name: Install dependencies
+        run: npm install
+        
+      - name: Test PWA manifest
+        run: |
+          echo "Testing PWA manifest..."
+          node -e "
+            const fs = require('fs');
+            const manifest = JSON.parse(fs.readFileSync('manifest.json', 'utf8'));
+            console.log('✅ Manifest is valid JSON');
+            console.log('App name:', manifest.name);
+            console.log('Icons:', manifest.icons.length);
+          "
+          
+      - name: Test service worker
+        run: |
+          echo "Testing service worker..."
+          node -e "
+            const fs = require('fs');
+            const sw = fs.readFileSync('sw.js', 'utf8');
+            if (sw.includes('CACHE_NAME')) {
+              console.log('✅ Service worker looks good');
+            } else {
+              throw new Error('❌ Service worker missing CACHE_NAME');
+            }
+          "
+          
+      - name: Validate HTML
+        run: |
+          echo "Basic HTML validation..."
+          if grep -q "<!DOCTYPE html>" index.html; then
+            echo "✅ HTML has DOCTYPE"
+          else
+            echo "❌ HTML missing DOCTYPE"
+            exit 1
+          fi

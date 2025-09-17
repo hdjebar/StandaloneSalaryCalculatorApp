@@ -1,0 +1,82 @@
+{
+  "name": "luxembourg-payroll-calculator-app",
+  "version": "3.4.3",
+  "description": "🇱🇺 Luxembourg Payroll Calculator - PWA with mobile and desktop support for 2025 tax calculations",
+  "main": "index.html",
+  "homepage": "https://hdjebar.github.io/StandaloneSalalaryCalculatorApp/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hdjebar/StandaloneSalalaryCalculatorApp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hdjebar/StandaloneSalalaryCalculatorApp/issues"
+  },
+  "scripts": {
+    "build": "echo 'No build needed - static HTML'",
+    "serve": "npx http-server . -p 8080",
+    "electron": "electron .",
+    "electron-dev": "electron . --dev",
+    "electron-build": "electron-builder",
+    "electron-build-win": "electron-builder --win",
+    "electron-build-mac": "electron-builder --mac",
+    "electron-build-linux": "electron-builder --linux",
+    "capacitor:add:ios": "npx cap add ios",
+    "capacitor:add:android": "npx cap add android",
+    "capacitor:sync": "npx cap sync",
+    "capacitor:run:ios": "npx cap run ios",
+    "capacitor:run:android": "npx cap run android",
+    "capacitor:open:ios": "npx cap open ios",
+    "capacitor:open:android": "npx cap open android"
+  },
+  "keywords": [
+    "luxembourg",
+    "payroll",
+    "calculator",
+    "tax",
+    "salary",
+    "mobile-app"
+  ],
+  "author": "hdjebar",
+  "license": "MIT",
+  "devDependencies": {
+    "@capacitor/cli": "^5.0.0",
+    "http-server": "^14.1.1",
+    "electron": "^26.0.0",
+    "electron-builder": "^24.0.0"
+  },
+  "dependencies": {
+    "@capacitor/core": "^5.0.0",
+    "@capacitor/ios": "^5.0.0",
+    "@capacitor/android": "^5.0.0",
+    "@capacitor/splash-screen": "^5.0.0",
+    "@capacitor/status-bar": "^5.0.0",
+    "@capacitor/keyboard": "^5.0.0"
+  },
+  "main": "main.js",
+  "build": {
+    "appId": "lu.payroll.calculator",
+    "productName": "Luxembourg Payroll Calculator",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "index.html",
+      "main.js",
+      "icons/**/*",
+      "manifest.json",
+      "sw.js"
+    ],
+    "mac": {
+      "category": "public.app-category.finance",
+      "icon": "icons/icon-512x512.png"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "icons/icon-512x512.png"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "icons/icon-512x512.png"
+    }
+  }
+}

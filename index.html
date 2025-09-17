@@ -13,9 +13,11 @@
   />
 
   <!-- PWA Configuration -->
-  <!-- <link rel="manifest" href="manifest.json" /> -->
+  <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#667eea" />
   <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="Lux Payroll" />
 
   <!-- Icons -->
@@ -584,6 +586,58 @@
         gap: var(--spacing-md);
     }
 
+
+    /* ============================================
+       DESKTOP PWA STYLES
+       ============================================ */
+    @media (display-mode: standalone) {
+      /* Desktop PWA specific styles */
+      body {
+        user-select: text; /* Allow text selection in desktop app */
+      }
+      
+      .container {
+        max-width: 1200px; /* Wider on desktop */
+        margin: 0 auto;
+      }
+      
+      /* Window controls overlay support */
+      @supports (top: env(titlebar-area-height)) {
+        .header {
+          padding-top: calc(env(titlebar-area-height) + var(--spacing-md));
+        }
+      }
+      
+      /* Desktop-specific button styles */
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+      }
+      
+      /* Better desktop tooltips */
+      .tooltip .tooltiptext {
+        width: 300px;
+        margin-left: -150px;
+      }
+    }
+
+    /* Desktop window size optimizations */
+    @media (min-width: 1024px) and (display-mode: standalone) {
+      .results-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .form-section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--spacing-xl);
+        align-items: start;
+      }
+      
+      .form-section h2 {
+        grid-column: 1 / -1;
+      }
+    }
 
     /* ============================================
        PRINT STYLES
@@ -1730,6 +1784,19 @@
 
   <!-- Inline JavaScript -->
   <script>
+    // Service Worker Registration for PWA
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then((registration) => {
+            console.log('SW registered: ', registration);
+          })
+          .catch((registrationError) => {
+            console.log('SW registration failed: ', registrationError);
+          });
+      });
+    }
+
     /**
      * Luxembourg Payroll Calculator 2025
      * Version: 3.5.0 (Enhanced UX)
