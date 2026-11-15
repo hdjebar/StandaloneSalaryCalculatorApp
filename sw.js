@@ -6,6 +6,8 @@ const CACHE_NAME = 'lux-payroll-v3.5.0';
 const APP_FILES = [
   './',
   './index.html',
+  './calc.js',
+  './params/params.js',
   './manifest.json',
   './icons/icon.svg',
   './icons/icon-192x192.png',

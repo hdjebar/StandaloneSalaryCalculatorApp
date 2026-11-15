@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta
     name="description"
-    content="Complete Luxembourg payroll calculator for 2025 with tax compliance, social security, and family benefits calculation."
+    content="Indicative Luxembourg payroll estimator: gross to net, employer cost, social contributions, income tax and tax credits. Runs entirely in the browser."
   />
   <meta
     name="keywords"
@@ -31,7 +31,7 @@
   <link rel="icon" type="image/svg+xml" href="icons/icon.svg" />
   <link rel="apple-touch-icon" href="icons/icon-192x192.png" />
 
-  <title>🇱🇺 Luxembourg Payroll Calculator 2025</title>
+  <title>🇱🇺 Luxembourg Payroll Estimator</title>
 
   <!-- Inline CSS -->
   <style>
@@ -120,6 +120,20 @@
       color: var(--text-primary);
       margin-bottom: var(--spacing-sm);
     }
+    /* Bandeau de limites */
+    .limits-notice {
+      background: var(--warning-light, #fffbeb);
+      border: 1px solid #f6e05e;
+      border-radius: var(--border-radius-lg, 8px);
+      padding: var(--spacing-md, 12px) var(--spacing-lg, 16px);
+      margin-bottom: var(--spacing-lg, 16px);
+      font-size: 0.85rem;
+      line-height: 1.45;
+    }
+    .limits-notice p { margin: 0 0 6px 0; }
+    .limits-notice p:last-child { margin-bottom: 0; }
+    .limits-notice .privacy-line { color: var(--text-secondary, #4a5568); }
+
     /* Icônes SVG locales (remplacent la police Font Awesome du CDN) */
     svg.fas {
       display: inline-block;
@@ -1159,11 +1173,11 @@
     <header class="header">
       <h1>
         <svg class="fas" aria-hidden="true" focusable="false"><use href="#i-calculator"></use></svg>
-        Luxembourg Payroll Calculator 2025
+        Luxembourg Payroll Estimator
       </h1>
       <p>
-        Complete Luxembourg payroll calculations with tax compliance, social
-        security contributions, and family benefits.
+        Indicative estimate of gross-to-net salary, employer cost, social
+        contributions and income tax. Everything is computed in your browser.
       </p>
     </header>
 
@@ -1175,6 +1189,23 @@
           <svg class="fas" aria-hidden="true" focusable="false"><use href="#i-euro-sign"></use></svg>
           Salary Calculator
         </h2>
+
+        <!-- Limites de l'outil et date des règles (même texte que la section « Limites » du README) -->
+        <div class="limits-notice" id="limitsNotice" role="note">
+          <p lang="fr"><strong>Outil indicatif.</strong> Estimation annuelle ramenée au mois, qui ne remplace ni la retenue
+            d'impôt calculée par l'employeur ni l'imposition établie par l'Administration des contributions directes.
+            Règles : <span class="rules-label" data-rules-label></span>. Approximations restantes : voir le README.</p>
+          <p lang="en"><strong>Indicative tool.</strong> Annual estimate divided by twelve; it does not replace the employer's
+            monthly withholding nor the assessment by the tax administration (ACD). Rules: <span class="rules-label" data-rules-label></span>.</p>
+          <p class="privacy-line">Nothing leaves your device: no network request, no tracking. The form is kept in this browser's
+            local storage and erased by “Clear Form”.</p>
+        </div>
+
+        <div class="form-group">
+          <label for="rulesSelect">Rules / Règles</label>
+          <select class="form-select" id="rulesSelect" aria-describedby="rulesHelp"></select>
+          <small class="form-text" id="rulesHelp">Each value and its legal source are listed in <code>params/</code> and <code>docs/sources.md</code>.</small>
+        </div>
 
         <!-- Quick Start Templates -->
         <div class="quick-start">
@@ -1290,7 +1321,7 @@
               Tax Class
               <div class="tooltip-wrapper">
                 <svg class="fas tooltip-trigger" aria-hidden="true" focusable="false"><use href="#i-circle-question"></use></svg>
-                <div class="tooltip-content">Your tax class affects your tax rate - Class 2 is best for married couples</div>
+                <div class="tooltip-content">Class 1: single. Class 1a: single parent, widowed, or 64+ at 1 January. Class 2: married or partners taxed jointly (income split in two, art. 121 LIR).</div>
               </div>
             </label>
             <select class="form-select" id="taxClass" required aria-describedby="taxClassFeedback" aria-invalid="false">
@@ -1303,24 +1334,24 @@
             <div id="taxClassWarning" class="tax-class-warning d-none mt-2" aria-live="polite"></div>
           </div>
 
-          <!-- Mutuality Class -->
+          <!-- Mutualité des employeurs (4 classes publiées par le CCSS) -->
           <div class="form-group">
             <label for="mutualityClass">
-              Mutuality Class
+              Employers' Mutuality Class (employer cost only)
               <div class="tooltip-wrapper">
                 <svg class="fas tooltip-trigger" aria-hidden="true" focusable="false"><use href="#i-circle-question"></use></svg>
-                <div class="tooltip-content">Based on your health record - Class A is best, Class E is highest cost</div>
+                <div class="tooltip-content">Set each year by the CCSS from the company's financial absenteeism rate. Rates come from the selected rules.</div>
               </div>
             </label>
-            <select class="form-select" id="mutualityClass" required aria-describedby="mutualityClassFeedback" aria-invalid="false">
-              <option value="">Select Mutuality Class</option>
-              <option value="0.85">Class A - 0.85 (Excellent record)</option>
-              <option value="1.0" selected>Class B - 1.0 (Standard)</option>
-              <option value="1.1">Class C - 1.1 (Above average)</option>
-              <option value="1.3">Class D - 1.3 (High absenteeism)</option>
-              <option value="1.5">Class E - 1.5 (Very high absenteeism)</option>
-            </select>
+            <select class="form-select" id="mutualityClass" required aria-describedby="mutualityClassFeedback" aria-invalid="false"></select>
             <div id="mutualityClassFeedback" class="invalid-feedback" aria-live="polite"></div>
+          </div>
+
+          <!-- Assurance accident : facteur bonus-malus -->
+          <div class="form-group">
+            <label for="accidentFactor">Accident Insurance Bonus-Malus Factor (employer cost only)</label>
+            <select class="form-select" id="accidentFactor" aria-describedby="accidentFactorHelp"></select>
+            <small class="form-text" id="accidentFactorHelp">Notified to the employer by the Association d'assurance accident; 1.00 if unknown.</small>
           </div>
 
           <!-- Additional Options -->
@@ -1343,8 +1374,8 @@
                 />
                 <div id="numChildrenFeedback" class="invalid-feedback" aria-live="polite"></div>
                 <small class="form-text" id="numChildrenHelp"
-                  >€299.86/month allowance (Allocation Familiale) + €922.56/year
-                  tax credit (Crédit d'Impôt) per child.</small
+                  >Used for the tax-class hint, deduction ceilings and the family allowance shown for information.
+                  Children do not reduce the tax itself: the child tax moderation is included in the family allowance (art. 122 LIR).</small
                 >
               </div>
 
@@ -1362,7 +1393,7 @@
                 />
                 <div id="childcareExpensesFeedback" class="invalid-feedback" aria-live="polite"></div>
                 <small class="form-text" id="childcareExpensesHelp"
-                  >Max €11,400/year per child for daycare, after-school care (Frais de Garde).</small
+                  >Capped at €11,400/year per child. This ceiling has no verified legal source (see docs/sources.md).</small
                 >
               </div>
             </div> 
@@ -1378,22 +1409,22 @@
                 step="1"
                 aria-describedby="professionalExpensesHelp"
               />
-              <small class="form-text" id="professionalExpensesHelp">Minimum €540/year automatically applied.</small>
+              <small class="form-text" id="professionalExpensesHelp">Actual expenses, excluding commuting; the €540/year minimum applies otherwise (art. 107 LIR).</small>
             </div>
 
             <div class="form-group">
-              <label for="transportDeduction">Transport Deduction (Annual €)</label>
+              <label for="commuteUnits">Home–Work Distance (units)</label>
               <input
                 type="number"
                 class="form-control"
-                id="transportDeduction"
+                id="commuteUnits"
                 placeholder="0"
                 min="0"
-                max="4620"
+                max="99"
                 step="1"
-                aria-describedby="transportDeductionHelp"
+                aria-describedby="commuteUnitsHelp"
               />
-              <small class="form-text" id="transportDeductionHelp">Maximum €4,620/year for commuting costs.</small>
+              <small class="form-text" id="commuteUnitsHelp">Straight-line km between the home and work communes. €99 per unit beyond 4, capped at €2,574/year (art. 105bis LIR).</small>
             </div>
 
             <div class="form-group">
@@ -1404,15 +1435,14 @@
                 id="pensionContributions"
                 placeholder="0"
                 min="0"
-                max="3200"
                 step="1"
                 aria-describedby="pensionContributionsHelp"
               />
-              <small class="form-text" id="pensionContributionsHelp">Maximum €3,200/year for private pension plans and life insurance.</small>
+              <small class="form-text" id="pensionContributionsHelp">Individual retirement savings contract (art. 111bis LIR), capped at <span data-param-text="pension"></span>/year.</small>
             </div>
 
             <div class="form-group">
-              <label for="mortgageInterest">Mortgage Interest (Annual €)</label>
+              <label for="mortgageInterest">Home Loan Interest (Annual €)</label>
               <input
                 type="number"
                 class="form-control"
@@ -1422,7 +1452,7 @@
                 step="1"
                 aria-describedby="mortgageInterestHelp"
               />
-              <small class="form-text" id="mortgageInterestHelp">Interest on home loans and energy-efficient renovations.</small>
+              <small class="form-text" id="mortgageInterestHelp">Approximation: deducted in full; the caps of art. 98bis LIR are not applied.</small>
             </div>
 
             <div class="form-group">
@@ -1433,11 +1463,10 @@
                 id="insurancePremiums"
                 placeholder="0"
                 min="0"
-                max="672"
                 step="1"
                 aria-describedby="insurancePremiumsHelp"
               />
-              <small class="form-text" id="insurancePremiumsHelp">Maximum €672/year for personal insurance premiums.</small>
+              <small class="form-text" id="insurancePremiumsHelp">Premiums and consumer-loan interest: €672/year per household member (art. 109 LIR). Below €480 in total, the flat €480 applies (art. 113).</small>
             </div>
 
             <div class="form-group">
@@ -1451,7 +1480,7 @@
                 step="1"
                 aria-describedby="medicalExpensesHelp"
               />
-              <small class="form-text" id="medicalExpensesHelp">Healthcare costs exceeding 2.5% of income (Frais Médicaux).</small>
+              <small class="form-text" id="medicalExpensesHelp">Extraordinary charges: deductible above a share of taxable income that depends on income, class and children (art. 127 LIR).</small>
             </div>
 
             <div class="form-group">
@@ -1465,7 +1494,7 @@
                 step="1"
                 aria-describedby="charitableDonationsHelp"
               />
-              <small class="form-text" id="charitableDonationsHelp">Minimum €120/year, maximum 20% of income.</small>
+              <small class="form-text" id="charitableDonationsHelp">Up to 20% of net income (art. 109 LIR). The €120 minimum has no verified source.</small>
             </div>
           </fieldset>
 
@@ -1473,7 +1502,7 @@
           <div class="live-preview" id="livePreview">
             <h4 style="margin: 0 0 var(--spacing-md) 0; color: var(--success-color); text-align: center;">
               <svg class="fas" aria-hidden="true" focusable="false"><use href="#i-eye"></use></svg>
-              Live Preview
+              Live Preview <small style="font-weight:normal">(same calculation as the results)</small>
             </h4>
             <div class="preview-grid">
               <div class="preview-item">
@@ -1481,7 +1510,7 @@
                 <div class="preview-value" id="previewNet">€0.00</div>
               </div>
               <div class="preview-item">
-                <div class="preview-label">Tax Rate</div>
+                <div class="preview-label">Tax / Gross</div>
                 <div class="preview-value" id="previewTaxRate">0.0%</div>
               </div>
               <div class="preview-item">
@@ -1489,7 +1518,7 @@
                 <div class="preview-value" id="previewEmployerCost">€0.00</div>
               </div>
               <div class="preview-item">
-                <div class="preview-label">Take Home</div>
+                <div class="preview-label">Annual Net</div>
                 <div class="preview-value" id="previewTakeHome">€0.00</div>
               </div>
             </div>
@@ -1626,8 +1655,8 @@
                 <span class="result-value" id="monthlyIncomeTax">€0.00</span>
               </div>
               <div class="result-item">
-                <span class="result-label">Solidarity Surcharge</span>
-                <span class="result-value" id="monthlySolidaritySurcharge">€0.00</span>
+                <span class="result-label">Employment Fund Contribution (CFE)</span>
+                <span class="result-value" id="monthlyCFE">€0.00</span>
               </div>
             </div>
 
@@ -1643,12 +1672,12 @@
                 <span class="result-value" id="monthlyTotalDeductionsApplied">€0.00</span>
               </div>
               <div class="result-item">
-                <span class="result-label">Child Allowance (Monthly)</span>
+                <span class="result-label">Family Allowance, for information (Monthly)</span>
                 <span class="result-value text-success" id="monthlyChildAllowance">€0.00</span>
               </div>
               <div class="result-item">
-                <span class="result-label">Child Tax Credit (Monthly)</span>
-                <span class="result-value text-success" id="monthlyChildTaxCredit">€0.00</span>
+                <span class="result-label">Net Tax after Credits (Monthly)</span>
+                <span class="result-value" id="monthlyNetTax">€0.00</span>
               </div>
             </div>
             
@@ -1673,6 +1702,15 @@
               </div>
               <div id="cimNoteMonthly" class="cim-note d-none" aria-live="polite"></div>
             </div>
+          </div>
+
+          <!-- Estimation annuelle et retenue mensuelle -->
+          <div class="ceiling-note" id="withholdingNote">
+            <p><svg class="fas" aria-hidden="true" focusable="false"><use href="#i-circle-info"></use></svg>
+              <strong>Annual estimate, not the payslip withholding.</strong> The tax shown is the annual tax divided by twelve.
+              The employer applies the monthly withholding tables of the grand-ducal regulation, which can differ by a few euros
+              a month; the difference is settled by the annual assessment or adjustment.</p>
+            <p class="rules-used">Rules used: <span data-rules-label></span>.</p>
           </div>
 
           <!-- Ceiling Calculation Note -->
@@ -1727,7 +1765,7 @@
                 <span class="result-value text-success" id="annualNetSalaryPercent">0.00%</span>
               </div>
               <div class="result-item">
-                <span class="result-label">Total Annual Tax (after all credits)</span>
+                <span class="result-label">Annual Tax incl. CFE, after Credits</span>
                 <span class="result-value" id="annualTotalTax">€0.00</span>
               </div>
               <div class="result-item">
@@ -1745,12 +1783,12 @@
               </div>
               <hr style="margin: var(--spacing-sm) 0; border-color: var(--border-color);">
               <div class="result-item">
-                <span class="result-label">Child Allowance (Annually)</span>
+                <span class="result-label">Family Allowance, for information (Annually)</span>
                 <span class="result-value text-success" id="annualChildAllowance">€0.00</span>
               </div>
               <div class="result-item">
-                <span class="result-label">Child Tax Credit (Annually)</span>
-                <span class="result-value text-success" id="annualChildTaxCredit">€0.00</span>
+                <span class="result-label">Adjusted Taxable Income</span>
+                <span class="result-value" id="annualTaxableIncome">€0.00</span>
               </div>
               <div class="result-item">
                 <span class="result-label">Employee Tax Credit (CIS - Annual)</span>
@@ -1774,13 +1812,13 @@
     <!-- Footer -->
     <footer class="footer">
       <p>
-        <strong>Disclaimer:</strong> This calculator provides estimates based on
-        2025 Luxembourg tax laws. For official calculations, consult a tax
-        professional.
+        <strong>Disclaimer:</strong> indicative estimate based on the rules selected above
+        (<span data-rules-label></span>). It does not replace the calculation of the Administration des
+        contributions directes. Sources of every value: <code>docs/sources.md</code>.
       </p>
       <p>
         <svg class="fas text-danger" aria-hidden="true" focusable="false"><use href="#i-heart"></use></svg>
-        Made for Luxembourg's workforce | Version 3.5.0 (Enhanced UX)
+        Made for Luxembourg's workforce | Version 3.5.0
       </p>
     </footer>
   </div>
@@ -1809,6 +1847,10 @@
     Install App
   </button>
 
+  <!-- Paramètres légaux (générés depuis params/*.json) et moteur de calcul -->
+  <script src="params/params.js"></script>
+  <script src="calc.js"></script>
+
   <!-- Inline JavaScript -->
   <script>
     // Service Worker Registration for PWA
@@ -1826,8 +1868,8 @@
     }
 
     /**
-     * Luxembourg Payroll Calculator 2025
-     * Version: 3.5.0 (Enhanced UX)
+     * Luxembourg Payroll Estimator
+     * Version: 3.5.0
      * Description: Calculates Luxembourg payroll including taxes, social security, and benefits.
      * This version includes major UX enhancements: Quick Start templates, live preview,
      * progress indicators, enhanced tooltips, data persistence, and mobile optimizations.
@@ -1835,74 +1877,28 @@
     'use strict';
 
     // ============================================
-    // CONFIGURATION & CONSTANTS
+    // RÈGLES (paramètres légaux) ET MOTEUR DE CALCUL
     // ============================================
-    const SSM_MONTHLY_UNQUALIFIED = 2703.74; // Social Minimum Wage (Unqualified) - Example for 2025
+    // Toutes les valeurs fiscales et sociales viennent de params/*.json (chargés par params/params.js)
+    // et tout le calcul est fait par calc.js : ce script ne contient que l'interface.
+    const APP_VERSION = '3.5.0';
+    const RULE_SETS = window.LUX_PARAMS || {};
+    const RULE_IDS = Object.keys(RULE_SETS).sort();
+    const STORAGE_KEY = 'luxPayrollCalculatorState.v2';
 
-    // Configuration object for various rates and parameters.
-    // Object.freeze prevents modification of the CONFIG object after initialization.
-    const CONFIG = Object.freeze({
-      EMPLOYER_RATES: { 
-        healthInsurance: 0.0305, 
-        pensionInsurance: 0.08,  
-        occupationalHealth: 0.0014, 
-        accident: 0.0070, 
-        mutualityBase: 0.0072 
-      },
-      SOCIAL_SECURITY_PARAMETERS: {
-        ssmMonthlyUnqualified: SSM_MONTHLY_UNQUALIFIED,
-        monthlyIncomeCeiling: SSM_MONTHLY_UNQUALIFIED * 5, 
-        dependencyBaseReduction: SSM_MONTHLY_UNQUALIFIED / 4, 
-        dependencyRate: 0.014 
-      },
-      PROFESSIONAL_EXPENSES_MIN_ANNUAL: 540,
-      FAMILY_BENEFITS: {
-        childAllowanceMonthly: 299.86,
-        childTaxCreditAnnual: 922.56
-      },
-      TRANSPORT_DEDUCTION_MAX_ANNUAL: 4620,
-      CHARITABLE_DONATION: {
-        minAnnual: 120,
-        maxPercentIncome: 0.20,
-        maxAbsoluteAnnual: 1000000
-      },
-      DEDUCTION_LIMITS: {
-        childcarePerChild: 11400,
-        privatePension: 3200,
-        insurancePremiums: 672,
-        medicalExpensesThreshold: 0.025 
-      },
-      // Tax brackets for income tax calculation (example values).
-      TAX_BRACKETS: [ 
-        { limit: 13230, rate: 0.00 }, { limit: 15435, rate: 0.08 }, { limit: 17640, rate: 0.09 },
-        { limit: 19845, rate: 0.10 }, { limit: 22050, rate: 0.11 }, { limit: 24255, rate: 0.12 },
-        { limit: 26550, rate: 0.14 }, { limit: 28845, rate: 0.16 }, { limit: 31140, rate: 0.18 },
-        { limit: 33435, rate: 0.20 }, { limit: 35730, rate: 0.22 }, { limit: 38025, rate: 0.24 },
-        { limit: 40320, rate: 0.26 }, { limit: 42615, rate: 0.28 }, { limit: 44910, rate: 0.30 },
-        { limit: 47205, rate: 0.32 }, { limit: 49500, rate: 0.34 }, { limit: 51795, rate: 0.36 },
-        { limit: 54090, rate: 0.38 }, { limit: 117450, rate: 0.39 }, { limit: 176160, rate: 0.40 },
-        { limit: 234870, rate: 0.41 }, { limit: Infinity, rate: 0.42 }
-      ],
-      // Tax credit parameters.
-      TAX_CREDITS: {
-        CIS: { // Employee Tax Credit
-          minAnnualGross: 936, maxAnnualGross: 79999.99, threshold1: 11265,
-          threshold2: 40000, amountTier1: 300, amountTier2: 600,
-          rate1: 0.029, rate2: 0.015
-        },
-        CICO2: { // CO2 Tax Credit
-          minAnnualGross: 936, maxAnnualGross: 79999.99, threshold: 40000,
-          amountFull: 192, reductionRate: 0.0048
-        },
-        CISSM: { // Minimum Social Wage Tax Credit
-            minMonthlyGross: 1800, threshold1Monthly: 3000, threshold2Monthly: 3600,
-            amountFullMonthly: 81,
-        }
-      }
-    });
+    /** Jeu de paramètres actif. */
+    function currentRules() {
+      return RULE_SETS[appState.rulesId] || RULE_SETS[RULE_IDS[RULE_IDS.length - 1]];
+    }
+    /** Valeur d'un paramètre du jeu actif. */
+    function ruleValue(id) {
+      const p = currentRules().parametres[id];
+      return p ? p.valeur : undefined;
+    }
 
     // Application state object.
     const appState = {
+      rulesId: null, // fixé au chargement (jeu de règles le plus récent par défaut)
       currentInputMode: 'gross', // 'gross' or 'total'
       isCalculating: false,
       currentCalculationData: null,
@@ -1914,7 +1910,8 @@
     // DOM Element References (cached for performance)
     const DOMElements = {
         payrollForm: null, salaryInput: null, salaryLabel: null, taxClass: null, mutualityClass: null,
-        numChildren: null, childcareExpenses: null, professionalExpenses: null, transportDeduction: null,
+        numChildren: null, childcareExpenses: null, professionalExpenses: null, commuteUnits: null,
+        accidentFactor: null, rulesSelect: null,
         pensionContributions: null, mortgageInterest: null, insurancePremiums: null, medicalExpenses: null,
         charitableDonations: null, grossBtn: null, totalBtn: null, conversionDisplay: null,
         conversionLabel: null, conversionValue: null, calculateBtn: null, clearBtn: null, printBtn: null,
@@ -1932,37 +1929,37 @@
         junior: {
             salary: 3500,
             taxClass: '1',
-            mutualityClass: '1.0',
+            mutualityClass: '2',
             numChildren: 0,
             professionalExpenses: 800,
-            transportDeduction: 2400
+            commuteUnits: 20
         },
         senior: {
             salary: 6500,
             taxClass: '2',
-            mutualityClass: '0.85',
+            mutualityClass: '1',
             numChildren: 1,
             professionalExpenses: 1200,
-            transportDeduction: 3600,
+            commuteUnits: 30,
             childcareExpenses: 8000
         },
         manager: {
             salary: 8200,
             taxClass: '2',
-            mutualityClass: '0.85',
+            mutualityClass: '1',
             numChildren: 2,
             professionalExpenses: 1500,
-            transportDeduction: 4620,
+            commuteUnits: 30,
             childcareExpenses: 15000,
             pensionContributions: 2500
         },
         executive: {
             salary: 12000,
             taxClass: '2',
-            mutualityClass: '0.85',
+            mutualityClass: '1',
             numChildren: 2,
             professionalExpenses: 2000,
-            transportDeduction: 4620,
+            commuteUnits: 30,
             pensionContributions: 3200,
             insurancePremiums: 672,
             mortgageInterest: 15000
@@ -2047,7 +2044,7 @@
         const requiredFields = [DOMElements.salaryInput, DOMElements.taxClass, DOMElements.mutualityClass];
         const optionalFields = [
             DOMElements.numChildren, DOMElements.childcareExpenses, DOMElements.professionalExpenses,
-            DOMElements.transportDeduction, DOMElements.pensionContributions, DOMElements.mortgageInterest,
+            DOMElements.commuteUnits, DOMElements.pensionContributions, DOMElements.mortgageInterest,
             DOMElements.insurancePremiums, DOMElements.medicalExpenses, DOMElements.charitableDonations
         ];
         
@@ -2098,7 +2095,7 @@
                     numChildren: DOMElements.numChildren,
                     childcareExpenses: DOMElements.childcareExpenses,
                     professionalExpenses: DOMElements.professionalExpenses,
-                    transportDeduction: DOMElements.transportDeduction,
+                    commuteUnits: DOMElements.commuteUnits,
                     pensionContributions: DOMElements.pensionContributions,
                     mortgageInterest: DOMElements.mortgageInterest,
                     insurancePremiums: DOMElements.insurancePremiums
@@ -2125,14 +2122,16 @@
     function saveFormState() {
         try {
             const formState = {
+                rulesId: appState.rulesId,
                 inputMode: appState.currentInputMode,
+                accidentFactor: DOMElements.accidentFactor?.value || '',
                 salary: DOMElements.salaryInput?.value || '',
                 taxClass: DOMElements.taxClass?.value || '',
                 mutualityClass: DOMElements.mutualityClass?.value || '',
                 numChildren: DOMElements.numChildren?.value || '',
                 childcareExpenses: DOMElements.childcareExpenses?.value || '',
                 professionalExpenses: DOMElements.professionalExpenses?.value || '',
-                transportDeduction: DOMElements.transportDeduction?.value || '',
+                commuteUnits: DOMElements.commuteUnits?.value || '',
                 pensionContributions: DOMElements.pensionContributions?.value || '',
                 mortgageInterest: DOMElements.mortgageInterest?.value || '',
                 insurancePremiums: DOMElements.insurancePremiums?.value || '',
@@ -2140,7 +2139,7 @@
                 charitableDonations: DOMElements.charitableDonations?.value || '',
                 timestamp: Date.now()
             };
-            localStorage.setItem('luxPayrollCalculatorState', JSON.stringify(formState));
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(formState));
         } catch (error) {
             console.warn('Could not save form state:', error);
         }
@@ -2151,14 +2150,14 @@
      */
     function loadFormState() {
         try {
-            const saved = localStorage.getItem('luxPayrollCalculatorState');
+            const saved = localStorage.getItem(STORAGE_KEY);
             if (!saved) return false;
             
             const formState = JSON.parse(saved);
             const maxAge = 7 * 24 * 60 * 60 * 1000; // 7 days
             
             if (Date.now() - formState.timestamp > maxAge) {
-                localStorage.removeItem('luxPayrollCalculatorState');
+                localStorage.removeItem(STORAGE_KEY);
                 return false;
             }
             
@@ -2169,7 +2168,9 @@
             if (DOMElements.numChildren) DOMElements.numChildren.value = formState.numChildren || '';
             if (DOMElements.childcareExpenses) DOMElements.childcareExpenses.value = formState.childcareExpenses || '';
             if (DOMElements.professionalExpenses) DOMElements.professionalExpenses.value = formState.professionalExpenses || '';
-            if (DOMElements.transportDeduction) DOMElements.transportDeduction.value = formState.transportDeduction || '';
+            if (DOMElements.commuteUnits) DOMElements.commuteUnits.value = formState.commuteUnits || '';
+            if (DOMElements.accidentFactor && formState.accidentFactor) DOMElements.accidentFactor.value = formState.accidentFactor;
+            if (formState.rulesId && RULE_SETS[formState.rulesId]) setRules(formState.rulesId);
             if (DOMElements.pensionContributions) DOMElements.pensionContributions.value = formState.pensionContributions || '';
             if (DOMElements.mortgageInterest) DOMElements.mortgageInterest.value = formState.mortgageInterest || '';
             if (DOMElements.insurancePremiums) DOMElements.insurancePremiums.value = formState.insurancePremiums || '';
@@ -2196,41 +2197,21 @@
      * Updates the live preview with estimated values.
      */
     function updateLivePreview() {
-        const salary = parseFloat(DOMElements.salaryInput?.value) || 0;
-        const taxClass = DOMElements.taxClass?.value || '';
-        const mutualityClass = parseFloat(DOMElements.mutualityClass?.value) || 1.0;
-        
-        if (salary > 0 && taxClass) {
-            // Quick estimation (simplified calculation for preview)
-            const grossAnnual = salary * 12;
-            const employeeSocialSecurity = salary * (0.0305 + 0.08 + 0.014); // Health + Pension + Dependency
-            const employerSocialSecurity = salary * (0.0305 + 0.08 + 0.007 + 0.0014 + (0.0072 * mutualityClass));
-            
-            // Simple tax estimation based on class
-            const taxMultiplier = taxClass === '1' ? 1.0 : taxClass === '1a' ? 0.9 : 0.65;
-            const estimatedTaxRate = Math.min(grossAnnual * 0.15 * taxMultiplier / grossAnnual, 0.42); // Rough estimate
-            const estimatedTax = grossAnnual * estimatedTaxRate;
-            
-            const netSalary = salary - employeeSocialSecurity - (estimatedTax / 12);
-            const employerCost = salary + employerSocialSecurity;
-            
-            if (DOMElements.previewNet) DOMElements.previewNet.textContent = `€${netSalary.toFixed(0)}`;
-            if (DOMElements.previewTaxRate) DOMElements.previewTaxRate.textContent = `${(estimatedTaxRate * 100).toFixed(1)}%`;
-            if (DOMElements.previewEmployerCost) DOMElements.previewEmployerCost.textContent = `€${employerCost.toFixed(0)}`;
-            if (DOMElements.previewTakeHome) DOMElements.previewTakeHome.textContent = `€${netSalary.toFixed(0)}`;
-            
-            // Show preview with animation
+        const data = DOMElements.taxClass?.value ? computeFromForm() : null;
+        if (data && data.brutMensuel > 0) {
+            if (DOMElements.previewNet) DOMElements.previewNet.textContent = formatCurrency(data.netMensuel);
+            if (DOMElements.previewTaxRate) DOMElements.previewTaxRate.textContent =
+                formatPercentage(data.brutAnnuel > 0 ? data.impotNetAnnuel / data.brutAnnuel * 100 : 0);
+            if (DOMElements.previewEmployerCost) DOMElements.previewEmployerCost.textContent = formatCurrency(data.coutEmployeurMensuel);
+            if (DOMElements.previewTakeHome) DOMElements.previewTakeHome.textContent = formatCurrency(data.netAnnuel);
             if (DOMElements.livePreview && !DOMElements.livePreview.classList.contains('show')) {
                 DOMElements.livePreview.classList.add('show');
             }
-        } else {
-            // Hide preview if insufficient data
-            if (DOMElements.livePreview) {
-                DOMElements.livePreview.classList.remove('show');
-            }
+        } else if (DOMElements.livePreview) {
+            DOMElements.livePreview.classList.remove('show');
         }
     }
-    
+
     /**
      * Shows or hides the loading indicator.
      * @param {boolean} [show=true] - True to show, false to hide.
@@ -2358,10 +2339,10 @@
           return; 
       }
       
-      const mutualityClass = parseFloat(sanitizeInput(els.mutualityClassSelect.value, 'select')) || 1.0;
-      let convertedValue = appState.currentInputMode === 'gross' 
-                            ? calculateTotalEmployerCost(inputValue, mutualityClass) 
-                            : calculateGrossFromTotal(inputValue, mutualityClass);
+      const opts = employerOptions();
+      let convertedValue = appState.currentInputMode === 'gross'
+                            ? calculateTotalEmployerCost(inputValue, opts)
+                            : calculateGrossFromTotal(inputValue, opts);
                             
       els.conversionValue.textContent = formatCurrency(convertedValue);
       els.conversionDisplay.classList.remove('d-none');
@@ -2547,249 +2528,71 @@
     }
 
     // ============================================
-    // CALCULATION LOGIC
+    // CALCULATION LOGIC (délégué à calc.js)
     // ============================================
 
-    /**
-     * Applies monthly ceiling to salary before calculating contribution.
-     * @param {number} grossMonthlySalary - Gross monthly salary.
-     * @param {number} monthlyIncomeCeiling - The ceiling amount.
-     * @param {number} rate - The contribution rate.
-     * @returns {number} - Calculated contribution.
-     */
-    function applyMonthlyCeilingAndCalculate(grossMonthlySalary, monthlyIncomeCeiling, rate) {
-        const cappedSalary = Math.min(grossMonthlySalary, monthlyIncomeCeiling);
-        return cappedSalary * rate;
-    }
-
-    /**
-     * Calculates total employer cost from gross salary.
-     * @param {number} grossSalary - Monthly gross salary.
-     * @param {number} mutualityClass - Mutuality class factor.
-     * @returns {number} - Total monthly employer cost.
-     */
-    function calculateTotalEmployerCost(grossSalary, mutualityClass) {
-      const contributions = calculateEmployerContributions(grossSalary, mutualityClass);
-      return grossSalary + Object.values(contributions).reduce((sum, value) => sum + value, 0);
-    }
-
-    /**
-     * Calculates gross salary from total employer cost.
-     * @param {number} totalCost - Total monthly employer cost.
-     * @param {number} mutualityClass - Mutuality class factor.
-     * @returns {number} - Monthly gross salary.
-     */
-    function calculateGrossFromTotal(totalCost, mutualityClass) {
-      let totalRate = CONFIG.EMPLOYER_RATES.healthInsurance + CONFIG.EMPLOYER_RATES.pensionInsurance +
-                      CONFIG.EMPLOYER_RATES.occupationalHealth + CONFIG.EMPLOYER_RATES.accident +
-                      (CONFIG.EMPLOYER_RATES.mutualityBase * mutualityClass);
-      return totalCost / (1 + totalRate);
-    }
-
-    /**
-     * Calculates employer's social security contributions.
-     * @param {number} grossSalary - Monthly gross salary.
-     * @param {number} mutualityFactor - Mutuality class factor.
-     * @returns {object} - Object with individual employer contributions.
-     */
-    function calculateEmployerContributions(grossSalary, mutualityFactor) {
-      const ceil = CONFIG.SOCIAL_SECURITY_PARAMETERS.monthlyIncomeCeiling;
+    /** Options employeur saisies : classe de mutualité (1-4) et facteur bonus-malus accident. */
+    function employerOptions() {
       return {
-        health: applyMonthlyCeilingAndCalculate(grossSalary, ceil, CONFIG.EMPLOYER_RATES.healthInsurance),
-        pension: applyMonthlyCeilingAndCalculate(grossSalary, ceil, CONFIG.EMPLOYER_RATES.pensionInsurance),
-        occupationalHealth: applyMonthlyCeilingAndCalculate(grossSalary, ceil, CONFIG.EMPLOYER_RATES.occupationalHealth),
-        accident: applyMonthlyCeilingAndCalculate(grossSalary, ceil, CONFIG.EMPLOYER_RATES.accident),
-        employersMutuality: applyMonthlyCeilingAndCalculate(grossSalary, ceil, CONFIG.EMPLOYER_RATES.mutualityBase * mutualityFactor)
+        classeMutualite: parseInt(DOMElements.mutualityClass?.value, 10) || 1,
+        facteurAccident: parseFloat(DOMElements.accidentFactor?.value) || 1
       };
     }
 
-    /**
-     * Calculates employee's social security contributions.
-     * @param {number} grossSalary - Monthly gross salary.
-     * @returns {object} - Object with individual employee contributions.
-     */
-    function calculateEmployeeContributions(grossSalary) {
-      const ceil = CONFIG.SOCIAL_SECURITY_PARAMETERS.monthlyIncomeCeiling;
-      // Dependency insurance base: gross salary minus 1/4 of SSM, cannot be negative.
-      const dependencyBase = Math.max(0, grossSalary - CONFIG.SOCIAL_SECURITY_PARAMETERS.dependencyBaseReduction);
-      return {
-        health: applyMonthlyCeilingAndCalculate(grossSalary, ceil, CONFIG.EMPLOYER_RATES.healthInsurance), 
-        pension: applyMonthlyCeilingAndCalculate(grossSalary, ceil, CONFIG.EMPLOYER_RATES.pensionInsurance), 
-        dependency: dependencyBase * CONFIG.SOCIAL_SECURITY_PARAMETERS.dependencyRate
-      };
+    function calculateTotalEmployerCost(grossSalary, opts) {
+      return grossSalary + LuxPayroll.cotisationsEmployeur(grossSalary, opts, currentRules()).total;
     }
 
-    /**
-     * Calculates income tax and solidarity surcharge.
-     * @param {number} annualTaxableIncome - Annual taxable income.
-     * @param {string} taxClass - Tax class ('1', '1a', '2').
-     * @returns {object} - Object with incomeTax, solidaritySurcharge, and totalTax.
-     */
-    function calculateIncomeTax(annualTaxableIncome, taxClass) {
-      let tax = 0; 
-      let previousLimit = 0;
-      const income = Math.max(0, annualTaxableIncome); // Ensure income is not negative.
-
-      for (const bracket of CONFIG.TAX_BRACKETS) {
-        if (income <= previousLimit) break;
-        tax += (Math.min(income, bracket.limit) - previousLimit) * bracket.rate;
-        previousLimit = bracket.limit;
-      }
-      
-      // Apply tax class coefficient.
-      const taxClassMultiplier = { '1': 1.0, '1a': 0.9, '2': 0.65 }[taxClass] || 1.0;
-      tax *= taxClassMultiplier;
-
-      // Calculate solidarity surcharge (7% or 9% based on income and tax class).
-      let solidarityRate = 0.07;
-      if (((taxClass === '1' || taxClass === '1a') && income > 150000) || (taxClass === '2' && income > 300000)) {
-        solidarityRate = 0.09;
-      }
-      const surcharge = tax * solidarityRate;
-      
-      return { incomeTax: tax, solidaritySurcharge: surcharge, totalTax: tax + surcharge };
+    function calculateGrossFromTotal(totalCost, opts) {
+      return LuxPayroll.brutDepuisCoutEmployeur(totalCost, opts, currentRules());
     }
 
-    /** Calculates Employee Tax Credit (CIS). */
-    function calculateCIS(annualGrossSalary) {
-        const CIS_CONFIG = CONFIG.TAX_CREDITS.CIS;
-        if (annualGrossSalary < CIS_CONFIG.minAnnualGross || annualGrossSalary > CIS_CONFIG.maxAnnualGross) return 0;
-        if (annualGrossSalary <= CIS_CONFIG.threshold1) { 
-            return Math.min(CIS_CONFIG.amountTier2, CIS_CONFIG.amountTier1 + (annualGrossSalary - CIS_CONFIG.minAnnualGross) * CIS_CONFIG.rate1);
-        } else if (annualGrossSalary <= CIS_CONFIG.threshold2) { 
-            return CIS_CONFIG.amountTier2;
-        } else { 
-            return Math.max(0, CIS_CONFIG.amountTier2 - (annualGrossSalary - CIS_CONFIG.threshold2) * CIS_CONFIG.rate2);
-        }
-    }
-
-    /** Calculates CO2 Tax Credit (CI-CO2). */
-    function calculateCICO2(annualGrossSalary) {
-        const CICO2_CONFIG = CONFIG.TAX_CREDITS.CICO2;
-        if (annualGrossSalary < CICO2_CONFIG.minAnnualGross || annualGrossSalary > CICO2_CONFIG.maxAnnualGross) return 0;
-        if (annualGrossSalary <= CICO2_CONFIG.threshold) { 
-            return CICO2_CONFIG.amountFull;
-        } else { 
-            return Math.max(0, CICO2_CONFIG.amountFull - (annualGrossSalary - CICO2_CONFIG.threshold) * CICO2_CONFIG.reductionRate);
-        }
-    }
-
-    /** Calculates Minimum Social Wage Tax Credit (CISSM). */
-    function calculateCISSM(monthlyGrossSalary) {
-        const CISSM_CONFIG = CONFIG.TAX_CREDITS.CISSM;
-        if (monthlyGrossSalary < CISSM_CONFIG.minMonthlyGross) return 0;
-        if (monthlyGrossSalary <= CISSM_CONFIG.threshold1Monthly) { 
-            return CISSM_CONFIG.amountFullMonthly;
-        } else if (monthlyGrossSalary <= CISSM_CONFIG.threshold2Monthly) { 
-            return Math.max(0, CISSM_CONFIG.amountFullMonthly * (1 - (monthlyGrossSalary - CISSM_CONFIG.threshold1Monthly) / (CISSM_CONFIG.threshold2Monthly - CISSM_CONFIG.threshold1Monthly)));
-        }
-        return 0; 
+    /** Lit le formulaire et renvoie le résultat de LuxPayroll.calculer (ou null si le salaire est vide). */
+    function computeFromForm() {
+      const num = (el) => sanitizeInput(el?.value, 'number');
+      const salary = num(DOMElements.salaryInput);
+      if (!(salary > 0)) return null;
+      const opts = employerOptions();
+      const gross = appState.currentInputMode === 'gross' ? salary : calculateGrossFromTotal(salary, opts);
+      return LuxPayroll.calculer({
+        brutMensuel: gross,
+        classe: DOMElements.taxClass?.value || '1',
+        enfants: sanitizeInput(DOMElements.numChildren?.value, 'integer'),
+        classeMutualite: opts.classeMutualite,
+        facteurAccident: opts.facteurAccident,
+        fraisObtention: num(DOMElements.professionalExpenses),
+        unitesEloignement: sanitizeInput(DOMElements.commuteUnits?.value, 'integer'),
+        fraisGarde: num(DOMElements.childcareExpenses),
+        prevoyanceVieillesse: num(DOMElements.pensionContributions),
+        interetsLogement: num(DOMElements.mortgageInterest),
+        primesAssurance: num(DOMElements.insurancePremiums),
+        fraisMedicaux: num(DOMElements.medicalExpenses),
+        dons: num(DOMElements.charitableDonations)
+      }, currentRules());
     }
 
     /** Performs the main payroll calculation. */
     function performCalculation() {
-      if (appState.isCalculating) return; 
-      
+      if (appState.isCalculating) return;
+
       if (!validateFormInputs()) {
           showGeneralError('Please correct the highlighted errors before calculating.');
-          // Ensure loading state is reset if validation fails early
-          if (DOMElements.calculateBtn?.classList.contains('loading')) {
-              showLoading(false);
-          }
+          if (DOMElements.calculateBtn?.classList.contains('loading')) showLoading(false);
           return;
       }
-      
-      showLoading(true); 
-      appState.salaryExceedsCeiling = false; // Reset flag
-      
+
+      showLoading(true);
       try {
-        // Get and sanitize inputs
-        const salaryInputValue = parseFloat(DOMElements.salaryInput?.value); 
-        const taxClassValue = DOMElements.taxClass?.value; 
-        const mutualityClassValue = parseFloat(DOMElements.mutualityClass?.value);
-        
-        const numChildrenRaw = DOMElements.numChildren?.value;
-        const numChildrenValue = (numChildrenRaw && numChildrenRaw.trim() !== '') ? parseInt(numChildrenRaw, 10) : 0;
-
-        const childcareExpensesRaw = DOMElements.childcareExpenses?.value;
-        const childcareExpensesValue = (childcareExpensesRaw && childcareExpensesRaw.trim() !== '') ? parseFloat(childcareExpensesRaw) : 0;
-
-        // Determine gross salary based on input mode
-        let grossMonthlySalary = (appState.currentInputMode === 'gross') 
-                                ? salaryInputValue 
-                                : calculateGrossFromTotal(salaryInputValue, mutualityClassValue); 
-        
-        if (grossMonthlySalary > CONFIG.SOCIAL_SECURITY_PARAMETERS.monthlyIncomeCeiling) {
-            appState.salaryExceedsCeiling = true;
-        }
-        
-        const annualGrossSalary = grossMonthlySalary * 12;
-        const employerContributions = calculateEmployerContributions(grossMonthlySalary, mutualityClassValue);
-        const employeeContributions = calculateEmployeeContributions(grossMonthlySalary);
-        const totalMonthlyEmployeeSSC = Object.values(employeeContributions).reduce((s, v) => s + v, 0);
-        const annualEmployeeSSC = totalMonthlyEmployeeSSC * 12;
-
-        // Calculate annual deductions
-        const professionalExpenses = Math.max(CONFIG.PROFESSIONAL_EXPENSES_MIN_ANNUAL, sanitizeInput(DOMElements.professionalExpenses?.value,'number'));
-        const transportDeduction = Math.min(sanitizeInput(DOMElements.transportDeduction?.value,'number'), CONFIG.TRANSPORT_DEDUCTION_MAX_ANNUAL);
-        const childcareDeduction = Math.min(childcareExpensesValue, numChildrenValue * CONFIG.DEDUCTION_LIMITS.childcarePerChild);
-        const pensionContributionsDed = Math.min(sanitizeInput(DOMElements.pensionContributions?.value,'number'), CONFIG.DEDUCTION_LIMITS.privatePension);
-        const mortgageInterestDed = sanitizeInput(DOMElements.mortgageInterest?.value,'number');
-        const insurancePremiumsDed = Math.min(sanitizeInput(DOMElements.insurancePremiums?.value,'number'), CONFIG.DEDUCTION_LIMITS.insurancePremiums);
-        const medicalExpensesThreshold = annualGrossSalary * CONFIG.DEDUCTION_LIMITS.medicalExpensesThreshold;
-        const medicalExpensesDed = Math.max(0, sanitizeInput(DOMElements.medicalExpenses?.value,'number') - medicalExpensesThreshold);
-        const charitableDonationsValue = sanitizeInput(DOMElements.charitableDonations?.value,'number');
-        const charitableDonationsMaxIncome = annualGrossSalary * CONFIG.CHARITABLE_DONATION.maxPercentIncome;
-        const charitableDonationsDed = charitableDonationsValue < CONFIG.CHARITABLE_DONATION.minAnnual 
-                                        ? 0 
-                                        : Math.min(charitableDonationsValue, charitableDonationsMaxIncome, CONFIG.CHARITABLE_DONATION.maxAbsoluteAnnual);
-        
-        const totalAnnualDeductions = professionalExpenses + transportDeduction + childcareDeduction + pensionContributionsDed + 
-                                    mortgageInterestDed + insurancePremiumsDed + medicalExpensesDed + charitableDonationsDed;
-        
-        const annualTaxableIncome = Math.max(0, annualGrossSalary - annualEmployeeSSC - totalAnnualDeductions);
-        const taxCalculationResult = calculateIncomeTax(annualTaxableIncome, taxClassValue);
-        
-        // Calculate tax credits
-        const annualCISCredit = calculateCIS(annualGrossSalary);
-        const annualCICO2Credit = calculateCICO2(annualGrossSalary);
-        const monthlyCISSMCredit = calculateCISSM(grossMonthlySalary); 
-        const annualCISSMCredit = monthlyCISSMCredit * 12; 
-        const annualChildTaxCreditValue = numChildrenValue * CONFIG.FAMILY_BENEFITS.childTaxCreditAnnual;
-        
-        const totalAnnualTaxCredits = annualChildTaxCreditValue + annualCISCredit + annualCICO2Credit + annualCISSMCredit;
-        const effectiveAnnualTax = Math.max(0, taxCalculationResult.totalTax - totalAnnualTaxCredits);
-        
-        const monthlyTax = effectiveAnnualTax / 12;
-        const netMonthlySalary = grossMonthlySalary - totalMonthlyEmployeeSSC - monthlyTax;
-        const annualChildAllowanceValue = numChildrenValue * CONFIG.FAMILY_BENEFITS.childAllowanceMonthly * 12;
-        const totalEmployerMonthlyContributions = Object.values(employerContributions).reduce((s, v) => s + v, 0);
-        const totalMonthlyEmployerCost = grossMonthlySalary + totalEmployerMonthlyContributions;
-
-        // Store results in appState
-        appState.currentCalculationData = {
-          grossSalary: grossMonthlySalary, netSalary: netMonthlySalary, totalEmployerCost: totalMonthlyEmployerCost, 
-          employerContributions: employerContributions, employeeContributions: employeeContributions, 
-          totalMonthlyEmployeeSSC: totalMonthlyEmployeeSSC, totalEmployerMonthlyContributions: totalEmployerMonthlyContributions,
-          taxCalculation: taxCalculationResult, 
-          taxCredits: { 
-              annualCIS: annualCISCredit, annualCICO2: annualCICO2Credit, annualCISSM: annualCISSMCredit, 
-              annualChildTaxCredit: annualChildTaxCreditValue, monthlyCISSM: monthlyCISSMCredit 
-          }, 
-          effectiveAnnualTax: effectiveAnnualTax, monthlyTaxes: monthlyTax, 
-          deductions: { totalAnnualDeductions: totalAnnualDeductions },
-          familyBenefits: { childAllowance: annualChildAllowanceValue, childTaxCredit: annualChildTaxCreditValue }, 
-          numChildren: numChildrenValue, taxClass: taxClassValue 
-        };
-
-        displayResults(appState.currentCalculationData);
+        const data = computeFromForm();
+        appState.salaryExceedsCeiling = data.depassePlafond;
+        appState.currentCalculationData = data;
+        displayResults(data);
         showNotification('Calculation complete!', 'success');
-
-      } catch (error) { 
-          console.error('Calculation error:', error); 
+      } catch (error) {
+          console.error('Calculation error:', error);
           showGeneralError('An unexpected error occurred during calculation. Please check your inputs or try again later.');
-      } finally { 
-          showLoading(false); 
+      } finally {
+          showLoading(false);
       }
     }
 
@@ -2802,41 +2605,39 @@
      * @param {object} results - The calculation results data.
      */
     function displayResults(results) {
-      // Update monthly summary
-      updateElementText('monthlyGrossSalary', formatCurrency(results.grossSalary));
-      updateElementText('monthlyNetSalary', formatCurrency(results.netSalary));
-      updateElementText('monthlyTotalCost', formatCurrency(results.totalEmployerCost));
-      
-      // Update employer contributions
-      updateElementText('employerHealth', formatCurrency(results.employerContributions.health));
-      updateElementText('employerPension', formatCurrency(results.employerContributions.pension));
-      updateElementText('employerAccident', formatCurrency(results.employerContributions.accident));
-      updateElementText('employerMutuality', formatCurrency(results.employerContributions.employersMutuality));
-      updateElementText('employerOccupational', formatCurrency(results.employerContributions.occupationalHealth));
-      
-      // Update employee contributions
-      updateElementText('employeeHealth', formatCurrency(results.employeeContributions.health));
-      updateElementText('employeePension', formatCurrency(results.employeeContributions.pension));
-      updateElementText('employeeDependency', formatCurrency(results.employeeContributions.dependency));
-      
-      // Update taxes
-      updateElementText('monthlyIncomeTax', formatCurrency(results.taxCalculation.incomeTax / 12)); 
-      updateElementText('monthlySolidaritySurcharge', formatCurrency(results.taxCalculation.solidaritySurcharge / 12));
-      
-      // Update monthly deductions and benefits
-      updateElementText('monthlyTotalDeductionsApplied', formatCurrency(results.deductions.totalAnnualDeductions / 12));
-      updateElementText('monthlyChildAllowance', formatCurrency(CONFIG.FAMILY_BENEFITS.childAllowanceMonthly * results.numChildren));
-      updateElementText('monthlyChildTaxCredit', formatCurrency(results.taxCredits.annualChildTaxCredit / 12));
+      const cs = results.cotisationsSalarie, ce = results.cotisationsEmployeur, cr = results.credits;
+      updateElementText('monthlyGrossSalary', formatCurrency(results.brutMensuel));
+      updateElementText('monthlyNetSalary', formatCurrency(results.netMensuel));
+      updateElementText('monthlyTotalCost', formatCurrency(results.coutEmployeurMensuel));
 
-      // Update monthly tax credits
-      updateElementText('monthlyCIS', formatCurrency(results.taxCredits.annualCIS / 12));
-      updateElementText('monthlyCICO2', formatCurrency(results.taxCredits.annualCICO2 / 12));
-      updateElementText('monthlyCISSM', formatCurrency(results.taxCredits.monthlyCISSM));
+      updateElementText('employerHealth', formatCurrency(ce.maladie));
+      updateElementText('employerPension', formatCurrency(ce.pension));
+      updateElementText('employerAccident', formatCurrency(ce.accident));
+      updateElementText('employerMutuality', formatCurrency(ce.mutualite));
+      updateElementText('employerOccupational', formatCurrency(ce.santeAuTravail));
+
+      updateElementText('employeeHealth', formatCurrency(cs.maladie));
+      updateElementText('employeePension', formatCurrency(cs.pension));
+      updateElementText('employeeDependency', formatCurrency(cs.dependance));
+
+      updateElementText('monthlyIncomeTax', formatCurrency(results.impot / 12));
+      updateElementText('monthlyCFE', formatCurrency(results.fondsPourEmploi / 12));
+
+      const r = results.revenu;
+      const deductions = r.salaires[0].fraisObtention + r.salaires[0].fraisDeplacement + r.interetsLogement + r.depensesSpeciales
+        + r.dons + r.chargesExtraordinaires + r.fraisGarde + r.abattementExtraProfessionnel;
+      updateElementText('monthlyTotalDeductionsApplied', formatCurrency(deductions / 12));
+      updateElementText('monthlyChildAllowance', results.allocationFamilialeMensuelle == null ? 'n/a' : formatCurrency(results.allocationFamilialeMensuelle));
+      updateElementText('monthlyNetTax', formatCurrency(results.impotNetMensuel));
+
+      updateElementText('monthlyCIS', formatCurrency(cr.cis / 12));
+      updateElementText('monthlyCICO2', formatCurrency(cr.cico2 / 12));
+      updateElementText('monthlyCISSM', formatCurrency(cr.cissmMensuel));
 
       // Display CIM note for Tax Class 1a (monthly)
       const cimNoteMonthlyDiv = DOMElements.cimNoteMonthly;
       if(cimNoteMonthlyDiv) {
-          if (results.taxClass === '1a') {
+          if (results.classe === '1a') {
               cimNoteMonthlyDiv.innerHTML = `<p><svg class="fas" aria-hidden="true" focusable="false"><use href="#i-circle-info"></use></svg> <strong>Single Parent Tax Credit (CIM):</strong> You may be eligible for CIM. Please consult official sources for precise calculation.</p>`;
               cimNoteMonthlyDiv.classList.remove('d-none');
           } else {
@@ -2849,12 +2650,12 @@
       const ceilingNoteDiv = DOMElements.ceilingNote;
       if (ceilingNoteDiv) {
           if (appState.salaryExceedsCeiling) {
-              const ceilingAmountFormatted = formatCurrency(CONFIG.SOCIAL_SECURITY_PARAMETERS.monthlyIncomeCeiling);
-              const ssmReductionFormatted = formatCurrency(CONFIG.SOCIAL_SECURITY_PARAMETERS.dependencyBaseReduction);
+              const ceilingAmountFormatted = formatCurrency(ruleValue('secu.maximum_cotisable'));
+              const ssmReductionFormatted = formatCurrency(ruleValue('secu.abattement_dependance'));
               ceilingNoteDiv.innerHTML = `
                   <p><svg class="fas" aria-hidden="true" focusable="false"><use href="#i-circle-info"></use></svg> <strong>Note on Social Security Ceilings:</strong></p>
                   <p>Your gross salary exceeds the monthly social security income ceiling of ${ceilingAmountFormatted}.</p>
-                  <p>Therefore, contributions for Health, Pension, Accident, and Employer's Mutuality are calculated based on this ceiling amount.</p>
+                  <p>Therefore, all contributions except dependency insurance are calculated on this ceiling amount.</p>
                   <p>Dependency Insurance is calculated on the gross salary minus a reduction of ${ssmReductionFormatted} and has no upper ceiling.</p>
               `;
               ceilingNoteDiv.classList.remove('d-none');
@@ -2919,6 +2720,41 @@
     // EVENT LISTENERS & INITIALIZATION
     // ============================================
 
+    /** Active un jeu de règles et met à jour les textes et listes qui en dépendent. */
+    function setRules(id) {
+      if (!RULE_SETS[id]) return;
+      appState.rulesId = id;
+      if (DOMElements.rulesSelect) DOMElements.rulesSelect.value = id;
+      const meta = currentRules().meta;
+      document.querySelectorAll('[data-rules-label]').forEach((el) => { el.textContent = meta.libelle; });
+      const pension = ruleValue('deductions.prevoyance_vieillesse_plafond');
+      document.querySelectorAll('[data-param-text="pension"]').forEach((el) => { el.textContent = formatCurrency(pension); });
+
+      const emp = ruleValue('secu.employeur');
+      const mutSel = DOMElements.mutualityClass;
+      if (mutSel) {
+        const previous = mutSel.value;
+        const limits = ['< 0.65 %', '< 1.60 %', '< 2.50 %', '≥ 2.50 %'];
+        mutSel.innerHTML = '<option value="">Select Mutuality Class</option>' + emp.mutualite_classes.map((t, i) =>
+          `<option value="${i + 1}">Class ${i + 1}: ${(t * 100).toFixed(2)} % (absenteeism ${limits[i] || ''})</option>`).join('');
+        mutSel.value = previous || '2';
+      }
+      const accSel = DOMElements.accidentFactor;
+      if (accSel) {
+        const previous = accSel.value;
+        accSel.innerHTML = emp.accident_facteurs_bonus_malus.map((f) =>
+          `<option value="${f}">${f.toFixed(2)} → ${(emp.accident_taux_base * f * 100).toFixed(4)} %</option>`).join('');
+        accSel.value = previous || '1';
+        if (!accSel.value) accSel.value = '1';
+      }
+    }
+
+    function populateRulesSelect() {
+      const sel = DOMElements.rulesSelect;
+      if (!sel) return;
+      sel.innerHTML = RULE_IDS.map((id) => `<option value="${id}">${RULE_SETS[id].meta.libelle}</option>`).join('');
+    }
+
     /** Initializes DOM element references. */
     function initializeDOMElements() {
         // Initialize standard elements
@@ -2930,7 +2766,9 @@
         DOMElements.numChildren = document.getElementById('numChildren');
         DOMElements.childcareExpenses = document.getElementById('childcareExpenses');
         DOMElements.professionalExpenses = document.getElementById('professionalExpenses');
-        DOMElements.transportDeduction = document.getElementById('transportDeduction');
+        DOMElements.commuteUnits = document.getElementById('commuteUnits');
+        DOMElements.accidentFactor = document.getElementById('accidentFactor');
+        DOMElements.rulesSelect = document.getElementById('rulesSelect');
         DOMElements.pensionContributions = document.getElementById('pensionContributions');
         DOMElements.mortgageInterest = document.getElementById('mortgageInterest');
         DOMElements.insurancePremiums = document.getElementById('insurancePremiums');
@@ -2987,6 +2825,14 @@
       DOMElements.totalBtn?.addEventListener('click', () => toggleInputMode('total'));
       DOMElements.salaryInput?.addEventListener('input', handleSalaryInput);
       DOMElements.mutualityClass?.addEventListener('change', handleSalaryInput);
+      DOMElements.accidentFactor?.addEventListener('change', () => { handleSalaryInput(); updateLivePreview(); saveFormState(); });
+      DOMElements.rulesSelect?.addEventListener('change', () => {
+          setRules(DOMElements.rulesSelect.value);
+          handleSalaryInput();
+          updateLivePreview();
+          saveFormState();
+          if (appState.currentCalculationData) performCalculation();
+      });
       
       // Listeners for real-time non-blocking tax class warning
       DOMElements.taxClass?.addEventListener('change', validateTaxClassAndChildrenRule);
@@ -3038,7 +2884,7 @@
       const formFields = [
           DOMElements.salaryInput, DOMElements.taxClass, DOMElements.mutualityClass,
           DOMElements.numChildren, DOMElements.childcareExpenses, DOMElements.professionalExpenses,
-          DOMElements.transportDeduction, DOMElements.pensionContributions, DOMElements.mortgageInterest,
+          DOMElements.commuteUnits, DOMElements.pensionContributions, DOMElements.mortgageInterest,
           DOMElements.insurancePremiums, DOMElements.medicalExpenses, DOMElements.charitableDonations
       ];
       
@@ -3074,10 +2920,10 @@
         
         // Optional fields that just need sanitization and min/max enforcement on blur
         { id: 'professionalExpenses', options: { min:0 } },
-        { id: 'transportDeduction', options: { min:0, max:4620 } },
-        { id: 'pensionContributions', options: { min:0, max:3200 } },
+        { id: 'commuteUnits', options: { min:0, max:99, integerOnly: true } },
+        { id: 'pensionContributions', options: { min:0 } },
         { id: 'mortgageInterest', options: { min:0 } },
-        { id: 'insurancePremiums', options: { min:0, max:672 } },
+        { id: 'insurancePremiums', options: { min:0 } },
         { id: 'medicalExpenses', options: { min:0 } },
         { id: 'charitableDonations', options: { min:0 } }
       ];
@@ -3158,7 +3004,7 @@
       
       // Clear saved form state
       try {
-        localStorage.removeItem('luxPayrollCalculatorState');
+        localStorage.removeItem(STORAGE_KEY);
       } catch (error) {
         console.warn('Could not clear saved form state:', error);
       }
@@ -3212,28 +3058,27 @@
      */
     function loadAnnualSummary(data) {
       if (!data) return;
-      const annualGross = data.grossSalary * 12;
-      const annualNet = data.netSalary * 12; 
-      const annualEmployerCost = data.totalEmployerCost * 12;
-
-      updateElementText('annualGrossSalary', formatCurrency(annualGross));
-      updateElementText('annualNetSalary', formatCurrency(annualNet));
-      updateElementText('annualNetSalaryPercent', annualGross > 0 ? formatPercentage((annualNet / annualGross) * 100) : '0.00%');
-      updateElementText('annualTotalTax', formatCurrency(data.effectiveAnnualTax)); 
-      updateElementText('annualEffectiveTaxRate', annualGross > 0 ? formatPercentage((data.effectiveAnnualTax / annualGross) * 100) : '0.00%');
-      updateElementText('annualTotalCost', formatCurrency(annualEmployerCost));
-      updateElementText('annualTotalDeductionsApplied', formatCurrency(data.deductions.totalAnnualDeductions));
-      updateElementText('annualChildAllowance', formatCurrency(data.familyBenefits.childAllowance));
-      updateElementText('annualChildTaxCredit', formatCurrency(data.taxCredits.annualChildTaxCredit)); 
-      updateElementText('annualCIS', formatCurrency(data.taxCredits.annualCIS));
-      updateElementText('annualCICO2', formatCurrency(data.taxCredits.annualCICO2));
-      updateElementText('annualCISSM', formatCurrency(data.taxCredits.annualCISSM));
+      const r = data.revenu;
+      updateElementText('annualGrossSalary', formatCurrency(data.brutAnnuel));
+      updateElementText('annualNetSalary', formatCurrency(data.netAnnuel));
+      updateElementText('annualNetSalaryPercent', data.brutAnnuel > 0 ? formatPercentage(data.netAnnuel / data.brutAnnuel * 100) : '0.00%');
+      updateElementText('annualTotalTax', formatCurrency(data.impotNetAnnuel));
+      updateElementText('annualEffectiveTaxRate', data.brutAnnuel > 0 ? formatPercentage(data.impotNetAnnuel / data.brutAnnuel * 100) : '0.00%');
+      updateElementText('annualTotalCost', formatCurrency(data.coutEmployeurMensuel * 12));
+      const deductions = r.salaires[0].fraisObtention + r.salaires[0].fraisDeplacement + r.interetsLogement + r.depensesSpeciales
+        + r.dons + r.chargesExtraordinaires + r.fraisGarde + r.abattementExtraProfessionnel;
+      updateElementText('annualTotalDeductionsApplied', formatCurrency(deductions));
+      updateElementText('annualChildAllowance', data.allocationFamilialeMensuelle == null ? 'n/a' : formatCurrency(data.allocationFamilialeMensuelle * 12));
+      updateElementText('annualTaxableIncome', formatCurrency(r.revenuImposableAjuste));
+      updateElementText('annualCIS', formatCurrency(data.credits.cis));
+      updateElementText('annualCICO2', formatCurrency(data.credits.cico2));
+      updateElementText('annualCISSM', formatCurrency(data.credits.cissmAnnuel));
 
       // Display CIM note for Tax Class 1a (annual)
       const cimNoteAnnualDiv = DOMElements.cimNoteAnnual;
        if(cimNoteAnnualDiv) {
-          if (data.taxClass === '1a') {
-              cimNoteAnnualDiv.innerHTML = `<p><svg class="fas" aria-hidden="true" focusable="false"><use href="#i-circle-info"></use></svg> <strong>Single Parent Tax Credit (CIM):</strong> You may be eligible for CIM (up to €3,504/year, depending on income and other conditions). This calculator does not include CIM. Please consult official sources.</p>`;
+          if (data.classe === '1a') {
+              cimNoteAnnualDiv.innerHTML = `<p><svg class="fas" aria-hidden="true" focusable="false"><use href="#i-circle-info"></use></svg> <strong>Single Parent Tax Credit (CIM):</strong> You may be eligible for the single-parent tax credit (CIM). This calculator does not include it. Please consult official sources.</p>`;
               cimNoteAnnualDiv.classList.remove('d-none');
           } else {
               cimNoteAnnualDiv.classList.add('d-none');
@@ -3280,7 +3125,7 @@
         const centerX = pieAreaWidth / 2;
         const centerY = height / 2;
 
-        const totalEmployerCost = data.totalEmployerCost;
+        const totalEmployerCost = data.coutEmployeurMensuel;
         if (totalEmployerCost <= 0) { // Handle no data case
             ctx.font = '13px Inter, Arial, sans-serif'; 
             ctx.fillStyle = '#6c757d'; // Muted text color
@@ -3289,10 +3134,13 @@
             return;
         }
 
-        const totalEmployerSSC = data.totalEmployerMonthlyContributions;
-        const totalEmployeeSSC = data.totalMonthlyEmployeeSSC;
-        const taxes = data.monthlyTaxes; 
-        const netSalary = data.netSalary;
+        // Si les crédits dépassent l'impôt (solde versé au salarié), le camembert montre un impôt nul
+        // et le salaire après cotisations ; le crédit versé est indiqué dans la légende.
+        const totalEmployerSSC = data.cotisationsEmployeur.total;
+        const totalEmployeeSSC = data.cotisationsSalarie.total;
+        const taxes = Math.max(0, data.impotNetMensuel);
+        const creditPaid = Math.max(0, -data.impotNetMensuel);
+        const netSalary = data.netMensuel - creditPaid;
 
         // Define pie slices with names, values, and colors
         const pieSlices = [
@@ -3351,11 +3199,12 @@
         const legendItems = [
             { name: 'Total Employer Cost', value: totalEmployerCost, isTotal: true, color: '#333333' }, // Color for consistency if box is drawn
             { name: 'Employer Social Security', value: totalEmployerSSC, color: '#2196F3' },
-            { name: 'Gross Salary', value: data.grossSalary, isInformational: true, color: '#777777' }, 
+            { name: 'Gross Salary', value: data.brutMensuel, isInformational: true, color: '#777777' },
             { name: 'Employee Social Security', value: totalEmployeeSSC, color: '#FF9800'},
             { name: 'Taxes & Surcharges', value: taxes, color: '#F44336' },
             { name: 'Net Salary', value: netSalary, color: '#4CAF50' }
         ];
+        if (creditPaid > 0) legendItems.push({ name: 'Tax credits paid out', value: creditPaid, isInformational: true, color: '#2f855a' });
         
         legendItems.forEach(item => {
             if (legendY + legendItemMinHeight > height - 5) return; // Avoid overflow
@@ -3395,7 +3244,7 @@
       const dataToExport = { 
           ...appState.currentCalculationData, 
           calculationDate: new Date().toISOString(),
-          appVersion: '3.4.3' // Add app version to export
+          appVersion: APP_VERSION
       };
       const dataStr = JSON.stringify(dataToExport, null, 2); // Pretty print JSON
       const dataBlob = new Blob([dataStr], { type: 'application/json;charset=utf-8;' });
@@ -3416,7 +3265,7 @@
           return; 
       }
       const d = appState.currentCalculationData;
-      const textSummary = `Luxembourg Payroll Estimate (Monthly):\nGross Salary: ${formatCurrency(d.grossSalary)}\nNet Salary: ${formatCurrency(d.netSalary)}\nTotal Employer Cost: ${formatCurrency(d.totalEmployerCost)}\n\n(Note: This is an estimate. Consult a professional for official figures.)`;
+      const textSummary = `Luxembourg Payroll Estimate (Monthly, rules: ${d.regles.libelle}):\nGross Salary: ${formatCurrency(d.brutMensuel)}\nNet Salary: ${formatCurrency(d.netMensuel)}\nTotal Employer Cost: ${formatCurrency(d.coutEmployeurMensuel)}\n\n(Indicative estimate; it does not replace the ACD calculation.)`;
       
       const shareData = { 
           title: 'Luxembourg Payroll Estimate', 
@@ -3524,6 +3373,12 @@
     // Main DOMContentLoaded listener
     document.addEventListener('DOMContentLoaded', function () {
       initializeDOMElements(); // Cache DOM elements
+      if (!window.LuxPayroll || !RULE_IDS.length) {
+        showGeneralError('calc.js or params/params.js could not be loaded: the calculator cannot run.', 60000);
+        return;
+      }
+      populateRulesSelect();
+      setRules(RULE_IDS[RULE_IDS.length - 1]);
       setupEventListeners();   // Set up event listeners
       toggleInputMode('gross'); // Set initial input mode
       
@@ -3560,7 +3415,7 @@
         }
       }, 100);
 
-      console.log('Luxembourg Payroll Calculator v3.5.0 initialized with Enhanced UX');
+      console.log(`Luxembourg Payroll Estimator v${APP_VERSION} initialized (rules: ${appState.rulesId})`);
     });
 
   </script>
