@@ -1,15 +1,15 @@
 {
   "name": "luxembourg-payroll-calculator-app",
-  "version": "3.4.3",
-  "description": "🇱🇺 Luxembourg Payroll Calculator - PWA with mobile and desktop support for 2025 tax calculations",
+  "version": "3.5.0",
+  "description": "Indicative Luxembourg payroll estimator (gross to net, employer cost, income tax), fully offline",
   "main": "main.js",
-  "homepage": "https://hdjebar.github.io/StandaloneSalalaryCalculatorApp/",
+  "homepage": "https://hdjebar.github.io/StandaloneSalaryCalculatorApp/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/hdjebar/StandaloneSalalaryCalculatorApp.git"
+    "url": "https://github.com/hdjebar/StandaloneSalaryCalculatorApp.git"
   },
   "bugs": {
-    "url": "https://github.com/hdjebar/StandaloneSalalaryCalculatorApp/issues"
+    "url": "https://github.com/hdjebar/StandaloneSalaryCalculatorApp/issues"
   },
   "scripts": {
     "test": "node --test tests/*.test.js",

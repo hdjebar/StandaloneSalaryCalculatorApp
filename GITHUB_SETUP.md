@@ -1,5 +1,5 @@
 # GitHub Repository Setup Guide
-## StandaloneSalalaryCalculatorApp
+## StandaloneSalaryCalculatorApp
 
 Follow these steps to create and set up your GitHub repository.
 
@@ -10,7 +10,7 @@ Follow these steps to create and set up your GitHub repository.
 1. **Go to GitHub**: https://github.com/new
 2. **Repository Details**:
    - **Owner**: `hdjebar`
-   - **Repository name**: `StandaloneSalalaryCalculatorApp`
+   - **Repository name**: `StandaloneSalaryCalculatorApp`
    - **Description**: `🇱🇺 Luxembourg Payroll Calculator - Progressive Web App with mobile and desktop support for 2025 tax calculations`
    - **Visibility**: ✅ Public (for GitHub Pages)
    - **Initialize**: ❌ Don't add README, .gitignore, or license (we have them)
@@ -27,7 +27,7 @@ Follow these steps to create and set up your GitHub repository.
 gh auth login
 
 # Create repository
-gh repo create hdjebar/StandaloneSalalaryCalculatorApp \
+gh repo create hdjebar/StandaloneSalaryCalculatorApp \
   --public \
   --description "🇱🇺 Luxembourg Payroll Calculator - PWA with mobile and desktop support" \
   --clone=false
@@ -57,7 +57,7 @@ mv README_GITHUB.md README.md
 ### **Add Remote Origin**
 ```bash
 # Add GitHub repository as remote
-git remote add origin https://github.com/hdjebar/StandaloneSalalaryCalculatorApp.git
+git remote add origin https://github.com/hdjebar/StandaloneSalaryCalculatorApp.git
 
 # Verify remote
 git remote -v
@@ -108,7 +108,7 @@ git push -u origin main
 ## 🌐 Step 4: Enable GitHub Pages
 
 ### **Via GitHub Web Interface**
-1. Go to your repository: `https://github.com/hdjebar/StandaloneSalalaryCalculatorApp`
+1. Go to your repository: `https://github.com/hdjebar/StandaloneSalaryCalculatorApp`
 2. Click **Settings** tab
 3. Scroll to **Pages** section
 4. **Source**: Deploy from a branch
@@ -117,7 +117,7 @@ git push -u origin main
 
 ### **Your PWA will be available at:**
 ```
-https://hdjebar.github.io/StandaloneSalalaryCalculatorApp/
+https://hdjebar.github.io/StandaloneSalaryCalculatorApp/
 ```
 
 ## 🏷️ Step 5: Create Release
@@ -146,7 +146,7 @@ git push origin v3.4.3
 - **Offline Support**: Works without internet connection
 
 ### 📱 Installation Options
-- **PWA**: Visit the [live demo](https://hdjebar.github.io/StandaloneSalalaryCalculatorApp/) and click "Install"
+- **PWA**: Visit the [live demo](https://hdjebar.github.io/StandaloneSalaryCalculatorApp/) and click "Install"
 - **Desktop**: Download platform-specific installer below
 - **Mobile**: Install PWA from mobile browser
 
@@ -173,7 +173,7 @@ git push origin v3.4.3
 1. Go to repository main page
 2. Click ⚙️ next to "About"
 3. **Topics**: `luxembourg`, `payroll`, `calculator`, `pwa`, `electron`, `mobile-app`, `tax-calculator`, `javascript`, `html5`, `css3`
-4. **Website**: `https://hdjebar.github.io/StandaloneSalalaryCalculatorApp/`
+4. **Website**: `https://hdjebar.github.io/StandaloneSalaryCalculatorApp/`
 5. Check ✅ "Use your GitHub Pages website"
 
 ### **Enable Discussions (Optional)**
@@ -197,11 +197,11 @@ Update the repository information in package.json:
   "name": "luxembourg-payroll-calculator-app",
   "repository": {
     "type": "git",
-    "url": "https://github.com/hdjebar/StandaloneSalalaryCalculatorApp.git"
+    "url": "https://github.com/hdjebar/StandaloneSalaryCalculatorApp.git"
   },
-  "homepage": "https://hdjebar.github.io/StandaloneSalalaryCalculatorApp/",
+  "homepage": "https://hdjebar.github.io/StandaloneSalaryCalculatorApp/",
   "bugs": {
-    "url": "https://github.com/hdjebar/StandaloneSalalaryCalculatorApp/issues"
+    "url": "https://github.com/hdjebar/StandaloneSalaryCalculatorApp/issues"
   }
 }
 ```
@@ -209,13 +209,13 @@ Update the repository information in package.json:
 ## 🎯 Step 8: Test Everything
 
 ### **Test PWA**
-1. Visit: `https://hdjebar.github.io/StandaloneSalalaryCalculatorApp/`
+1. Visit: `https://hdjebar.github.io/StandaloneSalaryCalculatorApp/`
 2. Check for "Install" button
 3. Test offline functionality
 4. Verify mobile responsiveness
 
 ### **Test Repository**
-1. Clone in new location: `git clone https://github.com/hdjebar/StandaloneSalalaryCalculatorApp.git`
+1. Clone in new location: `git clone https://github.com/hdjebar/StandaloneSalaryCalculatorApp.git`
 2. Run locally: `python3 -m http.server 8080`
 3. Test desktop app: `npm install && npm run electron`
 
