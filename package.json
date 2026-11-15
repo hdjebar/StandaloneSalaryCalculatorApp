@@ -2,7 +2,7 @@
   "name": "luxembourg-payroll-calculator-app",
   "version": "3.4.3",
   "description": "🇱🇺 Luxembourg Payroll Calculator - PWA with mobile and desktop support for 2025 tax calculations",
-  "main": "index.html",
+  "main": "main.js",
   "homepage": "https://hdjebar.github.io/StandaloneSalalaryCalculatorApp/",
   "repository": {
     "type": "git",
@@ -12,6 +12,8 @@
     "url": "https://github.com/hdjebar/StandaloneSalalaryCalculatorApp/issues"
   },
   "scripts": {
+    "test": "node --test tests/*.test.js",
+    "params": "node tools/construire-params.js",
     "build": "echo 'No build needed - static HTML'",
     "serve": "npx http-server . -p 8080",
     "electron": "electron .",
@@ -52,7 +54,6 @@
     "@capacitor/status-bar": "^5.0.0",
     "@capacitor/keyboard": "^5.0.0"
   },
-  "main": "main.js",
   "build": {
     "appId": "lu.payroll.calculator",
     "productName": "Luxembourg Payroll Calculator",
@@ -61,6 +62,8 @@
     },
     "files": [
       "index.html",
+      "calc.js",
+      "params/**/*",
       "main.js",
       "icons/**/*",
       "manifest.json",
