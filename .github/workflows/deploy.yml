@@ -1,10 +1,9 @@
 name: Deploy PWA to GitHub Pages
 
+# Déploiement manuel uniquement (onglet Actions → « Run workflow »), une fois GitHub Pages activé
+# dans Settings → Pages → Source : GitHub Actions. Les tests sont dans tests.yml.
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -37,49 +36,3 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-          
-      - name: Install dependencies
-        run: npm install
-        
-      - name: Test PWA manifest
-        run: |
-          echo "Testing PWA manifest..."
-          node -e "
-            const fs = require('fs');
-            const manifest = JSON.parse(fs.readFileSync('manifest.json', 'utf8'));
-            console.log('✅ Manifest is valid JSON');
-            console.log('App name:', manifest.name);
-            console.log('Icons:', manifest.icons.length);
-          "
-          
-      - name: Test service worker
-        run: |
-          echo "Testing service worker..."
-          node -e "
-            const fs = require('fs');
-            const sw = fs.readFileSync('sw.js', 'utf8');
-            if (sw.includes('CACHE_NAME')) {
-              console.log('✅ Service worker looks good');
-            } else {
-              throw new Error('❌ Service worker missing CACHE_NAME');
-            }
-          "
-          
-      - name: Validate HTML
-        run: |
-          echo "Basic HTML validation..."
-          if grep -q "<!DOCTYPE html>" index.html; then
-            echo "✅ HTML has DOCTYPE"
-          else
-            echo "❌ HTML missing DOCTYPE"
-            exit 1
-          fi
