@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta
     name="description"
-    content="Complete Luxembourg payroll calculator for 2025 with tax compliance, social security, and family benefits calculation."
+    content="Indicative Luxembourg payroll estimator: gross to net, employer cost, social contributions, income tax and tax credits. Runs entirely in the browser."
   />
   <meta
     name="keywords"
@@ -20,25 +20,18 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="Lux Payroll" />
 
-  <!-- Icons -->
-  <link
-    rel="icon"
-    type="image/png"
-    sizes="192x192"
-    href="images/icon-192x192.png"
-    onerror="this.href='https://placehold.co/192x192/667eea/ffffff?text=Icon'"
-  />
-  <link rel="apple-touch-icon" href="images/icon-192x192.png" onerror="this.href='https://placehold.co/192x192/667eea/ffffff?text=Icon'" />
-
-  <!-- FontAwesome -->
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-    crossorigin="anonymous"
-    referrerpolicy="no-referrer"
+  <!-- Politique de sécurité : le navigateur refuse toute ressource externe
+       (aucune police, feuille de style, image ou requête hors du dossier de l'application). -->
+  <meta
+    http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; manifest-src 'self'; worker-src 'self'; form-action 'none'; base-uri 'none'"
   />
 
-  <title>🇱🇺 Luxembourg Payroll Calculator 2025</title>
+  <!-- Icons (fichiers locaux, aucune icône de secours distante) -->
+  <link rel="icon" type="image/svg+xml" href="icons/icon.svg" />
+  <link rel="apple-touch-icon" href="icons/icon-192x192.png" />
+
+  <title>🇱🇺 Luxembourg Payroll Estimator</title>
 
   <!-- Inline CSS -->
   <style>
@@ -126,6 +119,29 @@
       font-weight: 700;
       color: var(--text-primary);
       margin-bottom: var(--spacing-sm);
+    }
+    /* Bandeau de limites */
+    .limits-notice {
+      background: var(--warning-light, #fffbeb);
+      border: 1px solid #f6e05e;
+      border-radius: var(--border-radius-lg, 8px);
+      padding: var(--spacing-md, 12px) var(--spacing-lg, 16px);
+      margin-bottom: var(--spacing-lg, 16px);
+      font-size: 0.85rem;
+      line-height: 1.45;
+    }
+    .limits-notice p { margin: 0 0 6px 0; }
+    .limits-notice p:last-child { margin-bottom: 0; }
+    .limits-notice .privacy-line { color: var(--text-secondary, #4a5568); }
+
+    /* Icônes SVG locales (remplacent la police Font Awesome du CDN) */
+    svg.fas {
+      display: inline-block;
+      width: 1em;
+      height: 1em;
+      fill: currentColor;
+      vertical-align: -0.125em;
+      overflow: visible;
     }
     .header h1 .fas {
       margin-right: var(--spacing-sm);
@@ -943,7 +959,7 @@
       display: flex;
       align-items: center;
     }
-    .quick-start h3 i {
+    .quick-start h3 .fas {
       margin-right: var(--spacing-sm);
       color: var(--primary-accent);
     }
@@ -1127,16 +1143,41 @@
   </style>
 </head>
 <body>
+  <!-- Icônes : Font Awesome Free 6.7.2 (https://fontawesome.com), licence CC BY 4.0,
+       intégrées en SVG pour un fonctionnement 100 % local (aucune requête réseau). -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+    <symbol id="i-bolt" viewBox="0 0 448 512"><path d="M349.4 44.6c5.9-13.7 1.5-29.7-10.6-38.5s-28.6-8-39.9 1.8l-256 224c-10 8.8-13.6 22.9-8.9 35.3S50.7 288 64 288l111.5 0L98.6 467.4c-5.9 13.7-1.5 29.7 10.6 38.5s28.6 8 39.9-1.8l256-224c10-8.8 13.6-22.9 8.9-35.3s-16.6-20.7-30-20.7l-111.5 0L349.4 44.6z"/></symbol>
+    <symbol id="i-building" viewBox="0 0 384 512"><path d="M48 0C21.5 0 0 21.5 0 48L0 464c0 26.5 21.5 48 48 48l96 0 0-80c0-26.5 21.5-48 48-48s48 21.5 48 48l0 80 96 0c26.5 0 48-21.5 48-48l0-416c0-26.5-21.5-48-48-48L48 0zM64 240c0-8.8 7.2-16 16-16l32 0c8.8 0 16 7.2 16 16l0 32c0 8.8-7.2 16-16 16l-32 0c-8.8 0-16-7.2-16-16l0-32zm112-16l32 0c8.8 0 16 7.2 16 16l0 32c0 8.8-7.2 16-16 16l-32 0c-8.8 0-16-7.2-16-16l0-32c0-8.8 7.2-16 16-16zm80 16c0-8.8 7.2-16 16-16l32 0c8.8 0 16 7.2 16 16l0 32c0 8.8-7.2 16-16 16l-32 0c-8.8 0-16-7.2-16-16l0-32zM80 96l32 0c8.8 0 16 7.2 16 16l0 32c0 8.8-7.2 16-16 16l-32 0c-8.8 0-16-7.2-16-16l0-32c0-8.8 7.2-16 16-16zm80 16c0-8.8 7.2-16 16-16l32 0c8.8 0 16 7.2 16 16l0 32c0 8.8-7.2 16-16 16l-32 0c-8.8 0-16-7.2-16-16l0-32zM272 96l32 0c8.8 0 16 7.2 16 16l0 32c0 8.8-7.2 16-16 16l-32 0c-8.8 0-16-7.2-16-16l0-32c0-8.8 7.2-16 16-16z"/></symbol>
+    <symbol id="i-calculator" viewBox="0 0 384 512"><path d="M64 0C28.7 0 0 28.7 0 64L0 448c0 35.3 28.7 64 64 64l256 0c35.3 0 64-28.7 64-64l0-384c0-35.3-28.7-64-64-64L64 0zM96 64l192 0c17.7 0 32 14.3 32 32l0 32c0 17.7-14.3 32-32 32L96 160c-17.7 0-32-14.3-32-32l0-32c0-17.7 14.3-32 32-32zm32 160a32 32 0 1 1 -64 0 32 32 0 1 1 64 0zM96 352a32 32 0 1 1 0-64 32 32 0 1 1 0 64zM64 416c0-17.7 14.3-32 32-32l96 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-96 0c-17.7 0-32-14.3-32-32zM192 256a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm32 64a32 32 0 1 1 -64 0 32 32 0 1 1 64 0zm64-64a32 32 0 1 1 0-64 32 32 0 1 1 0 64zm32 64a32 32 0 1 1 -64 0 32 32 0 1 1 64 0zM288 448a32 32 0 1 1 0-64 32 32 0 1 1 0 64z"/></symbol>
+    <symbol id="i-calendar-check" viewBox="0 0 448 512"><path d="M128 0c17.7 0 32 14.3 32 32l0 32 128 0 0-32c0-17.7 14.3-32 32-32s32 14.3 32 32l0 32 48 0c26.5 0 48 21.5 48 48l0 48L0 160l0-48C0 85.5 21.5 64 48 64l48 0 0-32c0-17.7 14.3-32 32-32zM0 192l448 0 0 272c0 26.5-21.5 48-48 48L48 512c-26.5 0-48-21.5-48-48L0 192zM329 305c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-95 95-47-47c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l64 64c9.4 9.4 24.6 9.4 33.9 0L329 305z"/></symbol>
+    <symbol id="i-calendar-days" viewBox="0 0 448 512"><path d="M128 0c17.7 0 32 14.3 32 32l0 32 128 0 0-32c0-17.7 14.3-32 32-32s32 14.3 32 32l0 32 48 0c26.5 0 48 21.5 48 48l0 48L0 160l0-48C0 85.5 21.5 64 48 64l48 0 0-32c0-17.7 14.3-32 32-32zM0 192l448 0 0 272c0 26.5-21.5 48-48 48L48 512c-26.5 0-48-21.5-48-48L0 192zm64 80l0 32c0 8.8 7.2 16 16 16l32 0c8.8 0 16-7.2 16-16l0-32c0-8.8-7.2-16-16-16l-32 0c-8.8 0-16 7.2-16 16zm128 0l0 32c0 8.8 7.2 16 16 16l32 0c8.8 0 16-7.2 16-16l0-32c0-8.8-7.2-16-16-16l-32 0c-8.8 0-16 7.2-16 16zm144-16c-8.8 0-16 7.2-16 16l0 32c0 8.8 7.2 16 16 16l32 0c8.8 0 16-7.2 16-16l0-32c0-8.8-7.2-16-16-16l-32 0zM64 400l0 32c0 8.8 7.2 16 16 16l32 0c8.8 0 16-7.2 16-16l0-32c0-8.8-7.2-16-16-16l-32 0c-8.8 0-16 7.2-16 16zm144-16c-8.8 0-16 7.2-16 16l0 32c0 8.8 7.2 16 16 16l32 0c8.8 0 16-7.2 16-16l0-32c0-8.8-7.2-16-16-16l-32 0zm112 16l0 32c0 8.8 7.2 16 16 16l32 0c8.8 0 16-7.2 16-16l0-32c0-8.8-7.2-16-16-16l-32 0c-8.8 0-16 7.2-16 16z"/></symbol>
+    <symbol id="i-circle-info" viewBox="0 0 512 512"><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM216 336l24 0 0-64-24 0c-13.3 0-24-10.7-24-24s10.7-24 24-24l48 0c13.3 0 24 10.7 24 24l0 88 8 0c13.3 0 24 10.7 24 24s-10.7 24-24 24l-80 0c-13.3 0-24-10.7-24-24s10.7-24 24-24zm40-208a32 32 0 1 1 0 64 32 32 0 1 1 0-64z"/></symbol>
+    <symbol id="i-circle-question" viewBox="0 0 512 512"><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM169.8 165.3c7.9-22.3 29.1-37.3 52.8-37.3l58.3 0c34.9 0 63.1 28.3 63.1 63.1c0 22.6-12.1 43.5-31.7 54.8L280 264.4c-.2 13-10.9 23.6-24 23.6c-13.3 0-24-10.7-24-24l0-13.5c0-8.6 4.6-16.5 12.1-20.8l44.3-25.4c4.7-2.7 7.6-7.7 7.6-13.1c0-8.4-6.8-15.1-15.1-15.1l-58.3 0c-3.4 0-6.4 2.1-7.5 5.3l-.4 1.2c-4.4 12.5-18.2 19-30.6 14.6s-19-18.2-14.6-30.6l.4-1.2zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></symbol>
+    <symbol id="i-download" viewBox="0 0 512 512"><path d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 242.7-73.4-73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0l128-128c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L288 274.7 288 32zM64 352c-35.3 0-64 28.7-64 64l0 32c0 35.3 28.7 64 64 64l384 0c35.3 0 64-28.7 64-64l0-32c0-35.3-28.7-64-64-64l-101.5 0-45.3 45.3c-25 25-65.5 25-90.5 0L165.5 352 64 352zm368 56a24 24 0 1 1 0 48 24 24 0 1 1 0-48z"/></symbol>
+    <symbol id="i-euro-sign" viewBox="0 0 320 512"><path d="M48.1 240c-.1 2.7-.1 5.3-.1 8l0 16c0 2.7 0 5.3 .1 8L32 272c-17.7 0-32 14.3-32 32s14.3 32 32 32l28.3 0C89.9 419.9 170 480 264 480l24 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-24 0c-57.9 0-108.2-32.4-133.9-80L256 336c17.7 0 32-14.3 32-32s-14.3-32-32-32l-143.8 0c-.1-2.6-.2-5.3-.2-8l0-16c0-2.7 .1-5.4 .2-8L256 240c17.7 0 32-14.3 32-32s-14.3-32-32-32l-125.9 0c25.7-47.6 76-80 133.9-80l24 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-24 0C170 32 89.9 92.1 60.3 176L32 176c-17.7 0-32 14.3-32 32s14.3 32 32 32l16.1 0z"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 576 512"><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM144 256a144 144 0 1 1 288 0 144 144 0 1 1 -288 0zm144-64c0 35.3-28.7 64-64 64c-7.1 0-13.9-1.2-20.3-3.3c-5.5-1.8-11.9 1.6-11.7 7.4c.3 6.9 1.3 13.8 3.2 20.7c13.7 51.2 66.4 81.6 117.6 67.9s81.6-66.4 67.9-117.6c-11.1-41.5-47.8-69.4-88.6-71.1c-5.8-.2-9.2 6.1-7.4 11.7c2.1 6.4 3.3 13.2 3.3 20.3z"/></symbol>
+    <symbol id="i-file-invoice-dollar" viewBox="0 0 384 512"><path d="M64 0C28.7 0 0 28.7 0 64L0 448c0 35.3 28.7 64 64 64l256 0c35.3 0 64-28.7 64-64l0-288-128 0c-17.7 0-32-14.3-32-32L224 0 64 0zM256 0l0 128 128 0L256 0zM64 80c0-8.8 7.2-16 16-16l64 0c8.8 0 16 7.2 16 16s-7.2 16-16 16L80 96c-8.8 0-16-7.2-16-16zm0 64c0-8.8 7.2-16 16-16l64 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-64 0c-8.8 0-16-7.2-16-16zm128 72c8.8 0 16 7.2 16 16l0 17.3c8.5 1.2 16.7 3.1 24.1 5.1c8.5 2.3 13.6 11 11.3 19.6s-11 13.6-19.6 11.3c-11.1-3-22-5.2-32.1-5.3c-8.4-.1-17.4 1.8-23.6 5.5c-5.7 3.4-8.1 7.3-8.1 12.8c0 3.7 1.3 6.5 7.3 10.1c6.9 4.1 16.6 7.1 29.2 10.9l.5 .1s0 0 0 0s0 0 0 0c11.3 3.4 25.3 7.6 36.3 14.6c12.1 7.6 22.4 19.7 22.7 38.2c.3 19.3-9.6 33.3-22.9 41.6c-7.7 4.8-16.4 7.6-25.1 9.1l0 17.1c0 8.8-7.2 16-16 16s-16-7.2-16-16l0-17.8c-11.2-2.1-21.7-5.7-30.9-8.9c0 0 0 0 0 0c-2.1-.7-4.2-1.4-6.2-2.1c-8.4-2.8-12.9-11.9-10.1-20.2s11.9-12.9 20.2-10.1c2.5 .8 4.8 1.6 7.1 2.4c0 0 0 0 0 0s0 0 0 0s0 0 0 0c13.6 4.6 24.6 8.4 36.3 8.7c9.1 .3 17.9-1.7 23.7-5.3c5.1-3.2 7.9-7.3 7.8-14c-.1-4.6-1.8-7.8-7.7-11.6c-6.8-4.3-16.5-7.4-29-11.2l-1.6-.5s0 0 0 0c-11-3.3-24.3-7.3-34.8-13.7c-12-7.2-22.6-18.9-22.7-37.3c-.1-19.4 10.8-32.8 23.8-40.5c7.5-4.4 15.8-7.2 24.1-8.7l0-17.3c0-8.8 7.2-16 16-16z"/></symbol>
+    <symbol id="i-gifts" viewBox="0 0 640 512"><path d="M200.6 32C205 19.5 198.5 5.8 186 1.4S159.8 3.5 155.4 16L144.7 46.2l-9.9-29.8C130.6 3.8 117-3 104.4 1.2S85 19 89.2 31.6l8.3 25-27.4-20c-10.7-7.8-25.7-5.4-33.5 5.3s-5.4 25.7 5.3 33.5L70.2 96 48 96C21.5 96 0 117.5 0 144L0 464c0 26.5 21.5 48 48 48l152.6 0c-5.4-9.4-8.6-20.3-8.6-32l0-224c0-29.9 20.5-55 48.2-62c1.8-31 17.1-58.2 40.1-76.1C271.7 104.7 256.9 96 240 96l-22.2 0 28.3-20.6c10.7-7.8 13.1-22.8 5.3-33.5s-22.8-13.1-33.5-5.3L192.5 55.1 200.6 32zM363.5 185.5L393.1 224 344 224c-13.3 0-24-10.7-24-24c0-13.1 10.8-24 24.2-24c7.6 0 14.7 3.5 19.3 9.5zM272 200c0 8.4 1.4 16.5 4.1 24l-4.1 0c-26.5 0-48 21.5-48 48l0 80 192 0 0-96 32 0 0 96 192 0 0-80c0-26.5-21.5-48-48-48l-4.1 0c2.7-7.5 4.1-15.6 4.1-24c0-39.9-32.5-72-72.2-72c-22.4 0-43.6 10.4-57.3 28.2L432 195.8l-30.5-39.6c-13.7-17.8-35-28.2-57.3-28.2c-39.7 0-72.2 32.1-72.2 72zM224 464c0 26.5 21.5 48 48 48l144 0 0-128-192 0 0 80zm224 48l144 0c26.5 0 48-21.5 48-48l0-80-192 0 0 128zm96-312c0 13.3-10.7 24-24 24l-49.1 0 29.6-38.5c4.6-5.9 11.7-9.5 19.3-9.5c13.4 0 24.2 10.9 24.2 24z"/></symbol>
+    <symbol id="i-hand-holding-dollar" viewBox="0 0 576 512"><path d="M312 24l0 10.5c6.4 1.2 12.6 2.7 18.2 4.2c12.8 3.4 20.4 16.6 17 29.4s-16.6 20.4-29.4 17c-10.9-2.9-21.1-4.9-30.2-5c-7.3-.1-14.7 1.7-19.4 4.4c-2.1 1.3-3.1 2.4-3.5 3c-.3 .5-.7 1.2-.7 2.8c0 .3 0 .5 0 .6c.2 .2 .9 1.2 3.3 2.6c5.8 3.5 14.4 6.2 27.4 10.1l.9 .3s0 0 0 0c11.1 3.3 25.9 7.8 37.9 15.3c13.7 8.6 26.1 22.9 26.4 44.9c.3 22.5-11.4 38.9-26.7 48.5c-6.7 4.1-13.9 7-21.3 8.8l0 10.6c0 13.3-10.7 24-24 24s-24-10.7-24-24l0-11.4c-9.5-2.3-18.2-5.3-25.6-7.8c-2.1-.7-4.1-1.4-6-2c-12.6-4.2-19.4-17.8-15.2-30.4s17.8-19.4 30.4-15.2c2.6 .9 5 1.7 7.3 2.5c13.6 4.6 23.4 7.9 33.9 8.3c8 .3 15.1-1.6 19.2-4.1c1.9-1.2 2.8-2.2 3.2-2.9c.4-.6 .9-1.8 .8-4.1l0-.2c0-1 0-2.1-4-4.6c-5.7-3.6-14.3-6.4-27.1-10.3l-1.9-.6c-10.8-3.2-25-7.5-36.4-14.4c-13.5-8.1-26.5-22-26.6-44.1c-.1-22.9 12.9-38.6 27.7-47.4c6.4-3.8 13.3-6.4 20.2-8.2L264 24c0-13.3 10.7-24 24-24s24 10.7 24 24zM568.2 336.3c13.1 17.8 9.3 42.8-8.5 55.9L433.1 485.5c-23.4 17.2-51.6 26.5-80.7 26.5L192 512 32 512c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l36.8 0 44.9-36c22.7-18.2 50.9-28 80-28l78.3 0 16 0 64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0-16 0c-8.8 0-16 7.2-16 16s7.2 16 16 16l120.6 0 119.7-88.2c17.8-13.1 42.8-9.3 55.9 8.5zM193.6 384c0 0 0 0 0 0l-.9 0c.3 0 .6 0 .9 0z"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 512 512"><path d="M47.6 300.4L228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6 0 115.2 0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z"/></symbol>
+    <symbol id="i-landmark" viewBox="0 0 512 512"><path d="M240.1 4.2c9.8-5.6 21.9-5.6 31.8 0l171.8 98.1L448 104l0 .9 47.9 27.4c12.6 7.2 18.8 22 15.1 36s-16.4 23.8-30.9 23.8L32 192c-14.5 0-27.2-9.8-30.9-23.8s2.5-28.8 15.1-36L64 104.9l0-.9 4.4-1.6L240.1 4.2zM64 224l64 0 0 192 40 0 0-192 64 0 0 192 48 0 0-192 64 0 0 192 40 0 0-192 64 0 0 196.3c.6 .3 1.2 .7 1.8 1.1l48 32c11.7 7.8 17 22.4 12.9 35.9S494.1 512 480 512L32 512c-14.1 0-26.5-9.2-30.6-22.7s1.1-28.1 12.9-35.9l48-32c.6-.4 1.2-.7 1.8-1.1L64 224z"/></symbol>
+    <symbol id="i-percent" viewBox="0 0 384 512"><path d="M374.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-320 320c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l320-320zM128 128A64 64 0 1 0 0 128a64 64 0 1 0 128 0zM384 384a64 64 0 1 0 -128 0 64 64 0 1 0 128 0z"/></symbol>
+    <symbol id="i-print" viewBox="0 0 512 512"><path d="M128 0C92.7 0 64 28.7 64 64l0 96 64 0 0-96 226.7 0L384 93.3l0 66.7 64 0 0-66.7c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0L128 0zM384 352l0 32 0 64-256 0 0-64 0-16 0-16 256 0zm64 32l32 0c17.7 0 32-14.3 32-32l0-96c0-35.3-28.7-64-64-64L64 192c-35.3 0-64 28.7-64 64l0 96c0 17.7 14.3 32 32 32l32 0 0 64c0 35.3 28.7 64 64 64l256 0c35.3 0 64-28.7 64-64l0-64zM432 248a24 24 0 1 1 0 48 24 24 0 1 1 0-48z"/></symbol>
+    <symbol id="i-rotate-left" viewBox="0 0 512 512"><path d="M48.5 224L40 224c-13.3 0-24-10.7-24-24L16 72c0-9.7 5.8-18.5 14.8-22.2s19.3-1.7 26.2 5.2L98.6 96.6c87.6-86.5 228.7-86.2 315.8 1c87.5 87.5 87.5 229.3 0 316.8s-229.3 87.5-316.8 0c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0c62.5 62.5 163.8 62.5 226.3 0s62.5-163.8 0-226.3c-62.2-62.2-162.7-62.5-225.3-1L185 183c6.9 6.9 8.9 17.2 5.2 26.2s-12.5 14.8-22.2 14.8L48.5 224z"/></symbol>
+    <symbol id="i-share-nodes" viewBox="0 0 448 512"><path d="M352 224c53 0 96-43 96-96s-43-96-96-96s-96 43-96 96c0 4 .2 8 .7 11.9l-94.1 47C145.4 170.2 121.9 160 96 160c-53 0-96 43-96 96s43 96 96 96c25.9 0 49.4-10.2 66.6-26.9l94.1 47c-.5 3.9-.7 7.8-.7 11.9c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-25.9 0-49.4 10.2-66.6 26.9l-94.1-47c.5-3.9 .7-7.8 .7-11.9s-.2-8-.7-11.9l94.1-47C302.6 213.8 326.1 224 352 224z"/></symbol>
+    <symbol id="i-triangle-exclamation" viewBox="0 0 512 512"><path d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480L40 480c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24l0 112c0 13.3 10.7 24 24 24s24-10.7 24-24l0-112c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/></symbol>
+    <symbol id="i-user-shield" viewBox="0 0 640 512"><path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c1.8 0 3.5-.2 5.3-.5c-76.3-55.1-99.8-141-103.1-200.2c-16.1-4.8-33.1-7.3-50.7-7.3l-91.4 0zm308.8-78.3l-120 48C358 277.4 352 286.2 352 296c0 63.3 25.9 168.8 134.8 214.2c5.9 2.5 12.6 2.5 18.5 0C614.1 464.8 640 359.3 640 296c0-9.8-6-18.6-15.1-22.3l-120-48c-5.7-2.3-12.1-2.3-17.8 0zM591.4 312c-3.9 50.7-27.2 116.7-95.4 149.7l0-187.8L591.4 312z"/></symbol>
+  </svg>
   <div class="container">
     <!-- Header -->
     <header class="header">
       <h1>
-        <i class="fas fa-calculator" aria-hidden="true"></i>
-        Luxembourg Payroll Calculator 2025
+        <svg class="fas" aria-hidden="true" focusable="false"><use href="#i-calculator"></use></svg>
+        Luxembourg Payroll Estimator
       </h1>
       <p>
-        Complete Luxembourg payroll calculations with tax compliance, social
-        security contributions, and family benefits.
+        Indicative estimate of gross-to-net salary, employer cost, social
+        contributions and income tax. Everything is computed in your browser.
       </p>
     </header>
 
@@ -1145,17 +1186,34 @@
       <!-- Calculator Section -->
       <section class="form-section" aria-labelledby="calculator-heading">
         <h2 id="calculator-heading">
-          <i class="fas fa-euro-sign" aria-hidden="true"></i>
+          <svg class="fas" aria-hidden="true" focusable="false"><use href="#i-euro-sign"></use></svg>
           Salary Calculator
         </h2>
+
+        <!-- Limites de l'outil et date des règles (même texte que la section « Limites » du README) -->
+        <div class="limits-notice" id="limitsNotice" role="note">
+          <p lang="fr"><strong>Outil indicatif.</strong> Estimation annuelle ramenée au mois, qui ne remplace ni la retenue
+            d'impôt calculée par l'employeur ni l'imposition établie par l'Administration des contributions directes.
+            Règles : <span class="rules-label" data-rules-label></span>. Approximations restantes : voir le README.</p>
+          <p lang="en"><strong>Indicative tool.</strong> Annual estimate divided by twelve; it does not replace the employer's
+            monthly withholding nor the assessment by the tax administration (ACD). Rules: <span class="rules-label" data-rules-label></span>.</p>
+          <p class="privacy-line">Nothing leaves your device: no network request, no tracking. The form is kept in this browser's
+            local storage and erased by “Clear Form”.</p>
+        </div>
+
+        <div class="form-group">
+          <label for="rulesSelect">Rules / Règles</label>
+          <select class="form-select" id="rulesSelect" aria-describedby="rulesHelp"></select>
+          <small class="form-text" id="rulesHelp">Each value and its legal source are listed in <code>params/</code> and <code>docs/sources.md</code>.</small>
+        </div>
 
         <!-- Quick Start Templates -->
         <div class="quick-start">
           <h3>
-            <i class="fas fa-bolt" aria-hidden="true"></i>
+            <svg class="fas" aria-hidden="true" focusable="false"><use href="#i-bolt"></use></svg>
             Quick Start - Choose a Template
             <div class="tooltip-wrapper">
-              <i class="fas fa-info-circle tooltip-trigger" aria-hidden="true"></i>
+              <svg class="fas tooltip-trigger" aria-hidden="true" focusable="false"><use href="#i-circle-info"></use></svg>
               <div class="tooltip-content">Click a template to auto-fill with realistic values</div>
             </div>
           </h3>
@@ -1211,7 +1269,7 @@
                 aria-checked="true"
                 aria-label="Calculate based on Gross Salary"
               >
-                <i class="fas fa-euro-sign" aria-hidden="true"></i>
+                <svg class="fas" aria-hidden="true" focusable="false"><use href="#i-euro-sign"></use></svg>
                 Gross Salary
               </button>
               <button
@@ -1222,7 +1280,7 @@
                 aria-checked="false"
                 aria-label="Calculate based on Total Employer Cost"
               >
-                <i class="fas fa-building" aria-hidden="true"></i>
+                <svg class="fas" aria-hidden="true" focusable="false"><use href="#i-building"></use></svg>
                 Total Employer Cost
               </button>
             </div>
@@ -1233,7 +1291,7 @@
             <label for="salaryInput" id="salaryLabel">
               Monthly Gross Salary (€)
               <div class="tooltip-wrapper">
-                <i class="fas fa-question-circle tooltip-trigger" aria-hidden="true"></i>
+                <svg class="fas tooltip-trigger" aria-hidden="true" focusable="false"><use href="#i-circle-question"></use></svg>
                 <div class="tooltip-content">Enter your monthly salary before taxes and deductions</div>
               </div>
             </label>
@@ -1262,8 +1320,8 @@
             <label for="taxClass">
               Tax Class
               <div class="tooltip-wrapper">
-                <i class="fas fa-question-circle tooltip-trigger" aria-hidden="true"></i>
-                <div class="tooltip-content">Your tax class affects your tax rate - Class 2 is best for married couples</div>
+                <svg class="fas tooltip-trigger" aria-hidden="true" focusable="false"><use href="#i-circle-question"></use></svg>
+                <div class="tooltip-content">Class 1: single. Class 1a: single parent, widowed, or 64+ at 1 January. Class 2: married or partners taxed jointly (income split in two, art. 121 LIR).</div>
               </div>
             </label>
             <select class="form-select" id="taxClass" required aria-describedby="taxClassFeedback" aria-invalid="false">
@@ -1276,24 +1334,24 @@
             <div id="taxClassWarning" class="tax-class-warning d-none mt-2" aria-live="polite"></div>
           </div>
 
-          <!-- Mutuality Class -->
+          <!-- Mutualité des employeurs (4 classes publiées par le CCSS) -->
           <div class="form-group">
             <label for="mutualityClass">
-              Mutuality Class
+              Employers' Mutuality Class (employer cost only)
               <div class="tooltip-wrapper">
-                <i class="fas fa-question-circle tooltip-trigger" aria-hidden="true"></i>
-                <div class="tooltip-content">Based on your health record - Class A is best, Class E is highest cost</div>
+                <svg class="fas tooltip-trigger" aria-hidden="true" focusable="false"><use href="#i-circle-question"></use></svg>
+                <div class="tooltip-content">Set each year by the CCSS from the company's financial absenteeism rate. Rates come from the selected rules.</div>
               </div>
             </label>
-            <select class="form-select" id="mutualityClass" required aria-describedby="mutualityClassFeedback" aria-invalid="false">
-              <option value="">Select Mutuality Class</option>
-              <option value="0.85">Class A - 0.85 (Excellent record)</option>
-              <option value="1.0" selected>Class B - 1.0 (Standard)</option>
-              <option value="1.1">Class C - 1.1 (Above average)</option>
-              <option value="1.3">Class D - 1.3 (High absenteeism)</option>
-              <option value="1.5">Class E - 1.5 (Very high absenteeism)</option>
-            </select>
+            <select class="form-select" id="mutualityClass" required aria-describedby="mutualityClassFeedback" aria-invalid="false"></select>
             <div id="mutualityClassFeedback" class="invalid-feedback" aria-live="polite"></div>
+          </div>
+
+          <!-- Assurance accident : facteur bonus-malus -->
+          <div class="form-group">
+            <label for="accidentFactor">Accident Insurance Bonus-Malus Factor (employer cost only)</label>
+            <select class="form-select" id="accidentFactor" aria-describedby="accidentFactorHelp"></select>
+            <small class="form-text" id="accidentFactorHelp">Notified to the employer by the Association d'assurance accident; 1.00 if unknown.</small>
           </div>
 
           <!-- Additional Options -->
@@ -1316,8 +1374,8 @@
                 />
                 <div id="numChildrenFeedback" class="invalid-feedback" aria-live="polite"></div>
                 <small class="form-text" id="numChildrenHelp"
-                  >€299.86/month allowance (Allocation Familiale) + €922.56/year
-                  tax credit (Crédit d'Impôt) per child.</small
+                  >Used for the tax-class hint, deduction ceilings and the family allowance shown for information.
+                  Children do not reduce the tax itself: the child tax moderation is included in the family allowance (art. 122 LIR).</small
                 >
               </div>
 
@@ -1335,7 +1393,7 @@
                 />
                 <div id="childcareExpensesFeedback" class="invalid-feedback" aria-live="polite"></div>
                 <small class="form-text" id="childcareExpensesHelp"
-                  >Max €11,400/year per child for daycare, after-school care (Frais de Garde).</small
+                  >Capped at €11,400/year per child. This ceiling has no verified legal source (see docs/sources.md).</small
                 >
               </div>
             </div> 
@@ -1351,22 +1409,22 @@
                 step="1"
                 aria-describedby="professionalExpensesHelp"
               />
-              <small class="form-text" id="professionalExpensesHelp">Minimum €540/year automatically applied.</small>
+              <small class="form-text" id="professionalExpensesHelp">Actual expenses, excluding commuting; the €540/year minimum applies otherwise (art. 107 LIR).</small>
             </div>
 
             <div class="form-group">
-              <label for="transportDeduction">Transport Deduction (Annual €)</label>
+              <label for="commuteUnits">Home–Work Distance (units)</label>
               <input
                 type="number"
                 class="form-control"
-                id="transportDeduction"
+                id="commuteUnits"
                 placeholder="0"
                 min="0"
-                max="4620"
+                max="99"
                 step="1"
-                aria-describedby="transportDeductionHelp"
+                aria-describedby="commuteUnitsHelp"
               />
-              <small class="form-text" id="transportDeductionHelp">Maximum €4,620/year for commuting costs.</small>
+              <small class="form-text" id="commuteUnitsHelp">Straight-line km between the home and work communes. €99 per unit beyond 4, capped at €2,574/year (art. 105bis LIR).</small>
             </div>
 
             <div class="form-group">
@@ -1377,15 +1435,14 @@
                 id="pensionContributions"
                 placeholder="0"
                 min="0"
-                max="3200"
                 step="1"
                 aria-describedby="pensionContributionsHelp"
               />
-              <small class="form-text" id="pensionContributionsHelp">Maximum €3,200/year for private pension plans and life insurance.</small>
+              <small class="form-text" id="pensionContributionsHelp">Individual retirement savings contract (art. 111bis LIR), capped at <span data-param-text="pension"></span>/year.</small>
             </div>
 
             <div class="form-group">
-              <label for="mortgageInterest">Mortgage Interest (Annual €)</label>
+              <label for="mortgageInterest">Home Loan Interest (Annual €)</label>
               <input
                 type="number"
                 class="form-control"
@@ -1395,7 +1452,7 @@
                 step="1"
                 aria-describedby="mortgageInterestHelp"
               />
-              <small class="form-text" id="mortgageInterestHelp">Interest on home loans and energy-efficient renovations.</small>
+              <small class="form-text" id="mortgageInterestHelp">Approximation: deducted in full; the caps of art. 98bis LIR are not applied.</small>
             </div>
 
             <div class="form-group">
@@ -1406,11 +1463,10 @@
                 id="insurancePremiums"
                 placeholder="0"
                 min="0"
-                max="672"
                 step="1"
                 aria-describedby="insurancePremiumsHelp"
               />
-              <small class="form-text" id="insurancePremiumsHelp">Maximum €672/year for personal insurance premiums.</small>
+              <small class="form-text" id="insurancePremiumsHelp">Premiums and consumer-loan interest: €672/year per household member (art. 109 LIR). Below €480 in total, the flat €480 applies (art. 113).</small>
             </div>
 
             <div class="form-group">
@@ -1424,7 +1480,7 @@
                 step="1"
                 aria-describedby="medicalExpensesHelp"
               />
-              <small class="form-text" id="medicalExpensesHelp">Healthcare costs exceeding 2.5% of income (Frais Médicaux).</small>
+              <small class="form-text" id="medicalExpensesHelp">Extraordinary charges: deductible above a share of taxable income that depends on income, class and children (art. 127 LIR).</small>
             </div>
 
             <div class="form-group">
@@ -1438,15 +1494,15 @@
                 step="1"
                 aria-describedby="charitableDonationsHelp"
               />
-              <small class="form-text" id="charitableDonationsHelp">Minimum €120/year, maximum 20% of income.</small>
+              <small class="form-text" id="charitableDonationsHelp">Up to 20% of net income (art. 109 LIR). The €120 minimum has no verified source.</small>
             </div>
           </fieldset>
 
           <!-- Live Preview Section -->
           <div class="live-preview" id="livePreview">
             <h4 style="margin: 0 0 var(--spacing-md) 0; color: var(--success-color); text-align: center;">
-              <i class="fas fa-eye" aria-hidden="true"></i>
-              Live Preview
+              <svg class="fas" aria-hidden="true" focusable="false"><use href="#i-eye"></use></svg>
+              Live Preview <small style="font-weight:normal">(same calculation as the results)</small>
             </h4>
             <div class="preview-grid">
               <div class="preview-item">
@@ -1454,7 +1510,7 @@
                 <div class="preview-value" id="previewNet">€0.00</div>
               </div>
               <div class="preview-item">
-                <div class="preview-label">Tax Rate</div>
+                <div class="preview-label">Tax / Gross</div>
                 <div class="preview-value" id="previewTaxRate">0.0%</div>
               </div>
               <div class="preview-item">
@@ -1462,7 +1518,7 @@
                 <div class="preview-value" id="previewEmployerCost">€0.00</div>
               </div>
               <div class="preview-item">
-                <div class="preview-label">Take Home</div>
+                <div class="preview-label">Annual Net</div>
                 <div class="preview-value" id="previewTakeHome">€0.00</div>
               </div>
             </div>
@@ -1471,11 +1527,11 @@
           <!-- Action Buttons -->
           <div class="action-buttons">
             <button type="submit" class="btn btn-primary" id="calculateBtn">
-              <i class="fas fa-calculator" aria-hidden="true"></i>
+              <svg class="fas" aria-hidden="true" focusable="false"><use href="#i-calculator"></use></svg>
               Calculate Payroll
             </button>
             <button type="button" class="btn btn-secondary" id="clearBtn">
-              <i class="fas fa-undo" aria-hidden="true"></i>
+              <svg class="fas" aria-hidden="true" focusable="false"><use href="#i-rotate-left"></use></svg>
               Clear Form
             </button>
           </div>
@@ -1493,7 +1549,7 @@
             aria-selected="true"
             aria-controls="monthlyContent"
           >
-            <i class="fas fa-calendar-alt" aria-hidden="true"></i> 
+            <svg class="fas" aria-hidden="true" focusable="false"><use href="#i-calendar-days"></use></svg> 
             Monthly
           </button>
           <button
@@ -1503,7 +1559,7 @@
             aria-selected="false"
             aria-controls="annualContent"
           >
-            <i class="fas fa-calendar-check" aria-hidden="true"></i> 
+            <svg class="fas" aria-hidden="true" focusable="false"><use href="#i-calendar-check"></use></svg> 
             Annual
           </button>
         </div>
@@ -1519,7 +1575,7 @@
             <!-- Monthly Summary -->
             <div class="result-card"> 
               <h3>
-                <i class="fas fa-file-invoice-dollar" aria-hidden="true"></i> 
+                <svg class="fas" aria-hidden="true" focusable="false"><use href="#i-file-invoice-dollar"></use></svg> 
                 Monthly Summary
                 <small class="text-muted d-block mt-1" style="font-size: 0.7em; font-weight: normal;">(Résumé Mensuel)</small>
               </h3>
@@ -1540,7 +1596,7 @@
             <!-- Employer Social Security Contributions -->
             <div class="result-card">
               <h3>
-                <i class="fas fa-landmark" aria-hidden="true"></i> 
+                <svg class="fas" aria-hidden="true" focusable="false"><use href="#i-landmark"></use></svg> 
                 Employer Social Security
                 <small class="text-muted d-block mt-1" style="font-size: 0.7em; font-weight: normal;">(Cotisations Sociales Employeur)</small>
               </h3>
@@ -1569,7 +1625,7 @@
             <!-- Employee Social Security Contributions -->
             <div class="result-card">
               <h3>
-                <i class="fas fa-user-shield" aria-hidden="true"></i> 
+                <svg class="fas" aria-hidden="true" focusable="false"><use href="#i-user-shield"></use></svg> 
                 Employee Social Security
                 <small class="text-muted d-block mt-1" style="font-size: 0.7em; font-weight: normal;">(Cotisations Sociales Employé)</small>
               </h3>
@@ -1590,7 +1646,7 @@
             <!-- Taxes & Surcharges -->
             <div class="result-card">
               <h3>
-                <i class="fas fa-percentage" aria-hidden="true"></i> 
+                <svg class="fas" aria-hidden="true" focusable="false"><use href="#i-percent"></use></svg> 
                 Taxes & Surcharges
                 <small class="text-muted d-block mt-1" style="font-size: 0.7em; font-weight: normal;">(Impôts et Taxes)</small>
               </h3>
@@ -1599,15 +1655,15 @@
                 <span class="result-value" id="monthlyIncomeTax">€0.00</span>
               </div>
               <div class="result-item">
-                <span class="result-label">Solidarity Surcharge</span>
-                <span class="result-value" id="monthlySolidaritySurcharge">€0.00</span>
+                <span class="result-label">Employment Fund Contribution (CFE)</span>
+                <span class="result-value" id="monthlyCFE">€0.00</span>
               </div>
             </div>
 
             <!-- Monthly Deductions & Benefits Card -->
             <div class="result-card">
               <h3>
-                <i class="fas fa-gifts" aria-hidden="true"></i> 
+                <svg class="fas" aria-hidden="true" focusable="false"><use href="#i-gifts"></use></svg> 
                 Monthly Deductions & Benefits
                 <small class="text-muted d-block mt-1" style="font-size: 0.7em; font-weight: normal;">(Déductions et Avantages Mensuels)</small>
               </h3>
@@ -1616,19 +1672,19 @@
                 <span class="result-value" id="monthlyTotalDeductionsApplied">€0.00</span>
               </div>
               <div class="result-item">
-                <span class="result-label">Child Allowance (Monthly)</span>
+                <span class="result-label">Family Allowance, for information (Monthly)</span>
                 <span class="result-value text-success" id="monthlyChildAllowance">€0.00</span>
               </div>
               <div class="result-item">
-                <span class="result-label">Child Tax Credit (Monthly)</span>
-                <span class="result-value text-success" id="monthlyChildTaxCredit">€0.00</span>
+                <span class="result-label">Net Tax after Credits (Monthly)</span>
+                <span class="result-value" id="monthlyNetTax">€0.00</span>
               </div>
             </div>
             
             <!-- Monthly Tax Credits Card -->
             <div class="result-card">
               <h3>
-                <i class="fas fa-hand-holding-usd" aria-hidden="true"></i> 
+                <svg class="fas" aria-hidden="true" focusable="false"><use href="#i-hand-holding-dollar"></use></svg> 
                 Tax Credits (Monthly Estimate)
                 <small class="text-muted d-block mt-1" style="font-size: 0.7em; font-weight: normal;">(Crédits d'Impôt Mensuels)</small>
               </h3>
@@ -1648,6 +1704,15 @@
             </div>
           </div>
 
+          <!-- Estimation annuelle et retenue mensuelle -->
+          <div class="ceiling-note" id="withholdingNote">
+            <p><svg class="fas" aria-hidden="true" focusable="false"><use href="#i-circle-info"></use></svg>
+              <strong>Annual estimate, not the payslip withholding.</strong> The tax shown is the annual tax divided by twelve.
+              The employer applies the monthly withholding tables of the grand-ducal regulation, which can differ by a few euros
+              a month; the difference is settled by the annual assessment or adjustment.</p>
+            <p class="rules-used">Rules used: <span data-rules-label></span>.</p>
+          </div>
+
           <!-- Ceiling Calculation Note -->
           <div id="ceilingNote" class="ceiling-note d-none" aria-live="polite"></div>
 
@@ -1659,15 +1724,15 @@
           <!-- Export Actions -->
           <div class="action-buttons">
             <button type="button" class="btn btn-success" id="exportBtn" aria-label="Export results as JSON">
-              <i class="fas fa-download" aria-hidden="true"></i>
+              <svg class="fas" aria-hidden="true" focusable="false"><use href="#i-download"></use></svg>
               Export Results
             </button>
             <button type="button" class="btn btn-info" id="shareBtn" aria-label="Share calculation results">
-              <i class="fas fa-share-alt" aria-hidden="true"></i> 
+              <svg class="fas" aria-hidden="true" focusable="false"><use href="#i-share-nodes"></use></svg> 
               Share Results
             </button>
             <button type="button" class="btn btn-secondary" id="printBtn" aria-label="Print results">
-                <i class="fas fa-print" aria-hidden="true"></i>
+                <svg class="fas" aria-hidden="true" focusable="false"><use href="#i-print"></use></svg>
                 Print Results
             </button>
           </div>
@@ -1683,7 +1748,7 @@
           <div class="results-grid">
             <div class="result-card">
               <h3>
-                <i class="fas fa-calendar-check" aria-hidden="true"></i> 
+                <svg class="fas" aria-hidden="true" focusable="false"><use href="#i-calendar-check"></use></svg> 
                 Annual Summary
                 <small class="text-muted d-block mt-1" style="font-size: 0.7em; font-weight: normal;">(Résumé Annuel)</small>
               </h3>
@@ -1700,7 +1765,7 @@
                 <span class="result-value text-success" id="annualNetSalaryPercent">0.00%</span>
               </div>
               <div class="result-item">
-                <span class="result-label">Total Annual Tax (after all credits)</span>
+                <span class="result-label">Annual Tax incl. CFE, after Credits</span>
                 <span class="result-value" id="annualTotalTax">€0.00</span>
               </div>
               <div class="result-item">
@@ -1718,12 +1783,12 @@
               </div>
               <hr style="margin: var(--spacing-sm) 0; border-color: var(--border-color);">
               <div class="result-item">
-                <span class="result-label">Child Allowance (Annually)</span>
+                <span class="result-label">Family Allowance, for information (Annually)</span>
                 <span class="result-value text-success" id="annualChildAllowance">€0.00</span>
               </div>
               <div class="result-item">
-                <span class="result-label">Child Tax Credit (Annually)</span>
-                <span class="result-value text-success" id="annualChildTaxCredit">€0.00</span>
+                <span class="result-label">Adjusted Taxable Income</span>
+                <span class="result-value" id="annualTaxableIncome">€0.00</span>
               </div>
               <div class="result-item">
                 <span class="result-label">Employee Tax Credit (CIS - Annual)</span>
@@ -1747,13 +1812,13 @@
     <!-- Footer -->
     <footer class="footer">
       <p>
-        <strong>Disclaimer:</strong> This calculator provides estimates based on
-        2025 Luxembourg tax laws. For official calculations, consult a tax
-        professional.
+        <strong>Disclaimer:</strong> indicative estimate based on the rules selected above
+        (<span data-rules-label></span>). It does not replace the calculation of the Administration des
+        contributions directes. Sources of every value: <code>docs/sources.md</code>.
       </p>
       <p>
-        <i class="fas fa-heart text-danger" aria-hidden="true"></i>
-        Made for Luxembourg's workforce | Version 3.5.0 (Enhanced UX)
+        <svg class="fas text-danger" aria-hidden="true" focusable="false"><use href="#i-heart"></use></svg>
+        Made for Luxembourg's workforce | Version 3.5.0
       </p>
     </footer>
   </div>
@@ -1778,16 +1843,21 @@
 
   <!-- PWA Install Button -->
   <button class="install-btn" id="installBtn" style="display: none;" aria-label="Install Application">
-    <i class="fas fa-download" aria-hidden="true"></i>
+    <svg class="fas" aria-hidden="true" focusable="false"><use href="#i-download"></use></svg>
     Install App
   </button>
+
+  <!-- Paramètres légaux (générés depuis params/*.json) et moteur de calcul -->
+  <script src="params/params.js"></script>
+  <script src="calc.js"></script>
 
   <!-- Inline JavaScript -->
   <script>
     // Service Worker Registration for PWA
-    if ('serviceWorker' in navigator) {
+    // (absent en ouverture directe du fichier : les navigateurs n'acceptent les service workers qu'en http(s))
+    if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
+        navigator.serviceWorker.register('./sw.js')
           .then((registration) => {
             console.log('SW registered: ', registration);
           })
@@ -1798,8 +1868,8 @@
     }
 
     /**
-     * Luxembourg Payroll Calculator 2025
-     * Version: 3.5.0 (Enhanced UX)
+     * Luxembourg Payroll Estimator
+     * Version: 3.5.0
      * Description: Calculates Luxembourg payroll including taxes, social security, and benefits.
      * This version includes major UX enhancements: Quick Start templates, live preview,
      * progress indicators, enhanced tooltips, data persistence, and mobile optimizations.
@@ -1807,74 +1877,28 @@
     'use strict';
 
     // ============================================
-    // CONFIGURATION & CONSTANTS
+    // RÈGLES (paramètres légaux) ET MOTEUR DE CALCUL
     // ============================================
-    const SSM_MONTHLY_UNQUALIFIED = 2703.74; // Social Minimum Wage (Unqualified) - Example for 2025
+    // Toutes les valeurs fiscales et sociales viennent de params/*.json (chargés par params/params.js)
+    // et tout le calcul est fait par calc.js : ce script ne contient que l'interface.
+    const APP_VERSION = '3.5.0';
+    const RULE_SETS = window.LUX_PARAMS || {};
+    const RULE_IDS = Object.keys(RULE_SETS).sort();
+    const STORAGE_KEY = 'luxPayrollCalculatorState.v2';
 
-    // Configuration object for various rates and parameters.
-    // Object.freeze prevents modification of the CONFIG object after initialization.
-    const CONFIG = Object.freeze({
-      EMPLOYER_RATES: { 
-        healthInsurance: 0.0305, 
-        pensionInsurance: 0.08,  
-        occupationalHealth: 0.0014, 
-        accident: 0.0070, 
-        mutualityBase: 0.0072 
-      },
-      SOCIAL_SECURITY_PARAMETERS: {
-        ssmMonthlyUnqualified: SSM_MONTHLY_UNQUALIFIED,
-        monthlyIncomeCeiling: SSM_MONTHLY_UNQUALIFIED * 5, 
-        dependencyBaseReduction: SSM_MONTHLY_UNQUALIFIED / 4, 
-        dependencyRate: 0.014 
-      },
-      PROFESSIONAL_EXPENSES_MIN_ANNUAL: 540,
-      FAMILY_BENEFITS: {
-        childAllowanceMonthly: 299.86,
-        childTaxCreditAnnual: 922.56
-      },
-      TRANSPORT_DEDUCTION_MAX_ANNUAL: 4620,
-      CHARITABLE_DONATION: {
-        minAnnual: 120,
-        maxPercentIncome: 0.20,
-        maxAbsoluteAnnual: 1000000
-      },
-      DEDUCTION_LIMITS: {
-        childcarePerChild: 11400,
-        privatePension: 3200,
-        insurancePremiums: 672,
-        medicalExpensesThreshold: 0.025 
-      },
-      // Tax brackets for income tax calculation (example values).
-      TAX_BRACKETS: [ 
-        { limit: 13230, rate: 0.00 }, { limit: 15435, rate: 0.08 }, { limit: 17640, rate: 0.09 },
-        { limit: 19845, rate: 0.10 }, { limit: 22050, rate: 0.11 }, { limit: 24255, rate: 0.12 },
-        { limit: 26550, rate: 0.14 }, { limit: 28845, rate: 0.16 }, { limit: 31140, rate: 0.18 },
-        { limit: 33435, rate: 0.20 }, { limit: 35730, rate: 0.22 }, { limit: 38025, rate: 0.24 },
-        { limit: 40320, rate: 0.26 }, { limit: 42615, rate: 0.28 }, { limit: 44910, rate: 0.30 },
-        { limit: 47205, rate: 0.32 }, { limit: 49500, rate: 0.34 }, { limit: 51795, rate: 0.36 },
-        { limit: 54090, rate: 0.38 }, { limit: 117450, rate: 0.39 }, { limit: 176160, rate: 0.40 },
-        { limit: 234870, rate: 0.41 }, { limit: Infinity, rate: 0.42 }
-      ],
-      // Tax credit parameters.
-      TAX_CREDITS: {
-        CIS: { // Employee Tax Credit
-          minAnnualGross: 936, maxAnnualGross: 79999.99, threshold1: 11265,
-          threshold2: 40000, amountTier1: 300, amountTier2: 600,
-          rate1: 0.029, rate2: 0.015
-        },
-        CICO2: { // CO2 Tax Credit
-          minAnnualGross: 936, maxAnnualGross: 79999.99, threshold: 40000,
-          amountFull: 192, reductionRate: 0.0048
-        },
-        CISSM: { // Minimum Social Wage Tax Credit
-            minMonthlyGross: 1800, threshold1Monthly: 3000, threshold2Monthly: 3600,
-            amountFullMonthly: 81,
-        }
-      }
-    });
+    /** Jeu de paramètres actif. */
+    function currentRules() {
+      return RULE_SETS[appState.rulesId] || RULE_SETS[RULE_IDS[RULE_IDS.length - 1]];
+    }
+    /** Valeur d'un paramètre du jeu actif. */
+    function ruleValue(id) {
+      const p = currentRules().parametres[id];
+      return p ? p.valeur : undefined;
+    }
 
     // Application state object.
     const appState = {
+      rulesId: null, // fixé au chargement (jeu de règles le plus récent par défaut)
       currentInputMode: 'gross', // 'gross' or 'total'
       isCalculating: false,
       currentCalculationData: null,
@@ -1886,7 +1910,8 @@
     // DOM Element References (cached for performance)
     const DOMElements = {
         payrollForm: null, salaryInput: null, salaryLabel: null, taxClass: null, mutualityClass: null,
-        numChildren: null, childcareExpenses: null, professionalExpenses: null, transportDeduction: null,
+        numChildren: null, childcareExpenses: null, professionalExpenses: null, commuteUnits: null,
+        accidentFactor: null, rulesSelect: null,
         pensionContributions: null, mortgageInterest: null, insurancePremiums: null, medicalExpenses: null,
         charitableDonations: null, grossBtn: null, totalBtn: null, conversionDisplay: null,
         conversionLabel: null, conversionValue: null, calculateBtn: null, clearBtn: null, printBtn: null,
@@ -1904,37 +1929,37 @@
         junior: {
             salary: 3500,
             taxClass: '1',
-            mutualityClass: '1.0',
+            mutualityClass: '2',
             numChildren: 0,
             professionalExpenses: 800,
-            transportDeduction: 2400
+            commuteUnits: 20
         },
         senior: {
             salary: 6500,
             taxClass: '2',
-            mutualityClass: '0.85',
+            mutualityClass: '1',
             numChildren: 1,
             professionalExpenses: 1200,
-            transportDeduction: 3600,
+            commuteUnits: 30,
             childcareExpenses: 8000
         },
         manager: {
             salary: 8200,
             taxClass: '2',
-            mutualityClass: '0.85',
+            mutualityClass: '1',
             numChildren: 2,
             professionalExpenses: 1500,
-            transportDeduction: 4620,
+            commuteUnits: 30,
             childcareExpenses: 15000,
             pensionContributions: 2500
         },
         executive: {
             salary: 12000,
             taxClass: '2',
-            mutualityClass: '0.85',
+            mutualityClass: '1',
             numChildren: 2,
             professionalExpenses: 2000,
-            transportDeduction: 4620,
+            commuteUnits: 30,
             pensionContributions: 3200,
             insurancePremiums: 672,
             mortgageInterest: 15000
@@ -2019,7 +2044,7 @@
         const requiredFields = [DOMElements.salaryInput, DOMElements.taxClass, DOMElements.mutualityClass];
         const optionalFields = [
             DOMElements.numChildren, DOMElements.childcareExpenses, DOMElements.professionalExpenses,
-            DOMElements.transportDeduction, DOMElements.pensionContributions, DOMElements.mortgageInterest,
+            DOMElements.commuteUnits, DOMElements.pensionContributions, DOMElements.mortgageInterest,
             DOMElements.insurancePremiums, DOMElements.medicalExpenses, DOMElements.charitableDonations
         ];
         
@@ -2070,7 +2095,7 @@
                     numChildren: DOMElements.numChildren,
                     childcareExpenses: DOMElements.childcareExpenses,
                     professionalExpenses: DOMElements.professionalExpenses,
-                    transportDeduction: DOMElements.transportDeduction,
+                    commuteUnits: DOMElements.commuteUnits,
                     pensionContributions: DOMElements.pensionContributions,
                     mortgageInterest: DOMElements.mortgageInterest,
                     insurancePremiums: DOMElements.insurancePremiums
@@ -2097,14 +2122,16 @@
     function saveFormState() {
         try {
             const formState = {
+                rulesId: appState.rulesId,
                 inputMode: appState.currentInputMode,
+                accidentFactor: DOMElements.accidentFactor?.value || '',
                 salary: DOMElements.salaryInput?.value || '',
                 taxClass: DOMElements.taxClass?.value || '',
                 mutualityClass: DOMElements.mutualityClass?.value || '',
                 numChildren: DOMElements.numChildren?.value || '',
                 childcareExpenses: DOMElements.childcareExpenses?.value || '',
                 professionalExpenses: DOMElements.professionalExpenses?.value || '',
-                transportDeduction: DOMElements.transportDeduction?.value || '',
+                commuteUnits: DOMElements.commuteUnits?.value || '',
                 pensionContributions: DOMElements.pensionContributions?.value || '',
                 mortgageInterest: DOMElements.mortgageInterest?.value || '',
                 insurancePremiums: DOMElements.insurancePremiums?.value || '',
@@ -2112,7 +2139,7 @@
                 charitableDonations: DOMElements.charitableDonations?.value || '',
                 timestamp: Date.now()
             };
-            localStorage.setItem('luxPayrollCalculatorState', JSON.stringify(formState));
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(formState));
         } catch (error) {
             console.warn('Could not save form state:', error);
         }
@@ -2123,14 +2150,14 @@
      */
     function loadFormState() {
         try {
-            const saved = localStorage.getItem('luxPayrollCalculatorState');
+            const saved = localStorage.getItem(STORAGE_KEY);
             if (!saved) return false;
             
             const formState = JSON.parse(saved);
             const maxAge = 7 * 24 * 60 * 60 * 1000; // 7 days
             
             if (Date.now() - formState.timestamp > maxAge) {
-                localStorage.removeItem('luxPayrollCalculatorState');
+                localStorage.removeItem(STORAGE_KEY);
                 return false;
             }
             
@@ -2141,7 +2168,9 @@
             if (DOMElements.numChildren) DOMElements.numChildren.value = formState.numChildren || '';
             if (DOMElements.childcareExpenses) DOMElements.childcareExpenses.value = formState.childcareExpenses || '';
             if (DOMElements.professionalExpenses) DOMElements.professionalExpenses.value = formState.professionalExpenses || '';
-            if (DOMElements.transportDeduction) DOMElements.transportDeduction.value = formState.transportDeduction || '';
+            if (DOMElements.commuteUnits) DOMElements.commuteUnits.value = formState.commuteUnits || '';
+            if (DOMElements.accidentFactor && formState.accidentFactor) DOMElements.accidentFactor.value = formState.accidentFactor;
+            if (formState.rulesId && RULE_SETS[formState.rulesId]) setRules(formState.rulesId);
             if (DOMElements.pensionContributions) DOMElements.pensionContributions.value = formState.pensionContributions || '';
             if (DOMElements.mortgageInterest) DOMElements.mortgageInterest.value = formState.mortgageInterest || '';
             if (DOMElements.insurancePremiums) DOMElements.insurancePremiums.value = formState.insurancePremiums || '';
@@ -2168,41 +2197,21 @@
      * Updates the live preview with estimated values.
      */
     function updateLivePreview() {
-        const salary = parseFloat(DOMElements.salaryInput?.value) || 0;
-        const taxClass = DOMElements.taxClass?.value || '';
-        const mutualityClass = parseFloat(DOMElements.mutualityClass?.value) || 1.0;
-        
-        if (salary > 0 && taxClass) {
-            // Quick estimation (simplified calculation for preview)
-            const grossAnnual = salary * 12;
-            const employeeSocialSecurity = salary * (0.0305 + 0.08 + 0.014); // Health + Pension + Dependency
-            const employerSocialSecurity = salary * (0.0305 + 0.08 + 0.007 + 0.0014 + (0.0072 * mutualityClass));
-            
-            // Simple tax estimation based on class
-            const taxMultiplier = taxClass === '1' ? 1.0 : taxClass === '1a' ? 0.9 : 0.65;
-            const estimatedTaxRate = Math.min(grossAnnual * 0.15 * taxMultiplier / grossAnnual, 0.42); // Rough estimate
-            const estimatedTax = grossAnnual * estimatedTaxRate;
-            
-            const netSalary = salary - employeeSocialSecurity - (estimatedTax / 12);
-            const employerCost = salary + employerSocialSecurity;
-            
-            if (DOMElements.previewNet) DOMElements.previewNet.textContent = `€${netSalary.toFixed(0)}`;
-            if (DOMElements.previewTaxRate) DOMElements.previewTaxRate.textContent = `${(estimatedTaxRate * 100).toFixed(1)}%`;
-            if (DOMElements.previewEmployerCost) DOMElements.previewEmployerCost.textContent = `€${employerCost.toFixed(0)}`;
-            if (DOMElements.previewTakeHome) DOMElements.previewTakeHome.textContent = `€${netSalary.toFixed(0)}`;
-            
-            // Show preview with animation
+        const data = DOMElements.taxClass?.value ? computeFromForm() : null;
+        if (data && data.brutMensuel > 0) {
+            if (DOMElements.previewNet) DOMElements.previewNet.textContent = formatCurrency(data.netMensuel);
+            if (DOMElements.previewTaxRate) DOMElements.previewTaxRate.textContent =
+                formatPercentage(data.brutAnnuel > 0 ? data.impotNetAnnuel / data.brutAnnuel * 100 : 0);
+            if (DOMElements.previewEmployerCost) DOMElements.previewEmployerCost.textContent = formatCurrency(data.coutEmployeurMensuel);
+            if (DOMElements.previewTakeHome) DOMElements.previewTakeHome.textContent = formatCurrency(data.netAnnuel);
             if (DOMElements.livePreview && !DOMElements.livePreview.classList.contains('show')) {
                 DOMElements.livePreview.classList.add('show');
             }
-        } else {
-            // Hide preview if insufficient data
-            if (DOMElements.livePreview) {
-                DOMElements.livePreview.classList.remove('show');
-            }
+        } else if (DOMElements.livePreview) {
+            DOMElements.livePreview.classList.remove('show');
         }
     }
-    
+
     /**
      * Shows or hides the loading indicator.
      * @param {boolean} [show=true] - True to show, false to hide.
@@ -2330,10 +2339,10 @@
           return; 
       }
       
-      const mutualityClass = parseFloat(sanitizeInput(els.mutualityClassSelect.value, 'select')) || 1.0;
-      let convertedValue = appState.currentInputMode === 'gross' 
-                            ? calculateTotalEmployerCost(inputValue, mutualityClass) 
-                            : calculateGrossFromTotal(inputValue, mutualityClass);
+      const opts = employerOptions();
+      let convertedValue = appState.currentInputMode === 'gross'
+                            ? calculateTotalEmployerCost(inputValue, opts)
+                            : calculateGrossFromTotal(inputValue, opts);
                             
       els.conversionValue.textContent = formatCurrency(convertedValue);
       els.conversionDisplay.classList.remove('d-none');
@@ -2450,7 +2459,7 @@
         const hasChildcareExpenses = !isNaN(childcareExpenses) && childcareExpenses > 0;
 
         if (taxClass === '1' && (hasChildren || hasChildcareExpenses)) {
-            taxClassWarningDiv.innerHTML = `<i class="fas fa-exclamation-triangle" aria-hidden="true"></i> Note: Tax Class 1a is typically more beneficial for single taxpayers with children or significant childcare expenses. Please verify your selection.`;
+            taxClassWarningDiv.innerHTML = `<svg class="fas" aria-hidden="true" focusable="false"><use href="#i-triangle-exclamation"></use></svg> Note: Tax Class 1a is typically more beneficial for single taxpayers with children or significant childcare expenses. Please verify your selection.`;
             taxClassWarningDiv.classList.remove('d-none');
         } else {
             taxClassWarningDiv.innerHTML = '';
@@ -2519,249 +2528,71 @@
     }
 
     // ============================================
-    // CALCULATION LOGIC
+    // CALCULATION LOGIC (délégué à calc.js)
     // ============================================
 
-    /**
-     * Applies monthly ceiling to salary before calculating contribution.
-     * @param {number} grossMonthlySalary - Gross monthly salary.
-     * @param {number} monthlyIncomeCeiling - The ceiling amount.
-     * @param {number} rate - The contribution rate.
-     * @returns {number} - Calculated contribution.
-     */
-    function applyMonthlyCeilingAndCalculate(grossMonthlySalary, monthlyIncomeCeiling, rate) {
-        const cappedSalary = Math.min(grossMonthlySalary, monthlyIncomeCeiling);
-        return cappedSalary * rate;
-    }
-
-    /**
-     * Calculates total employer cost from gross salary.
-     * @param {number} grossSalary - Monthly gross salary.
-     * @param {number} mutualityClass - Mutuality class factor.
-     * @returns {number} - Total monthly employer cost.
-     */
-    function calculateTotalEmployerCost(grossSalary, mutualityClass) {
-      const contributions = calculateEmployerContributions(grossSalary, mutualityClass);
-      return grossSalary + Object.values(contributions).reduce((sum, value) => sum + value, 0);
-    }
-
-    /**
-     * Calculates gross salary from total employer cost.
-     * @param {number} totalCost - Total monthly employer cost.
-     * @param {number} mutualityClass - Mutuality class factor.
-     * @returns {number} - Monthly gross salary.
-     */
-    function calculateGrossFromTotal(totalCost, mutualityClass) {
-      let totalRate = CONFIG.EMPLOYER_RATES.healthInsurance + CONFIG.EMPLOYER_RATES.pensionInsurance +
-                      CONFIG.EMPLOYER_RATES.occupationalHealth + CONFIG.EMPLOYER_RATES.accident +
-                      (CONFIG.EMPLOYER_RATES.mutualityBase * mutualityClass);
-      return totalCost / (1 + totalRate);
-    }
-
-    /**
-     * Calculates employer's social security contributions.
-     * @param {number} grossSalary - Monthly gross salary.
-     * @param {number} mutualityFactor - Mutuality class factor.
-     * @returns {object} - Object with individual employer contributions.
-     */
-    function calculateEmployerContributions(grossSalary, mutualityFactor) {
-      const ceil = CONFIG.SOCIAL_SECURITY_PARAMETERS.monthlyIncomeCeiling;
+    /** Options employeur saisies : classe de mutualité (1-4) et facteur bonus-malus accident. */
+    function employerOptions() {
       return {
-        health: applyMonthlyCeilingAndCalculate(grossSalary, ceil, CONFIG.EMPLOYER_RATES.healthInsurance),
-        pension: applyMonthlyCeilingAndCalculate(grossSalary, ceil, CONFIG.EMPLOYER_RATES.pensionInsurance),
-        occupationalHealth: applyMonthlyCeilingAndCalculate(grossSalary, ceil, CONFIG.EMPLOYER_RATES.occupationalHealth),
-        accident: applyMonthlyCeilingAndCalculate(grossSalary, ceil, CONFIG.EMPLOYER_RATES.accident),
-        employersMutuality: applyMonthlyCeilingAndCalculate(grossSalary, ceil, CONFIG.EMPLOYER_RATES.mutualityBase * mutualityFactor)
+        classeMutualite: parseInt(DOMElements.mutualityClass?.value, 10) || 1,
+        facteurAccident: parseFloat(DOMElements.accidentFactor?.value) || 1
       };
     }
 
-    /**
-     * Calculates employee's social security contributions.
-     * @param {number} grossSalary - Monthly gross salary.
-     * @returns {object} - Object with individual employee contributions.
-     */
-    function calculateEmployeeContributions(grossSalary) {
-      const ceil = CONFIG.SOCIAL_SECURITY_PARAMETERS.monthlyIncomeCeiling;
-      // Dependency insurance base: gross salary minus 1/4 of SSM, cannot be negative.
-      const dependencyBase = Math.max(0, grossSalary - CONFIG.SOCIAL_SECURITY_PARAMETERS.dependencyBaseReduction);
-      return {
-        health: applyMonthlyCeilingAndCalculate(grossSalary, ceil, CONFIG.EMPLOYER_RATES.healthInsurance), 
-        pension: applyMonthlyCeilingAndCalculate(grossSalary, ceil, CONFIG.EMPLOYER_RATES.pensionInsurance), 
-        dependency: dependencyBase * CONFIG.SOCIAL_SECURITY_PARAMETERS.dependencyRate
-      };
+    function calculateTotalEmployerCost(grossSalary, opts) {
+      return grossSalary + LuxPayroll.cotisationsEmployeur(grossSalary, opts, currentRules()).total;
     }
 
-    /**
-     * Calculates income tax and solidarity surcharge.
-     * @param {number} annualTaxableIncome - Annual taxable income.
-     * @param {string} taxClass - Tax class ('1', '1a', '2').
-     * @returns {object} - Object with incomeTax, solidaritySurcharge, and totalTax.
-     */
-    function calculateIncomeTax(annualTaxableIncome, taxClass) {
-      let tax = 0; 
-      let previousLimit = 0;
-      const income = Math.max(0, annualTaxableIncome); // Ensure income is not negative.
-
-      for (const bracket of CONFIG.TAX_BRACKETS) {
-        if (income <= previousLimit) break;
-        tax += (Math.min(income, bracket.limit) - previousLimit) * bracket.rate;
-        previousLimit = bracket.limit;
-      }
-      
-      // Apply tax class coefficient.
-      const taxClassMultiplier = { '1': 1.0, '1a': 0.9, '2': 0.65 }[taxClass] || 1.0;
-      tax *= taxClassMultiplier;
-
-      // Calculate solidarity surcharge (7% or 9% based on income and tax class).
-      let solidarityRate = 0.07;
-      if (((taxClass === '1' || taxClass === '1a') && income > 150000) || (taxClass === '2' && income > 300000)) {
-        solidarityRate = 0.09;
-      }
-      const surcharge = tax * solidarityRate;
-      
-      return { incomeTax: tax, solidaritySurcharge: surcharge, totalTax: tax + surcharge };
+    function calculateGrossFromTotal(totalCost, opts) {
+      return LuxPayroll.brutDepuisCoutEmployeur(totalCost, opts, currentRules());
     }
 
-    /** Calculates Employee Tax Credit (CIS). */
-    function calculateCIS(annualGrossSalary) {
-        const CIS_CONFIG = CONFIG.TAX_CREDITS.CIS;
-        if (annualGrossSalary < CIS_CONFIG.minAnnualGross || annualGrossSalary > CIS_CONFIG.maxAnnualGross) return 0;
-        if (annualGrossSalary <= CIS_CONFIG.threshold1) { 
-            return Math.min(CIS_CONFIG.amountTier2, CIS_CONFIG.amountTier1 + (annualGrossSalary - CIS_CONFIG.minAnnualGross) * CIS_CONFIG.rate1);
-        } else if (annualGrossSalary <= CIS_CONFIG.threshold2) { 
-            return CIS_CONFIG.amountTier2;
-        } else { 
-            return Math.max(0, CIS_CONFIG.amountTier2 - (annualGrossSalary - CIS_CONFIG.threshold2) * CIS_CONFIG.rate2);
-        }
-    }
-
-    /** Calculates CO2 Tax Credit (CI-CO2). */
-    function calculateCICO2(annualGrossSalary) {
-        const CICO2_CONFIG = CONFIG.TAX_CREDITS.CICO2;
-        if (annualGrossSalary < CICO2_CONFIG.minAnnualGross || annualGrossSalary > CICO2_CONFIG.maxAnnualGross) return 0;
-        if (annualGrossSalary <= CICO2_CONFIG.threshold) { 
-            return CICO2_CONFIG.amountFull;
-        } else { 
-            return Math.max(0, CICO2_CONFIG.amountFull - (annualGrossSalary - CICO2_CONFIG.threshold) * CICO2_CONFIG.reductionRate);
-        }
-    }
-
-    /** Calculates Minimum Social Wage Tax Credit (CISSM). */
-    function calculateCISSM(monthlyGrossSalary) {
-        const CISSM_CONFIG = CONFIG.TAX_CREDITS.CISSM;
-        if (monthlyGrossSalary < CISSM_CONFIG.minMonthlyGross) return 0;
-        if (monthlyGrossSalary <= CISSM_CONFIG.threshold1Monthly) { 
-            return CISSM_CONFIG.amountFullMonthly;
-        } else if (monthlyGrossSalary <= CISSM_CONFIG.threshold2Monthly) { 
-            return Math.max(0, CISSM_CONFIG.amountFullMonthly * (1 - (monthlyGrossSalary - CISSM_CONFIG.threshold1Monthly) / (CISSM_CONFIG.threshold2Monthly - CISSM_CONFIG.threshold1Monthly)));
-        }
-        return 0; 
+    /** Lit le formulaire et renvoie le résultat de LuxPayroll.calculer (ou null si le salaire est vide). */
+    function computeFromForm() {
+      const num = (el) => sanitizeInput(el?.value, 'number');
+      const salary = num(DOMElements.salaryInput);
+      if (!(salary > 0)) return null;
+      const opts = employerOptions();
+      const gross = appState.currentInputMode === 'gross' ? salary : calculateGrossFromTotal(salary, opts);
+      return LuxPayroll.calculer({
+        brutMensuel: gross,
+        classe: DOMElements.taxClass?.value || '1',
+        enfants: sanitizeInput(DOMElements.numChildren?.value, 'integer'),
+        classeMutualite: opts.classeMutualite,
+        facteurAccident: opts.facteurAccident,
+        fraisObtention: num(DOMElements.professionalExpenses),
+        unitesEloignement: sanitizeInput(DOMElements.commuteUnits?.value, 'integer'),
+        fraisGarde: num(DOMElements.childcareExpenses),
+        prevoyanceVieillesse: num(DOMElements.pensionContributions),
+        interetsLogement: num(DOMElements.mortgageInterest),
+        primesAssurance: num(DOMElements.insurancePremiums),
+        fraisMedicaux: num(DOMElements.medicalExpenses),
+        dons: num(DOMElements.charitableDonations)
+      }, currentRules());
     }
 
     /** Performs the main payroll calculation. */
     function performCalculation() {
-      if (appState.isCalculating) return; 
-      
+      if (appState.isCalculating) return;
+
       if (!validateFormInputs()) {
           showGeneralError('Please correct the highlighted errors before calculating.');
-          // Ensure loading state is reset if validation fails early
-          if (DOMElements.calculateBtn?.classList.contains('loading')) {
-              showLoading(false);
-          }
+          if (DOMElements.calculateBtn?.classList.contains('loading')) showLoading(false);
           return;
       }
-      
-      showLoading(true); 
-      appState.salaryExceedsCeiling = false; // Reset flag
-      
+
+      showLoading(true);
       try {
-        // Get and sanitize inputs
-        const salaryInputValue = parseFloat(DOMElements.salaryInput?.value); 
-        const taxClassValue = DOMElements.taxClass?.value; 
-        const mutualityClassValue = parseFloat(DOMElements.mutualityClass?.value);
-        
-        const numChildrenRaw = DOMElements.numChildren?.value;
-        const numChildrenValue = (numChildrenRaw && numChildrenRaw.trim() !== '') ? parseInt(numChildrenRaw, 10) : 0;
-
-        const childcareExpensesRaw = DOMElements.childcareExpenses?.value;
-        const childcareExpensesValue = (childcareExpensesRaw && childcareExpensesRaw.trim() !== '') ? parseFloat(childcareExpensesRaw) : 0;
-
-        // Determine gross salary based on input mode
-        let grossMonthlySalary = (appState.currentInputMode === 'gross') 
-                                ? salaryInputValue 
-                                : calculateGrossFromTotal(salaryInputValue, mutualityClassValue); 
-        
-        if (grossMonthlySalary > CONFIG.SOCIAL_SECURITY_PARAMETERS.monthlyIncomeCeiling) {
-            appState.salaryExceedsCeiling = true;
-        }
-        
-        const annualGrossSalary = grossMonthlySalary * 12;
-        const employerContributions = calculateEmployerContributions(grossMonthlySalary, mutualityClassValue);
-        const employeeContributions = calculateEmployeeContributions(grossMonthlySalary);
-        const totalMonthlyEmployeeSSC = Object.values(employeeContributions).reduce((s, v) => s + v, 0);
-        const annualEmployeeSSC = totalMonthlyEmployeeSSC * 12;
-
-        // Calculate annual deductions
-        const professionalExpenses = Math.max(CONFIG.PROFESSIONAL_EXPENSES_MIN_ANNUAL, sanitizeInput(DOMElements.professionalExpenses?.value,'number'));
-        const transportDeduction = Math.min(sanitizeInput(DOMElements.transportDeduction?.value,'number'), CONFIG.TRANSPORT_DEDUCTION_MAX_ANNUAL);
-        const childcareDeduction = Math.min(childcareExpensesValue, numChildrenValue * CONFIG.DEDUCTION_LIMITS.childcarePerChild);
-        const pensionContributionsDed = Math.min(sanitizeInput(DOMElements.pensionContributions?.value,'number'), CONFIG.DEDUCTION_LIMITS.privatePension);
-        const mortgageInterestDed = sanitizeInput(DOMElements.mortgageInterest?.value,'number');
-        const insurancePremiumsDed = Math.min(sanitizeInput(DOMElements.insurancePremiums?.value,'number'), CONFIG.DEDUCTION_LIMITS.insurancePremiums);
-        const medicalExpensesThreshold = annualGrossSalary * CONFIG.DEDUCTION_LIMITS.medicalExpensesThreshold;
-        const medicalExpensesDed = Math.max(0, sanitizeInput(DOMElements.medicalExpenses?.value,'number') - medicalExpensesThreshold);
-        const charitableDonationsValue = sanitizeInput(DOMElements.charitableDonations?.value,'number');
-        const charitableDonationsMaxIncome = annualGrossSalary * CONFIG.CHARITABLE_DONATION.maxPercentIncome;
-        const charitableDonationsDed = charitableDonationsValue < CONFIG.CHARITABLE_DONATION.minAnnual 
-                                        ? 0 
-                                        : Math.min(charitableDonationsValue, charitableDonationsMaxIncome, CONFIG.CHARITABLE_DONATION.maxAbsoluteAnnual);
-        
-        const totalAnnualDeductions = professionalExpenses + transportDeduction + childcareDeduction + pensionContributionsDed + 
-                                    mortgageInterestDed + insurancePremiumsDed + medicalExpensesDed + charitableDonationsDed;
-        
-        const annualTaxableIncome = Math.max(0, annualGrossSalary - annualEmployeeSSC - totalAnnualDeductions);
-        const taxCalculationResult = calculateIncomeTax(annualTaxableIncome, taxClassValue);
-        
-        // Calculate tax credits
-        const annualCISCredit = calculateCIS(annualGrossSalary);
-        const annualCICO2Credit = calculateCICO2(annualGrossSalary);
-        const monthlyCISSMCredit = calculateCISSM(grossMonthlySalary); 
-        const annualCISSMCredit = monthlyCISSMCredit * 12; 
-        const annualChildTaxCreditValue = numChildrenValue * CONFIG.FAMILY_BENEFITS.childTaxCreditAnnual;
-        
-        const totalAnnualTaxCredits = annualChildTaxCreditValue + annualCISCredit + annualCICO2Credit + annualCISSMCredit;
-        const effectiveAnnualTax = Math.max(0, taxCalculationResult.totalTax - totalAnnualTaxCredits);
-        
-        const monthlyTax = effectiveAnnualTax / 12;
-        const netMonthlySalary = grossMonthlySalary - totalMonthlyEmployeeSSC - monthlyTax;
-        const annualChildAllowanceValue = numChildrenValue * CONFIG.FAMILY_BENEFITS.childAllowanceMonthly * 12;
-        const totalEmployerMonthlyContributions = Object.values(employerContributions).reduce((s, v) => s + v, 0);
-        const totalMonthlyEmployerCost = grossMonthlySalary + totalEmployerMonthlyContributions;
-
-        // Store results in appState
-        appState.currentCalculationData = {
-          grossSalary: grossMonthlySalary, netSalary: netMonthlySalary, totalEmployerCost: totalMonthlyEmployerCost, 
-          employerContributions: employerContributions, employeeContributions: employeeContributions, 
-          totalMonthlyEmployeeSSC: totalMonthlyEmployeeSSC, totalEmployerMonthlyContributions: totalEmployerMonthlyContributions,
-          taxCalculation: taxCalculationResult, 
-          taxCredits: { 
-              annualCIS: annualCISCredit, annualCICO2: annualCICO2Credit, annualCISSM: annualCISSMCredit, 
-              annualChildTaxCredit: annualChildTaxCreditValue, monthlyCISSM: monthlyCISSMCredit 
-          }, 
-          effectiveAnnualTax: effectiveAnnualTax, monthlyTaxes: monthlyTax, 
-          deductions: { totalAnnualDeductions: totalAnnualDeductions },
-          familyBenefits: { childAllowance: annualChildAllowanceValue, childTaxCredit: annualChildTaxCreditValue }, 
-          numChildren: numChildrenValue, taxClass: taxClassValue 
-        };
-
-        displayResults(appState.currentCalculationData);
+        const data = computeFromForm();
+        appState.salaryExceedsCeiling = data.depassePlafond;
+        appState.currentCalculationData = data;
+        displayResults(data);
         showNotification('Calculation complete!', 'success');
-
-      } catch (error) { 
-          console.error('Calculation error:', error); 
+      } catch (error) {
+          console.error('Calculation error:', error);
           showGeneralError('An unexpected error occurred during calculation. Please check your inputs or try again later.');
-      } finally { 
-          showLoading(false); 
+      } finally {
+          showLoading(false);
       }
     }
 
@@ -2774,42 +2605,40 @@
      * @param {object} results - The calculation results data.
      */
     function displayResults(results) {
-      // Update monthly summary
-      updateElementText('monthlyGrossSalary', formatCurrency(results.grossSalary));
-      updateElementText('monthlyNetSalary', formatCurrency(results.netSalary));
-      updateElementText('monthlyTotalCost', formatCurrency(results.totalEmployerCost));
-      
-      // Update employer contributions
-      updateElementText('employerHealth', formatCurrency(results.employerContributions.health));
-      updateElementText('employerPension', formatCurrency(results.employerContributions.pension));
-      updateElementText('employerAccident', formatCurrency(results.employerContributions.accident));
-      updateElementText('employerMutuality', formatCurrency(results.employerContributions.employersMutuality));
-      updateElementText('employerOccupational', formatCurrency(results.employerContributions.occupationalHealth));
-      
-      // Update employee contributions
-      updateElementText('employeeHealth', formatCurrency(results.employeeContributions.health));
-      updateElementText('employeePension', formatCurrency(results.employeeContributions.pension));
-      updateElementText('employeeDependency', formatCurrency(results.employeeContributions.dependency));
-      
-      // Update taxes
-      updateElementText('monthlyIncomeTax', formatCurrency(results.taxCalculation.incomeTax / 12)); 
-      updateElementText('monthlySolidaritySurcharge', formatCurrency(results.taxCalculation.solidaritySurcharge / 12));
-      
-      // Update monthly deductions and benefits
-      updateElementText('monthlyTotalDeductionsApplied', formatCurrency(results.deductions.totalAnnualDeductions / 12));
-      updateElementText('monthlyChildAllowance', formatCurrency(CONFIG.FAMILY_BENEFITS.childAllowanceMonthly * results.numChildren));
-      updateElementText('monthlyChildTaxCredit', formatCurrency(results.taxCredits.annualChildTaxCredit / 12));
+      const cs = results.cotisationsSalarie, ce = results.cotisationsEmployeur, cr = results.credits;
+      updateElementText('monthlyGrossSalary', formatCurrency(results.brutMensuel));
+      updateElementText('monthlyNetSalary', formatCurrency(results.netMensuel));
+      updateElementText('monthlyTotalCost', formatCurrency(results.coutEmployeurMensuel));
 
-      // Update monthly tax credits
-      updateElementText('monthlyCIS', formatCurrency(results.taxCredits.annualCIS / 12));
-      updateElementText('monthlyCICO2', formatCurrency(results.taxCredits.annualCICO2 / 12));
-      updateElementText('monthlyCISSM', formatCurrency(results.taxCredits.monthlyCISSM));
+      updateElementText('employerHealth', formatCurrency(ce.maladie));
+      updateElementText('employerPension', formatCurrency(ce.pension));
+      updateElementText('employerAccident', formatCurrency(ce.accident));
+      updateElementText('employerMutuality', formatCurrency(ce.mutualite));
+      updateElementText('employerOccupational', formatCurrency(ce.santeAuTravail));
+
+      updateElementText('employeeHealth', formatCurrency(cs.maladie));
+      updateElementText('employeePension', formatCurrency(cs.pension));
+      updateElementText('employeeDependency', formatCurrency(cs.dependance));
+
+      updateElementText('monthlyIncomeTax', formatCurrency(results.impot / 12));
+      updateElementText('monthlyCFE', formatCurrency(results.fondsPourEmploi / 12));
+
+      const r = results.revenu;
+      const deductions = r.salaires[0].fraisObtention + r.salaires[0].fraisDeplacement + r.interetsLogement + r.depensesSpeciales
+        + r.dons + r.chargesExtraordinaires + r.fraisGarde + r.abattementExtraProfessionnel;
+      updateElementText('monthlyTotalDeductionsApplied', formatCurrency(deductions / 12));
+      updateElementText('monthlyChildAllowance', results.allocationFamilialeMensuelle == null ? 'n/a' : formatCurrency(results.allocationFamilialeMensuelle));
+      updateElementText('monthlyNetTax', formatCurrency(results.impotNetMensuel));
+
+      updateElementText('monthlyCIS', formatCurrency(cr.cis / 12));
+      updateElementText('monthlyCICO2', formatCurrency(cr.cico2 / 12));
+      updateElementText('monthlyCISSM', formatCurrency(cr.cissmMensuel));
 
       // Display CIM note for Tax Class 1a (monthly)
       const cimNoteMonthlyDiv = DOMElements.cimNoteMonthly;
       if(cimNoteMonthlyDiv) {
-          if (results.taxClass === '1a') {
-              cimNoteMonthlyDiv.innerHTML = `<p><i class="fas fa-info-circle" aria-hidden="true"></i> <strong>Single Parent Tax Credit (CIM):</strong> You may be eligible for CIM. Please consult official sources for precise calculation.</p>`;
+          if (results.classe === '1a') {
+              cimNoteMonthlyDiv.innerHTML = `<p><svg class="fas" aria-hidden="true" focusable="false"><use href="#i-circle-info"></use></svg> <strong>Single Parent Tax Credit (CIM):</strong> You may be eligible for CIM. Please consult official sources for precise calculation.</p>`;
               cimNoteMonthlyDiv.classList.remove('d-none');
           } else {
               cimNoteMonthlyDiv.classList.add('d-none');
@@ -2821,12 +2650,12 @@
       const ceilingNoteDiv = DOMElements.ceilingNote;
       if (ceilingNoteDiv) {
           if (appState.salaryExceedsCeiling) {
-              const ceilingAmountFormatted = formatCurrency(CONFIG.SOCIAL_SECURITY_PARAMETERS.monthlyIncomeCeiling);
-              const ssmReductionFormatted = formatCurrency(CONFIG.SOCIAL_SECURITY_PARAMETERS.dependencyBaseReduction);
+              const ceilingAmountFormatted = formatCurrency(ruleValue('secu.maximum_cotisable'));
+              const ssmReductionFormatted = formatCurrency(ruleValue('secu.abattement_dependance'));
               ceilingNoteDiv.innerHTML = `
-                  <p><i class="fas fa-info-circle" aria-hidden="true"></i> <strong>Note on Social Security Ceilings:</strong></p>
+                  <p><svg class="fas" aria-hidden="true" focusable="false"><use href="#i-circle-info"></use></svg> <strong>Note on Social Security Ceilings:</strong></p>
                   <p>Your gross salary exceeds the monthly social security income ceiling of ${ceilingAmountFormatted}.</p>
-                  <p>Therefore, contributions for Health, Pension, Accident, and Employer's Mutuality are calculated based on this ceiling amount.</p>
+                  <p>Therefore, all contributions except dependency insurance are calculated on this ceiling amount.</p>
                   <p>Dependency Insurance is calculated on the gross salary minus a reduction of ${ssmReductionFormatted} and has no upper ceiling.</p>
               `;
               ceilingNoteDiv.classList.remove('d-none');
@@ -2891,6 +2720,41 @@
     // EVENT LISTENERS & INITIALIZATION
     // ============================================
 
+    /** Active un jeu de règles et met à jour les textes et listes qui en dépendent. */
+    function setRules(id) {
+      if (!RULE_SETS[id]) return;
+      appState.rulesId = id;
+      if (DOMElements.rulesSelect) DOMElements.rulesSelect.value = id;
+      const meta = currentRules().meta;
+      document.querySelectorAll('[data-rules-label]').forEach((el) => { el.textContent = meta.libelle; });
+      const pension = ruleValue('deductions.prevoyance_vieillesse_plafond');
+      document.querySelectorAll('[data-param-text="pension"]').forEach((el) => { el.textContent = formatCurrency(pension); });
+
+      const emp = ruleValue('secu.employeur');
+      const mutSel = DOMElements.mutualityClass;
+      if (mutSel) {
+        const previous = mutSel.value;
+        const limits = ['< 0.65 %', '< 1.60 %', '< 2.50 %', '≥ 2.50 %'];
+        mutSel.innerHTML = '<option value="">Select Mutuality Class</option>' + emp.mutualite_classes.map((t, i) =>
+          `<option value="${i + 1}">Class ${i + 1}: ${(t * 100).toFixed(2)} % (absenteeism ${limits[i] || ''})</option>`).join('');
+        mutSel.value = previous || '2';
+      }
+      const accSel = DOMElements.accidentFactor;
+      if (accSel) {
+        const previous = accSel.value;
+        accSel.innerHTML = emp.accident_facteurs_bonus_malus.map((f) =>
+          `<option value="${f}">${f.toFixed(2)} → ${(emp.accident_taux_base * f * 100).toFixed(4)} %</option>`).join('');
+        accSel.value = previous || '1';
+        if (!accSel.value) accSel.value = '1';
+      }
+    }
+
+    function populateRulesSelect() {
+      const sel = DOMElements.rulesSelect;
+      if (!sel) return;
+      sel.innerHTML = RULE_IDS.map((id) => `<option value="${id}">${RULE_SETS[id].meta.libelle}</option>`).join('');
+    }
+
     /** Initializes DOM element references. */
     function initializeDOMElements() {
         // Initialize standard elements
@@ -2902,7 +2766,9 @@
         DOMElements.numChildren = document.getElementById('numChildren');
         DOMElements.childcareExpenses = document.getElementById('childcareExpenses');
         DOMElements.professionalExpenses = document.getElementById('professionalExpenses');
-        DOMElements.transportDeduction = document.getElementById('transportDeduction');
+        DOMElements.commuteUnits = document.getElementById('commuteUnits');
+        DOMElements.accidentFactor = document.getElementById('accidentFactor');
+        DOMElements.rulesSelect = document.getElementById('rulesSelect');
         DOMElements.pensionContributions = document.getElementById('pensionContributions');
         DOMElements.mortgageInterest = document.getElementById('mortgageInterest');
         DOMElements.insurancePremiums = document.getElementById('insurancePremiums');
@@ -2959,6 +2825,14 @@
       DOMElements.totalBtn?.addEventListener('click', () => toggleInputMode('total'));
       DOMElements.salaryInput?.addEventListener('input', handleSalaryInput);
       DOMElements.mutualityClass?.addEventListener('change', handleSalaryInput);
+      DOMElements.accidentFactor?.addEventListener('change', () => { handleSalaryInput(); updateLivePreview(); saveFormState(); });
+      DOMElements.rulesSelect?.addEventListener('change', () => {
+          setRules(DOMElements.rulesSelect.value);
+          handleSalaryInput();
+          updateLivePreview();
+          saveFormState();
+          if (appState.currentCalculationData) performCalculation();
+      });
       
       // Listeners for real-time non-blocking tax class warning
       DOMElements.taxClass?.addEventListener('change', validateTaxClassAndChildrenRule);
@@ -3010,7 +2884,7 @@
       const formFields = [
           DOMElements.salaryInput, DOMElements.taxClass, DOMElements.mutualityClass,
           DOMElements.numChildren, DOMElements.childcareExpenses, DOMElements.professionalExpenses,
-          DOMElements.transportDeduction, DOMElements.pensionContributions, DOMElements.mortgageInterest,
+          DOMElements.commuteUnits, DOMElements.pensionContributions, DOMElements.mortgageInterest,
           DOMElements.insurancePremiums, DOMElements.medicalExpenses, DOMElements.charitableDonations
       ];
       
@@ -3046,10 +2920,10 @@
         
         // Optional fields that just need sanitization and min/max enforcement on blur
         { id: 'professionalExpenses', options: { min:0 } },
-        { id: 'transportDeduction', options: { min:0, max:4620 } },
-        { id: 'pensionContributions', options: { min:0, max:3200 } },
+        { id: 'commuteUnits', options: { min:0, max:99, integerOnly: true } },
+        { id: 'pensionContributions', options: { min:0 } },
         { id: 'mortgageInterest', options: { min:0 } },
-        { id: 'insurancePremiums', options: { min:0, max:672 } },
+        { id: 'insurancePremiums', options: { min:0 } },
         { id: 'medicalExpenses', options: { min:0 } },
         { id: 'charitableDonations', options: { min:0 } }
       ];
@@ -3130,7 +3004,7 @@
       
       // Clear saved form state
       try {
-        localStorage.removeItem('luxPayrollCalculatorState');
+        localStorage.removeItem(STORAGE_KEY);
       } catch (error) {
         console.warn('Could not clear saved form state:', error);
       }
@@ -3184,28 +3058,27 @@
      */
     function loadAnnualSummary(data) {
       if (!data) return;
-      const annualGross = data.grossSalary * 12;
-      const annualNet = data.netSalary * 12; 
-      const annualEmployerCost = data.totalEmployerCost * 12;
-
-      updateElementText('annualGrossSalary', formatCurrency(annualGross));
-      updateElementText('annualNetSalary', formatCurrency(annualNet));
-      updateElementText('annualNetSalaryPercent', annualGross > 0 ? formatPercentage((annualNet / annualGross) * 100) : '0.00%');
-      updateElementText('annualTotalTax', formatCurrency(data.effectiveAnnualTax)); 
-      updateElementText('annualEffectiveTaxRate', annualGross > 0 ? formatPercentage((data.effectiveAnnualTax / annualGross) * 100) : '0.00%');
-      updateElementText('annualTotalCost', formatCurrency(annualEmployerCost));
-      updateElementText('annualTotalDeductionsApplied', formatCurrency(data.deductions.totalAnnualDeductions));
-      updateElementText('annualChildAllowance', formatCurrency(data.familyBenefits.childAllowance));
-      updateElementText('annualChildTaxCredit', formatCurrency(data.taxCredits.annualChildTaxCredit)); 
-      updateElementText('annualCIS', formatCurrency(data.taxCredits.annualCIS));
-      updateElementText('annualCICO2', formatCurrency(data.taxCredits.annualCICO2));
-      updateElementText('annualCISSM', formatCurrency(data.taxCredits.annualCISSM));
+      const r = data.revenu;
+      updateElementText('annualGrossSalary', formatCurrency(data.brutAnnuel));
+      updateElementText('annualNetSalary', formatCurrency(data.netAnnuel));
+      updateElementText('annualNetSalaryPercent', data.brutAnnuel > 0 ? formatPercentage(data.netAnnuel / data.brutAnnuel * 100) : '0.00%');
+      updateElementText('annualTotalTax', formatCurrency(data.impotNetAnnuel));
+      updateElementText('annualEffectiveTaxRate', data.brutAnnuel > 0 ? formatPercentage(data.impotNetAnnuel / data.brutAnnuel * 100) : '0.00%');
+      updateElementText('annualTotalCost', formatCurrency(data.coutEmployeurMensuel * 12));
+      const deductions = r.salaires[0].fraisObtention + r.salaires[0].fraisDeplacement + r.interetsLogement + r.depensesSpeciales
+        + r.dons + r.chargesExtraordinaires + r.fraisGarde + r.abattementExtraProfessionnel;
+      updateElementText('annualTotalDeductionsApplied', formatCurrency(deductions));
+      updateElementText('annualChildAllowance', data.allocationFamilialeMensuelle == null ? 'n/a' : formatCurrency(data.allocationFamilialeMensuelle * 12));
+      updateElementText('annualTaxableIncome', formatCurrency(r.revenuImposableAjuste));
+      updateElementText('annualCIS', formatCurrency(data.credits.cis));
+      updateElementText('annualCICO2', formatCurrency(data.credits.cico2));
+      updateElementText('annualCISSM', formatCurrency(data.credits.cissmAnnuel));
 
       // Display CIM note for Tax Class 1a (annual)
       const cimNoteAnnualDiv = DOMElements.cimNoteAnnual;
        if(cimNoteAnnualDiv) {
-          if (data.taxClass === '1a') {
-              cimNoteAnnualDiv.innerHTML = `<p><i class="fas fa-info-circle" aria-hidden="true"></i> <strong>Single Parent Tax Credit (CIM):</strong> You may be eligible for CIM (up to €3,504/year, depending on income and other conditions). This calculator does not include CIM. Please consult official sources.</p>`;
+          if (data.classe === '1a') {
+              cimNoteAnnualDiv.innerHTML = `<p><svg class="fas" aria-hidden="true" focusable="false"><use href="#i-circle-info"></use></svg> <strong>Single Parent Tax Credit (CIM):</strong> You may be eligible for the single-parent tax credit (CIM). This calculator does not include it. Please consult official sources.</p>`;
               cimNoteAnnualDiv.classList.remove('d-none');
           } else {
               cimNoteAnnualDiv.classList.add('d-none');
@@ -3252,7 +3125,7 @@
         const centerX = pieAreaWidth / 2;
         const centerY = height / 2;
 
-        const totalEmployerCost = data.totalEmployerCost;
+        const totalEmployerCost = data.coutEmployeurMensuel;
         if (totalEmployerCost <= 0) { // Handle no data case
             ctx.font = '13px Inter, Arial, sans-serif'; 
             ctx.fillStyle = '#6c757d'; // Muted text color
@@ -3261,10 +3134,13 @@
             return;
         }
 
-        const totalEmployerSSC = data.totalEmployerMonthlyContributions;
-        const totalEmployeeSSC = data.totalMonthlyEmployeeSSC;
-        const taxes = data.monthlyTaxes; 
-        const netSalary = data.netSalary;
+        // Si les crédits dépassent l'impôt (solde versé au salarié), le camembert montre un impôt nul
+        // et le salaire après cotisations ; le crédit versé est indiqué dans la légende.
+        const totalEmployerSSC = data.cotisationsEmployeur.total;
+        const totalEmployeeSSC = data.cotisationsSalarie.total;
+        const taxes = Math.max(0, data.impotNetMensuel);
+        const creditPaid = Math.max(0, -data.impotNetMensuel);
+        const netSalary = data.netMensuel - creditPaid;
 
         // Define pie slices with names, values, and colors
         const pieSlices = [
@@ -3323,11 +3199,12 @@
         const legendItems = [
             { name: 'Total Employer Cost', value: totalEmployerCost, isTotal: true, color: '#333333' }, // Color for consistency if box is drawn
             { name: 'Employer Social Security', value: totalEmployerSSC, color: '#2196F3' },
-            { name: 'Gross Salary', value: data.grossSalary, isInformational: true, color: '#777777' }, 
+            { name: 'Gross Salary', value: data.brutMensuel, isInformational: true, color: '#777777' },
             { name: 'Employee Social Security', value: totalEmployeeSSC, color: '#FF9800'},
             { name: 'Taxes & Surcharges', value: taxes, color: '#F44336' },
             { name: 'Net Salary', value: netSalary, color: '#4CAF50' }
         ];
+        if (creditPaid > 0) legendItems.push({ name: 'Tax credits paid out', value: creditPaid, isInformational: true, color: '#2f855a' });
         
         legendItems.forEach(item => {
             if (legendY + legendItemMinHeight > height - 5) return; // Avoid overflow
@@ -3367,7 +3244,7 @@
       const dataToExport = { 
           ...appState.currentCalculationData, 
           calculationDate: new Date().toISOString(),
-          appVersion: '3.4.3' // Add app version to export
+          appVersion: APP_VERSION
       };
       const dataStr = JSON.stringify(dataToExport, null, 2); // Pretty print JSON
       const dataBlob = new Blob([dataStr], { type: 'application/json;charset=utf-8;' });
@@ -3388,7 +3265,7 @@
           return; 
       }
       const d = appState.currentCalculationData;
-      const textSummary = `Luxembourg Payroll Estimate (Monthly):\nGross Salary: ${formatCurrency(d.grossSalary)}\nNet Salary: ${formatCurrency(d.netSalary)}\nTotal Employer Cost: ${formatCurrency(d.totalEmployerCost)}\n\n(Note: This is an estimate. Consult a professional for official figures.)`;
+      const textSummary = `Luxembourg Payroll Estimate (Monthly, rules: ${d.regles.libelle}):\nGross Salary: ${formatCurrency(d.brutMensuel)}\nNet Salary: ${formatCurrency(d.netMensuel)}\nTotal Employer Cost: ${formatCurrency(d.coutEmployeurMensuel)}\n\n(Indicative estimate; it does not replace the ACD calculation.)`;
       
       const shareData = { 
           title: 'Luxembourg Payroll Estimate', 
@@ -3496,6 +3373,12 @@
     // Main DOMContentLoaded listener
     document.addEventListener('DOMContentLoaded', function () {
       initializeDOMElements(); // Cache DOM elements
+      if (!window.LuxPayroll || !RULE_IDS.length) {
+        showGeneralError('calc.js or params/params.js could not be loaded: the calculator cannot run.', 60000);
+        return;
+      }
+      populateRulesSelect();
+      setRules(RULE_IDS[RULE_IDS.length - 1]);
       setupEventListeners();   // Set up event listeners
       toggleInputMode('gross'); // Set initial input mode
       
@@ -3532,7 +3415,7 @@
         }
       }, 100);
 
-      console.log('Luxembourg Payroll Calculator v3.5.0 initialized with Enhanced UX');
+      console.log(`Luxembourg Payroll Estimator v${APP_VERSION} initialized (rules: ${appState.rulesId})`);
     });
 
   </script>

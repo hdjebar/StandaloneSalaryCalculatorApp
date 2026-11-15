@@ -1,0 +1,34 @@
+name: Tests du calcul
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # Aucune dépendance à installer : les tests utilisent uniquement le module node:test.
+      - name: Tests (node --test)
+        run: node --test tests/*.test.js
+
+      - name: params/params.js est à jour avec params/*.json
+        run: node tools/construire-params.js --check
+
+      - name: Aucune URL externe chargée par l'application
+        run: |
+          # Toute URL http(s) hors commentaires et hors espace de noms SVG fait échouer le contrôle.
+          if grep -nE "https?://" index.html calc.js sw.js manifest.json params/params.js \
+              | grep -vE "www\.w3\.org/2000/svg|<!--|^\S+:\s*//|^\S+:\s*\*|\"(url|url_formules|legilux|confirmation)\":" ; then
+            echo "URL externe trouvée dans un fichier chargé par l'application." ; exit 1
+          fi
+          echo "Aucune URL externe chargée."

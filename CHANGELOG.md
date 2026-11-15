@@ -5,6 +5,49 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.5.0] - 2026-11-15
+
+Mise à jour des règles et mise en conformité du calcul avec la LIR. Le détail des sources est dans
+`docs/sources.md`, l'effet chiffré sur quatre profils dans `docs/ecarts.md`. (Le pied de page de la 3.4.3
+affichait déjà « 3.5.0 (Enhanced UX) » sans publication correspondante : cette entrée est la vraie 3.5.0.)
+
+### Corrigé
+- Classes d'impôt calculées selon la loi : classe 1 (art. 120), classe 1a (art. 120bis), classe 2 par splitting
+  (art. 121), au lieu des coefficients 1,0 / 0,9 / 0,65.
+- Contribution au fonds pour l'emploi lissée au-delà de 150 000 € / 300 000 € (formules ACD), au lieu d'un
+  taux de 9 % appliqué à tout l'impôt.
+- Suppression du crédit de 922,56 € par enfant déduit de l'impôt : la modération d'impôt est incluse dans
+  l'allocation familiale (art. 122, al. 2).
+- Revenu imposable : la contribution dépendance n'est plus déduite (art. 110) ; forfait de dépenses spéciales de
+  480 € (art. 113) ; plafond assurances de 672 € majoré par membre du ménage (art. 109) ; frais médicaux selon
+  le barème de l'art. 127, al. 4 ; arrondis des art. 124 et 126.
+- Forfait de déplacement : 99 € par unité d'éloignement au-delà de 4, plafonné à 2 574 € (art. 105bis), au lieu
+  d'un montant libre plafonné à 4 620 € sans source.
+- Crédits CIS, CI-CO2 et CISSM arrondis au cent supérieur et restituables (l'impôt net peut être négatif).
+- Cotisations employeur : quatre classes de mutualité et facteur bonus-malus accident, comme dans les avis du
+  CCSS ; maximum cotisable de 13 518,68 € (CCSS) au lieu de 13 518,70 €.
+- Conversion coût employeur → brut exacte au-delà du plafond.
+- L'aperçu en direct utilise le même calcul que les résultats.
+
+### Ajouté
+- `calc.js` : tout le calcul en fonctions pures, sans DOM, utilisable dans le navigateur et dans Node.
+- `params/2025-05.json` et `params/2026-01.json` : chaque paramètre avec valeur, unité, date d'effet, source
+  (texte, article, URL) et statut ; sélecteur de règles dans l'interface.
+- Règles au 1er janvier 2026 : CI-CO2 à 216 €, prévoyance-vieillesse à 4 500 €, pension à 8,5 %, accident
+  0,65 %, nouveaux taux de mutualité.
+- Tests `node --test` sans dépendance (65 formules ACD, 26 exemples du ministère des Finances, crédits aux
+  bornes, cotisations, brut vers net) et workflow GitHub Actions.
+- Mention des limites et date des règles dans l'application ; README en français et en anglais.
+- `docs/inventaire.md`, `docs/sources.md`, `docs/ecarts.md` ; outils de comparaison avec la 3.4.3 et de
+  vérification réseau.
+
+### Supprimé
+- Toute dépendance réseau : Font Awesome (cdnjs) remplacé par des icônes SVG intégrées, icône de secours
+  `placehold.co` supprimée, politique CSP ajoutée ; `sw.js` ne met plus en cache que des fichiers locaux, avec
+  des chemins relatifs.
+- Mentions « Coming soon » et « accurate » du README ; captures d'écran et gestionnaire de fichiers absents du
+  manifeste.
+
 ## [3.4.3] - 2025-06-04
 
 ### Added

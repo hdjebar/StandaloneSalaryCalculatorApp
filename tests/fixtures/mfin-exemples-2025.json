@@ -1,0 +1,146 @@
+{
+ "source": {
+  "titre": "Ministère des Finances, « Entlaaschtungs-Pak » : adaptation du barème de 2,5 tranches indiciaires, exemples concrets (fiches de juillet 2024)",
+  "url": "https://gouvernement.lu/dam-assets/documents/actualites/2024/07/17-roth-paquet-fiscal/factsheets.pdf",
+  "sha256": "118fd5b1c24d72f8109541fc2a6277164ff745be4e95c8aaa4f6824fe2614da3",
+  "lecture": "Colonnes reprises : salaire brut annuel, revenu imposable ajusté annuel (tronqué à l'euro dans la fiche), impôt dû suivant barème 2025. Selon la fiche, l'impôt est « compte non tenu du fonds pour l'emploi » et sans crédits d'impôt ; calculs sur 12 salaires fixes. Classe 2 : deux salaires répartis 2/3 et 1/3."
+ },
+ "cas": {
+  "1": [
+   {
+    "brut_annuel": 37000,
+    "revenu_imposable": 31891,
+    "impot_2025": 2346
+   },
+   {
+    "brut_annuel": 45000,
+    "revenu_imposable": 39008,
+    "impot_2025": 3972
+   },
+   {
+    "brut_annuel": 50000,
+    "revenu_imposable": 43455,
+    "impot_2025": 5208
+   },
+   {
+    "brut_annuel": 60000,
+    "revenu_imposable": 52350,
+    "impot_2025": 8198
+   },
+   {
+    "brut_annuel": 75000,
+    "revenu_imposable": 65692,
+    "impot_2025": 13368
+   },
+   {
+    "brut_annuel": 75919,
+    "revenu_imposable": 66510,
+    "impot_2025": 13699
+   },
+   {
+    "brut_annuel": 100000,
+    "revenu_imposable": 87930,
+    "impot_2025": 22045
+   },
+   {
+    "brut_annuel": 125000,
+    "revenu_imposable": 110168,
+    "impot_2025": 30723
+   },
+   {
+    "brut_annuel": 150000,
+    "revenu_imposable": 132526,
+    "impot_2025": 39590
+   }
+  ],
+  "1a": [
+   {
+    "brut_annuel": 37000,
+    "revenu_imposable": 31891,
+    "impot_2025": 608
+   },
+   {
+    "brut_annuel": 45000,
+    "revenu_imposable": 39008,
+    "impot_2025": 1801
+   },
+   {
+    "brut_annuel": 50000,
+    "revenu_imposable": 43455,
+    "impot_2025": 2890
+   },
+   {
+    "brut_annuel": 60000,
+    "revenu_imposable": 52350,
+    "impot_2025": 5859
+   },
+   {
+    "brut_annuel": 75000,
+    "revenu_imposable": 65692,
+    "impot_2025": 11046
+   },
+   {
+    "brut_annuel": 75919,
+    "revenu_imposable": 66510,
+    "impot_2025": 11378
+   },
+   {
+    "brut_annuel": 100000,
+    "revenu_imposable": 87930,
+    "impot_2025": 19724
+   },
+   {
+    "brut_annuel": 125000,
+    "revenu_imposable": 110168,
+    "impot_2025": 28401
+   },
+   {
+    "brut_annuel": 150000,
+    "revenu_imposable": 132526,
+    "impot_2025": 37268
+   }
+  ],
+  "2": [
+   {
+    "brut_annuel": 50000,
+    "revenu_imposable": 37935,
+    "impot_2025": 1011
+   },
+   {
+    "brut_annuel": 75000,
+    "revenu_imposable": 60173,
+    "impot_2025": 4024
+   },
+   {
+    "brut_annuel": 75919,
+    "revenu_imposable": 60990,
+    "impot_2025": 4168
+   },
+   {
+    "brut_annuel": 90000,
+    "revenu_imposable": 73515,
+    "impot_2025": 6825
+   },
+   {
+    "brut_annuel": 100000,
+    "revenu_imposable": 82410,
+    "impot_2025": 9123
+   },
+   {
+    "brut_annuel": 125000,
+    "revenu_imposable": 104648,
+    "impot_2025": 16358
+   },
+   {
+    "brut_annuel": 150000,
+    "revenu_imposable": 126885,
+    "impot_2025": 25000
+   },
+   {
+    "brut_annuel": 175000,
+    "revenu_imposable": 149123,
+    "impot_2025": 33678
+   }
+  ]
+ }
+}

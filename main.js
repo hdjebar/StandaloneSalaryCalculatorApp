@@ -147,9 +147,9 @@ function createWindow() {
                 </head>
                 <body>
                   <h1>🇱🇺 Luxembourg Payroll Calculator</h1>
-                  <p><strong>Version:</strong> 3.4.3</p>
+                  <p><strong>Version:</strong> 3.5.0</p>
                   <p><strong>Platform:</strong> Desktop App</p>
-                  <p>Complete Luxembourg payroll calculator for 2025 with tax compliance, social security, and family benefits calculation.</p>
+                  <p>Indicative Luxembourg payroll estimator. Rules of May 2025 and 1 January 2026. It does not replace the ACD calculation.</p>
                   <p><small>Built with Electron</small></p>
                 </body>
               </html>

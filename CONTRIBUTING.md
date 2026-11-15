@@ -6,7 +6,7 @@ Thank you for your interest in contributing to this project! This document provi
 
 This project adheres to professional standards. By participating, you agree to:
 - Be respectful and inclusive in all interactions
-- Focus on accurate calculations and regulatory compliance
+- Every tax or social parameter must cite its legal source (see docs/sources.md)
 - Provide constructive feedback and suggestions
 - Help maintain high code quality and documentation standards
 - Respect the project's goals of accuracy and accessibility
@@ -301,4 +301,4 @@ Contributors to the validation system help prevent user errors and improve the o
 
 ---
 
-**Note**: This project aims to provide accurate estimates based on Luxembourg tax law while maintaining high standards for user experience and accessibility. All contributors should prioritize accuracy, compliance with official regulations, and inclusive design practices. When in doubt, always reference official sources and recommend professional consultation for complex situations.
+**Note**: This project provides indicative estimates based on the Luxembourg legal texts cited in docs/sources.md while maintaining high standards for user experience and accessibility. All contributors should prioritize accuracy, compliance with official regulations, and inclusive design practices. When in doubt, always reference official sources and recommend professional consultation for complex situations.

@@ -1,0 +1,430 @@
+{
+ "source": {
+  "titre": "ACD, « Formules du calcul automatisé de l'impôt » 2025 (fichier Excel, feuilles Classe 1, Classe 1a, Classe 2, colonnes « Formules de l'impôt sur le revenu »)",
+  "url": "https://impotsdirects.public.lu/dam-assets/fr/baremes/bareme-2025-format-excel.xlsx",
+  "page": "https://impotsdirects.public.lu/fr/baremes.html",
+  "texte_officiel": "https://legilux.public.lu/eli/etat/leg/rgd/2024/12/20/a590/jo",
+  "sha256": "d138db5f10051a83a49afab788906081a53f70cc85d2f2921d9afde7a4597853",
+  "mention": "Document élaboré par l'ACD à des fins d'information, mis à jour le 17/04/2025 ; seuls les textes publiés au Journal officiel font foi.",
+  "lecture": "impôt = taux × R − déduction, arrondi à l'euro inférieur, R = revenu imposable ajusté (multiple de 50 €), compris entre lim_inf et lim_sup."
+ },
+ "classes": {
+  "1": {
+   "formules": [
+    {
+     "lim_inf": 0,
+     "lim_sup": 13200,
+     "taux": 0,
+     "deduction": 0
+    },
+    {
+     "lim_inf": 13250,
+     "lim_sup": 15400,
+     "taux": 0.08,
+     "deduction": 1058.4
+    },
+    {
+     "lim_inf": 15450,
+     "lim_sup": 17600,
+     "taux": 0.09,
+     "deduction": 1212.75
+    },
+    {
+     "lim_inf": 17650,
+     "lim_sup": 19800,
+     "taux": 0.1,
+     "deduction": 1389.15
+    },
+    {
+     "lim_inf": 19850,
+     "lim_sup": 22050,
+     "taux": 0.11,
+     "deduction": 1587.6
+    },
+    {
+     "lim_inf": 22100,
+     "lim_sup": 24250,
+     "taux": 0.12,
+     "deduction": 1808.1
+    },
+    {
+     "lim_inf": 24300,
+     "lim_sup": 26550,
+     "taux": 0.14,
+     "deduction": 2293.2
+    },
+    {
+     "lim_inf": 26600,
+     "lim_sup": 28800,
+     "taux": 0.16,
+     "deduction": 2824.2
+    },
+    {
+     "lim_inf": 28850,
+     "lim_sup": 31100,
+     "taux": 0.18,
+     "deduction": 3401.1
+    },
+    {
+     "lim_inf": 31150,
+     "lim_sup": 33400,
+     "taux": 0.2,
+     "deduction": 4023.9
+    },
+    {
+     "lim_inf": 33450,
+     "lim_sup": 35700,
+     "taux": 0.22,
+     "deduction": 4692.6
+    },
+    {
+     "lim_inf": 35750,
+     "lim_sup": 38000,
+     "taux": 0.24,
+     "deduction": 5407.2
+    },
+    {
+     "lim_inf": 38050,
+     "lim_sup": 40300,
+     "taux": 0.26,
+     "deduction": 6167.7
+    },
+    {
+     "lim_inf": 40350,
+     "lim_sup": 42600,
+     "taux": 0.28,
+     "deduction": 6974.1
+    },
+    {
+     "lim_inf": 42650,
+     "lim_sup": 44900,
+     "taux": 0.3,
+     "deduction": 7826.4
+    },
+    {
+     "lim_inf": 44950,
+     "lim_sup": 47200,
+     "taux": 0.32,
+     "deduction": 8724.6
+    },
+    {
+     "lim_inf": 47250,
+     "lim_sup": 49500,
+     "taux": 0.34,
+     "deduction": 9668.7
+    },
+    {
+     "lim_inf": 49550,
+     "lim_sup": 51750,
+     "taux": 0.36,
+     "deduction": 10658.7
+    },
+    {
+     "lim_inf": 51800,
+     "lim_sup": 54050,
+     "taux": 0.38,
+     "deduction": 11694.6
+    },
+    {
+     "lim_inf": 54100,
+     "lim_sup": 117450,
+     "taux": 0.39,
+     "deduction": 12235.5
+    },
+    {
+     "lim_inf": 117500,
+     "lim_sup": 176150,
+     "taux": 0.4,
+     "deduction": 13410
+    },
+    {
+     "lim_inf": 176200,
+     "lim_sup": 234850,
+     "taux": 0.41,
+     "deduction": 15171.6
+    },
+    {
+     "lim_inf": 234900,
+     "lim_sup": null,
+     "taux": 0.42,
+     "deduction": 17520.3
+    }
+   ],
+   "fonds_pour_emploi": {
+    "texte": "L’impôt est à déterminer à l’aide des formules et à arrondir à l’euro inférieur.\nSi le revenu est inférieur ou égal à 150.000 €, l’impôt est à majorer de 7% et à\narrondir à l’euro inférieur.\nSi le revenu est supérieur à 150.000 €, l’impôt est à majorer de (I*0,09 – 931,8); I\nétant l’impôt non-majoré.\nCe montant est à arrondir à l’euro inférieur.",
+    "seuil": 150000,
+    "constante": 931.8
+   }
+  },
+  "1a": {
+   "formules": [
+    {
+     "lim_inf": 0,
+     "lim_sup": 26450,
+     "taux": 0,
+     "deduction": 0
+    },
+    {
+     "lim_inf": 26500,
+     "lim_sup": 28200,
+     "taux": 0.1,
+     "deduction": 2646
+    },
+    {
+     "lim_inf": 28250,
+     "lim_sup": 29950,
+     "taux": 0.1125,
+     "deduction": 2998.8
+    },
+    {
+     "lim_inf": 30000,
+     "lim_sup": 31750,
+     "taux": 0.125,
+     "deduction": 3373.65
+    },
+    {
+     "lim_inf": 31800,
+     "lim_sup": 33500,
+     "taux": 0.1375,
+     "deduction": 3770.55
+    },
+    {
+     "lim_inf": 33550,
+     "lim_sup": 35250,
+     "taux": 0.15,
+     "deduction": 4189.5
+    },
+    {
+     "lim_inf": 35300,
+     "lim_sup": 37100,
+     "taux": 0.175,
+     "deduction": 5071.5
+    },
+    {
+     "lim_inf": 37150,
+     "lim_sup": 38950,
+     "taux": 0.2,
+     "deduction": 5999.4
+    },
+    {
+     "lim_inf": 39000,
+     "lim_sup": 40750,
+     "taux": 0.225,
+     "deduction": 6973.2
+    },
+    {
+     "lim_inf": 40800,
+     "lim_sup": 42600,
+     "taux": 0.25,
+     "deduction": 7992.9
+    },
+    {
+     "lim_inf": 42650,
+     "lim_sup": 44450,
+     "taux": 0.275,
+     "deduction": 9058.5
+    },
+    {
+     "lim_inf": 44500,
+     "lim_sup": 46250,
+     "taux": 0.3,
+     "deduction": 10170
+    },
+    {
+     "lim_inf": 46300,
+     "lim_sup": 48100,
+     "taux": 0.325,
+     "deduction": 11327.4
+    },
+    {
+     "lim_inf": 48150,
+     "lim_sup": 49950,
+     "taux": 0.35,
+     "deduction": 12530.7
+    },
+    {
+     "lim_inf": 50000,
+     "lim_sup": 51800,
+     "taux": 0.375,
+     "deduction": 13779.9
+    },
+    {
+     "lim_inf": 51850,
+     "lim_sup": 117450,
+     "taux": 0.39,
+     "deduction": 14556.96
+    },
+    {
+     "lim_inf": 117500,
+     "lim_sup": 176150,
+     "taux": 0.4,
+     "deduction": 15731.46
+    },
+    {
+     "lim_inf": 176200,
+     "lim_sup": 234850,
+     "taux": 0.41,
+     "deduction": 17493.06
+    },
+    {
+     "lim_inf": 234900,
+     "lim_sup": null,
+     "taux": 0.42,
+     "deduction": 19841.76
+    }
+   ],
+   "fonds_pour_emploi": {
+    "texte": "L’impôt est à déterminer à l’aide des formules et à arrondir à l’euro inférieur.\nSi le revenu est inférieur ou égal à 150.000 €, l’impôt est à majorer de 7% et à\narrondir à l’euro inférieur.\nSi le revenu est supérieur à 150.000 €, l’impôt est à majorer de (I*0,09 – 885,36); I\nétant l’impôt non-majoré.\nCe montant est à arrondir à l’euro inférieur.",
+    "seuil": 150000,
+    "constante": 885.36
+   }
+  },
+  "2": {
+   "formules": [
+    {
+     "lim_inf": 0,
+     "lim_sup": 26450,
+     "taux": 0,
+     "deduction": 0
+    },
+    {
+     "lim_inf": 26500,
+     "lim_sup": 30850,
+     "taux": 0.08,
+     "deduction": 2116.8
+    },
+    {
+     "lim_inf": 30900,
+     "lim_sup": 35250,
+     "taux": 0.09,
+     "deduction": 2425.5
+    },
+    {
+     "lim_inf": 35300,
+     "lim_sup": 39650,
+     "taux": 0.1,
+     "deduction": 2778.3
+    },
+    {
+     "lim_inf": 39700,
+     "lim_sup": 44100,
+     "taux": 0.11,
+     "deduction": 3175.2
+    },
+    {
+     "lim_inf": 44150,
+     "lim_sup": 48500,
+     "taux": 0.12,
+     "deduction": 3616.2
+    },
+    {
+     "lim_inf": 48550,
+     "lim_sup": 53100,
+     "taux": 0.14,
+     "deduction": 4586.4
+    },
+    {
+     "lim_inf": 53150,
+     "lim_sup": 57650,
+     "taux": 0.16,
+     "deduction": 5648.4
+    },
+    {
+     "lim_inf": 57700,
+     "lim_sup": 62250,
+     "taux": 0.18,
+     "deduction": 6802.2
+    },
+    {
+     "lim_inf": 62300,
+     "lim_sup": 66850,
+     "taux": 0.2,
+     "deduction": 8047.8
+    },
+    {
+     "lim_inf": 66900,
+     "lim_sup": 71450,
+     "taux": 0.22,
+     "deduction": 9385.2
+    },
+    {
+     "lim_inf": 71500,
+     "lim_sup": 76050,
+     "taux": 0.24,
+     "deduction": 10814.4
+    },
+    {
+     "lim_inf": 76100,
+     "lim_sup": 80600,
+     "taux": 0.26,
+     "deduction": 12335.4
+    },
+    {
+     "lim_inf": 80650,
+     "lim_sup": 85200,
+     "taux": 0.28,
+     "deduction": 13948.2
+    },
+    {
+     "lim_inf": 85250,
+     "lim_sup": 89800,
+     "taux": 0.3,
+     "deduction": 15652.8
+    },
+    {
+     "lim_inf": 89850,
+     "lim_sup": 94400,
+     "taux": 0.32,
+     "deduction": 17449.2
+    },
+    {
+     "lim_inf": 94450,
+     "lim_sup": 99000,
+     "taux": 0.34,
+     "deduction": 19337.4
+    },
+    {
+     "lim_inf": 99050,
+     "lim_sup": 103550,
+     "taux": 0.36,
+     "deduction": 21317.4
+    },
+    {
+     "lim_inf": 103600,
+     "lim_sup": 108150,
+     "taux": 0.38,
+     "deduction": 23389.2
+    },
+    {
+     "lim_inf": 108200,
+     "lim_sup": 234900,
+     "taux": 0.39,
+     "deduction": 24471
+    },
+    {
+     "lim_inf": 234950,
+     "lim_sup": 352300,
+     "taux": 0.4,
+     "deduction": 26820
+    },
+    {
+     "lim_inf": 352350,
+     "lim_sup": 469700,
+     "taux": 0.41,
+     "deduction": 30343.2
+    },
+    {
+     "lim_inf": 469750,
+     "lim_sup": null,
+     "taux": 0.42,
+     "deduction": 35040.6
+    }
+   ],
+   "fonds_pour_emploi": {
+    "texte": "L’impôt est à déterminer à l’aide des formules et à arrondir à l’euro inférieur.\nSi le revenu est inférieur ou égal à 300.000 €, l’impôt est à majorer de 7% et à\narrondir à l’euro inférieur.\nSi le revenu est supérieur à 300.000 €, l’impôt est à majorer de (I*0,09 – 1.863,6) ; I\nétant l’impôt non-majoré.\nCe montant est à arrondir à l’euro inférieur.",
+    "seuil": 300000,
+    "constante": 1863.6
+   }
+  }
+ }
+}
